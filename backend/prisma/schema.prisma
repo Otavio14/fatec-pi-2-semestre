@@ -140,6 +140,7 @@ model Produto {
   estoque             Int
   descricao           String
   dt_validade         String
+  imagem              String
   Avaliacao           Avaliacao[]
   FornecedoresProduto FornecedoresProduto[]
   ProdutoCategoria    ProdutoCategoria[]
