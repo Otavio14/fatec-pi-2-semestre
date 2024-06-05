@@ -7,6 +7,7 @@ import { ProdutoPage } from "./pages/produto.jsx";
 import { AdminHomePage } from "./pages/admin-home.jsx";
 import { AdminHeader } from "./components/admin-header.jsx";
 import { UsuarioPage } from "./pages/usuario.jsx";
+import { ProdutosPage } from "./pages/produtosAdmPage.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -54,6 +55,10 @@ export const routes = createBrowserRouter(
           path: "usuarios",
           element: <UsuarioPage />,
         },
+        {
+          path: "produtos",
+          element: <ProdutosPage />
+        }
       ],
     },
   ],
