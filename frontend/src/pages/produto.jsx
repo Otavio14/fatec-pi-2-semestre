@@ -18,7 +18,6 @@ export const ProdutoPage = () => {
 
   useEffect(() => {
     api.get(`/produtos/${parseInt(ProdutoId)}`).then((res) => {
-      console.log(res)
       setProduto(res.data)
     })
   }, []);
@@ -37,7 +36,6 @@ export const ProdutoPage = () => {
             {Produto.nome}
           </h1>
           <div className="flex items-center mb-1 gap-1">
-            {/* <h1>{Id}</h1> */}
             {Array(Produto.nota || 0)
               ?.fill(null)
               ?.map((_, index) => (
