@@ -13,21 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  age   Int?
-  tasks Task[]
-}
-
-model Task {
-  id     Int    @id @default(autoincrement())
-  title  String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
-}
-
 model Avaliacao {
   id           Int     @id @default(autoincrement())
   id_produtos  Int

@@ -1,10 +1,10 @@
-import User from "../models/usuario.model.js";
+import Usuario from "../models/usuario.model.js";
 import { validationResult } from "express-validator";
 
-export default class UserController {
+export default class UsuarioController {
   static async index(_, res) {
-    const users = await User.findMany();
-    res.json(users);
+    const usuarios = await Usuario.findMany();
+    res.json(usuarios);
   }
 
   static async create(req, res) {
@@ -12,22 +12,22 @@ export default class UserController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const user = await User.create({
+    const usuario = await Usuario.create({
       data: req.body,
     });
-    res.json(user);
+    res.json(usuario);
   }
 
   static async show(req, res) {
-    const user = await User.findUnique({
+    const usuario = await Usuario.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
-    if (!user) {
+    if (!usuario) {
       return res.statu(404).json({ message: "Usuário não encontrado" });
     }
-    res.json(user);
+    res.json(usuario);
   }
 
   static async update(req, res) {
@@ -35,21 +35,21 @@ export default class UserController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const user = await User.findUnique({
+    const usuario = await Usuario.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
-    if (!user) {
+    if (!usuario) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
-    const updatedUser = await User.update({
+    const updatedUsuario = await Usuario.update({
       where: {
         id: parseInt(req.params.id),
       },
       data: req.body,
     });
-    res.json(updatedUser);
+    res.json(updatedUsuario);
   }
 
   static async delete(req, res) {
@@ -57,15 +57,15 @@ export default class UserController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const user = await User.findUnique({
+    const usuario = await Usuario.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
-    if (!user) {
+    if (!usuario) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
-    await User.delete({
+    await Usuario.delete({
       where: {
         id: parseInt(req.params.id),
       },

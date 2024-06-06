@@ -38,5 +38,18 @@ a {
 }
 
 button {
-  transition: color 0.2s, background-color 0.4s;
+  transition:
+    color 0.2s,
+    background-color 0.4s;
+}
+
+table > thead > tr > th,
+table > tbody > tr > td {
+  text-align: left;
+  border-width: 1px;
+  padding: 0.5rem;
+}
+
+table > tbody > tr > td:has(button) {
+  text-align: center;
 }

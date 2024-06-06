@@ -1,18 +1,18 @@
 import { body, param } from "express-validator";
 
-export const createUserValidator = [
-  body('email').isEmail().withMessage("Email inválido"),
-  body('name').isString().withMessage("Nome inválido"),
-  body('age').isInt().withMessage("Idade inválida")
+export const createUsuarioValidator = [
+  body("email").isEmail().withMessage("Email inválido"),
+  body("nome").isString().withMessage("Nome inválido"),
+  body("senha").isInt().withMessage("Senha inválida"),
 ];
 
-export const updateUserValidator = [
-  param('id').isInt().withMessage("ID inválido"),
-  body('email').isEmail().withMessage("Email inválido"),
-  body('name').isString().withMessage("Nome inválido"),
-  body('age').isInt().withMessage("Idade inválida")
+export const updateUsuarioValidator = [
+  param("id").isInt().withMessage("ID inválido"),
+  body("email").isEmail().withMessage("Email inválido"),
+  body("nome").isString().withMessage("Nome inválido"),
+  body("senha").isInt().withMessage("Senha inválida"),
 ];
 
-export const deleteUserValidator = [
-  param('id').isInt().withMessage("Id inválido")
+export const deleteUsuarioValidator = [
+  param("id").isInt().withMessage("Id inválido"),
 ];

@@ -8,8 +8,8 @@ export const HomePage = () => {
 
   useEffect(() => {
     api.get("/produtos").then((res) => {
-      setProdutos(res.data)
-    })
+      setProdutos(res.data);
+    });
   }, []);
 
   // const [Produtos, setProdutos] = useState([
@@ -88,7 +88,7 @@ export const HomePage = () => {
   // ]);
 
   return (
-    <div className="flex flex-col items-center p-20">
+    <div className="flex flex-col items-center p-0 sm:p-20">
       <div className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
         Produtos
       </div>
