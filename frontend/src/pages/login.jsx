@@ -60,7 +60,7 @@ export const LoginPage = () => {
         />
         <button
           style={{ transition: "color .3s, background-color .5s" }}
-          className="mt-[14px] rounded bg-[#dd3842] px-[34px] py-[16px] font-semibold leading-[22px] text-white"
+          className="mt-[14px] rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[22px] text-white hover:bg-white hover:text-[#0c2d57]"
         >
           Entrar
         </button>

@@ -1,6 +1,7 @@
 CREATE TABLE clientes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_cidades INTEGER NOT NULL,
+    nome TEXT NOT NULL,
     cep TEXT NOT NULL,
     email TEXT NOT NULL,
     telefone TEXT NOT NULL,

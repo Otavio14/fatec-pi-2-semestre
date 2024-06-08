@@ -1,9 +1,9 @@
-import estados from "../models/estados.model.js";
+import Estado from "../models/estados.model.js";
 import { validationResult } from "express-validator";
 
 export default class estadosController {
   static async index(_, res) {
-    const estados = await estados.findMany();
+    const estados = await Estado.findMany();
     res.json(estados);
   }
 
@@ -12,14 +12,14 @@ export default class estadosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const estados = await estados.create({
+    const estados = await Estado.create({
       data: req.body,
     });
     res.json(estados);
   }
 
   static async show(req, res) {
-    const estados = await estados.findUnique({
+    const estados = await Estado.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -35,7 +35,7 @@ export default class estadosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const estados = await estados.findUnique({
+    const estados = await Estado.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -43,7 +43,7 @@ export default class estadosController {
     if (!estados) {
       return res.status(404).json({ message: "Estado não encontrado" });
     }
-    const updatedestados = await estados.update({
+    const updatedestados = await Estado.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,7 +57,7 @@ export default class estadosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const estados = await estados.findUnique({
+    const estados = await Estado.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -65,7 +65,7 @@ export default class estadosController {
     if (!estados) {
       return res.status(404).json({ message: "Estado não encontrado" });
     }
-    await estados.delete({
+    await Estado.delete({
       where: {
         id: parseInt(req.params.id),
       },

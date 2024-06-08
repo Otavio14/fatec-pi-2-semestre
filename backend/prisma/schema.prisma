@@ -42,6 +42,7 @@ model Cidade {
 model Cliente {
   id         Int         @id @default(autoincrement())
   id_cidades Int
+  nome       String
   cep        String
   email      String
   telefone   String

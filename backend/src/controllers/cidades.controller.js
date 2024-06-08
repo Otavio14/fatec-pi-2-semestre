@@ -1,9 +1,10 @@
-import cidades from "../models/cidades.model.js";
+import Cidade from "../models/cidades.model.js";
+import Estado from "../models/estados.model.js";
 import { validationResult } from "express-validator";
 
 export default class cidadesController {
   static async index(_, res) {
-    const cidades = await cidades.findMany();
+    const cidades = await Cidade.findMany();
     res.json(cidades);
   }
 
@@ -12,14 +13,14 @@ export default class cidadesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const cidades = await cidades.create({
+    const cidades = await Cidade.create({
       data: req.body,
     });
     res.json(cidades);
   }
 
   static async show(req, res) {
-    const cidades = await cidades.findUnique({
+    const cidades = await Cidade.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -35,7 +36,7 @@ export default class cidadesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const cidades = await cidades.findUnique({
+    const cidades = await Cidade.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -43,7 +44,7 @@ export default class cidadesController {
     if (!cidades) {
       return res.status(404).json({ message: "Cidade não encontrada" });
     }
-    const updatedcidades = await cidades.update({
+    const updatedcidades = await Cidade.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,7 +58,7 @@ export default class cidadesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const cidades = await cidades.findUnique({
+    const cidades = await Cidade.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -65,11 +66,41 @@ export default class cidadesController {
     if (!cidades) {
       return res.status(404).json({ message: "Cidade não encontrada" });
     }
-    await cidades.delete({
+    await Cidade.delete({
       where: {
         id: parseInt(req.params.id),
       },
     });
     res.status(204).json({ message: "Cidade deletada com sucesso" });
   }
+
+  //! APAGAR DEPOIS
+  static async createAuto(req, res) {
+    // const cidades = await Cidade.findMany();
+    // res.json(cidades);
+
+    // await Cidade.createMany({
+    //   data: req.body,
+    // });
+
+    const estados = await Estado.findMany();
+
+    const distritos = await Promise.all(
+      estados.map(async (estado) => {
+        const response = await fetch(
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado.sigla}/distritos`
+        );
+        const data = await response.json();
+
+        return data.map((distrito) => ({
+          nome: distrito.nome,
+          id_estados: estado.id,
+        }));
+      })
+    );
+    console.log(distritos);
+
+    res.json("");
+  }
+  //! APAGAR DEPOIS
 }
