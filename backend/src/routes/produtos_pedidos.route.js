@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Produtos_PedidosController from "../controllers/usuarios.controller.js";
+import Produtos_PedidosController from "../controllers/produtos_pedidos.controller.js";
 import {
   createProdutos_PedidosValidator,
   updateProdutos_PedidosValidator,
