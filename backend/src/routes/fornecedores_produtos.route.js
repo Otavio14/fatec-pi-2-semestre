@@ -4,7 +4,7 @@ import {
   createFornecedores_ProdutosValidator,
   updateFornecedores_ProdutosValidator,
   deleteFornecedores_ProdutosValidator,
-} from "../validators/produtos.validator.js";
+} from "../validators/fornecedores_produtos.validator.js";
 
 const router = Router();
 
