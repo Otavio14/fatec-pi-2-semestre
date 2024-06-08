@@ -26,7 +26,7 @@ export default class UsuarioController {
       },
     });
     if (!usuario) {
-      return res.statu(404).json({ message: "Usuário não encontrado" });
+      return res.status(404).json({ message: "Usuário não encontrado" });
     }
     res.json(usuario);
   }
