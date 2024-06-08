@@ -1,5 +1,4 @@
 import Cidade from "../models/cidades.model.js";
-import Estado from "../models/estados.model.js";
 import { validationResult } from "express-validator";
 
 export default class cidadesController {
@@ -73,34 +72,4 @@ export default class cidadesController {
     });
     res.status(204).json({ message: "Cidade deletada com sucesso" });
   }
-
-  //! APAGAR DEPOIS
-  static async createAuto(req, res) {
-    // const cidades = await Cidade.findMany();
-    // res.json(cidades);
-
-    // await Cidade.createMany({
-    //   data: req.body,
-    // });
-
-    const estados = await Estado.findMany();
-
-    const distritos = await Promise.all(
-      estados.map(async (estado) => {
-        const response = await fetch(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado.sigla}/distritos`
-        );
-        const data = await response.json();
-
-        return data.map((distrito) => ({
-          nome: distrito.nome,
-          id_estados: estado.id,
-        }));
-      })
-    );
-    console.log(distritos);
-
-    res.json("");
-  }
-  //! APAGAR DEPOIS
 }

@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.get("/", CidadesController.createAuto);
+router.get("/", CidadesController.index);
 router.get("/:id", CidadesController.show);
 router.post("/", createCidadesValidator, CidadesController.create);
 router.put("/:id", updateCidadesValidator, CidadesController.update);

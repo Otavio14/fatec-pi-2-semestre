@@ -10,7 +10,7 @@ const router = Router();
 
 router.get("/", EstadosController.index);
 router.get("/:id", EstadosController.show);
-router.post("/", EstadosController.create);
+router.post("/", createEstadoValidator, EstadosController.create);
 router.put("/:id", updateEstadoValidator, EstadosController.update);
 router.delete("/:id", deleteEstadoValidator, EstadosController.delete);
 
