@@ -1,5 +1,6 @@
 import Usuario from "../models/usuario.model.js";
 import { validationResult } from "express-validator";
+import * as jose from "jose";
 
 export default class UsuarioController {
   static async index(_, res) {
@@ -71,5 +72,28 @@ export default class UsuarioController {
       },
     });
     res.status(204).json({ message: "Usuário deletado com sucesso" });
+  }
+
+  static async login(req, res) {
+    const usuario = await Usuario.findUnique({
+      where: {
+        email: req.body.email,
+        senha: req.body.senha,
+      },
+    });
+    if (!usuario) {
+      return res.status(403).json({ message: "Dados incorretos" });
+    }
+
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const jwt = await new jose.SignJWT(usuario)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setIssuer("urn:example:issuer")
+      .setAudience("urn:example:audience")
+      .setExpirationTime("20h")
+      .sign(secret);
+
+    res.json({ token: jwt });
   }
 }

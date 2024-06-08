@@ -32,6 +32,7 @@ Criar um `.env` com os seguintes dados:
 ```bash
 DATABASE_URL= # Caminho para o arquivo do banco de dados do Prisma
 PORT= # Porta a ser utilizada
+JWT_SECRET = # 256 Bit secret
 ```
 ## Autores
 

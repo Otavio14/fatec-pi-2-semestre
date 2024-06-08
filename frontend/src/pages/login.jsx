@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../shared/api";
 import { Input } from "../components/input.jsx";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Swal } from "../shared/swal";
 
 export const LoginPage = () => {
   const [Email, setEmail] = useState("");
@@ -10,26 +11,35 @@ export const LoginPage = () => {
 
   const login = (event) => {
     event.preventDefault();
-    navigate("/admin");
 
-    api.post("login", { email: Email, senha: Senha }).then((response) => {
-      console.log(response);
-    });
+    api
+      .post("/usuarios/login", { email: Email, senha: Senha })
+      .then((response) => {
+        localStorage.setItem("token", response.data.token);
+        navigate("/admin");
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Atenção!",
+          text: "Email ou senha incorretos",
+        });
+      });
   };
 
   return (
-    <div className="items-center flex flex-col h-full justify-center min-h-screen min-w-full w-full bg-[#0c2d57b3]">
+    <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3]">
       <form
         onSubmit={login}
-        className="pt-[33px] px-[65px] pb-[60px] bg-white flex flex-col justify-center rounded-[10px] w-[500px] relative"
+        className="relative flex w-[500px] flex-col justify-center rounded-[10px] bg-white px-[65px] pb-[60px] pt-[33px]"
       >
         <NavLink
           to="/"
-          className="absolute top-[15px] right-[20px] text-[#8f9eb2]"
+          className="absolute right-[20px] top-[15px] text-[#8f9eb2]"
         >
           Voltar para a Home
         </NavLink>
-        <h2 className="text-[#0c2d57] text-[30px] font-semibold leading-[140%] mb-[20px]">
+        <h2 className="mb-[20px] text-[30px] font-semibold leading-[140%] text-[#0c2d57]">
           Log in
         </h2>
         <Input
@@ -37,16 +47,20 @@ export const LoginPage = () => {
           value={Email}
           placeholder={"Digite seu email"}
           onChange={(event) => setEmail(event.target.value)}
+          required
+          type="email"
         />
         <Input
           Label={"Senha"}
           value={Senha}
           placeholder={"*********"}
           onChange={(event) => setSenha(event.target.value)}
+          required
+          type="password"
         />
         <button
           style={{ transition: "color .3s, background-color .5s" }}
-          className="rounded bg-[#dd3842] mt-[14px] py-[16px] px-[34px] font-semibold leading-[22px] text-white"
+          className="mt-[14px] rounded bg-[#dd3842] px-[34px] py-[16px] font-semibold leading-[22px] text-white"
         >
           Entrar
         </button>

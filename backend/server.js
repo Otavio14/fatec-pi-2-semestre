@@ -4,7 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 const app = express();
-const porta = 3000;
+const porta = process.env.PORT || 3000;
 
 app.use(
   cors({

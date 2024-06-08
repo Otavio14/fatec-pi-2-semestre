@@ -8,6 +8,8 @@ import { AdminHomePage } from "./pages/admin-home.jsx";
 import { AdminHeader } from "./components/admin-header.jsx";
 import { UsuarioPage } from "./pages/usuario.jsx";
 import { ProdutosPage } from "./pages/produtosAdmPage.jsx";
+import { AdminRoute } from "./shared/auth.jsx";
+import { FinalizarCompraPage } from "./pages/finalizar-compra.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -47,8 +49,21 @@ export const routes = createBrowserRouter(
       ),
     },
     {
+      path: "/finalizar-compra",
+      element: (
+        <>
+          <HeaderComponent />
+          <FinalizarCompraPage />
+        </>
+      ),
+    },
+    {
       path: "/admin",
-      element: <AdminHeader />,
+      element: (
+        <AdminRoute>
+          <AdminHeader />
+        </AdminRoute>
+      ),
       children: [
         { path: "", element: <AdminHomePage /> },
         {
@@ -57,10 +72,10 @@ export const routes = createBrowserRouter(
         },
         {
           path: "produtos",
-          element: <ProdutosPage />
-        }
+          element: <ProdutosPage />,
+        },
       ],
     },
   ],
-  { basename: "/fatec-pi-2-semestre" }
+  { basename: "/fatec-pi-2-semestre" },
 );

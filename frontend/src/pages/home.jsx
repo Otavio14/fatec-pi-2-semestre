@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Card } from "../components/card.jsx";
-import { NavLink } from "react-router-dom";
 import { api } from "../shared/api.js";
 
 export const HomePage = () => {
@@ -89,19 +88,19 @@ export const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center p-0 sm:p-20">
-      <div className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
+      <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
         Produtos
-      </div>
+      </h1>
       <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 xl:grid-cols-3">
         {Produtos.map((produto, i) => (
-          <NavLink key={i} to={`/produto/${produto?.id}`}>
-            <Card
-              Text={produto.nome}
-              Price={produto.preco}
-              Image={produto.imagem}
-              // Nota={produto.Nota} Para evitar confusão por enquanto
-            />
-          </NavLink>
+          <Card
+            key={i}
+            Text={produto.nome}
+            Price={produto.preco}
+            Image={produto.imagem}
+            Id={produto.id}
+            // Nota={produto.Nota} Para evitar confusão por enquanto
+          />
         ))}
       </div>
     </div>

@@ -1,33 +1,17 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import UserSvg from "../assets/user.svg";
 import CarrinhoSvg from "../assets/carrinho.svg";
 import { useEffect, useState } from "react";
 import { X } from "@phosphor-icons/react";
 
 export const HeaderComponent = () => {
+  const Navigate = useNavigate();
   const [CarrinhoQuantidade, setCarrinhoQuantidade] = useState(0);
   const [CarrinhoTotal, setCarrinhoTotal] = useState(0);
-  const [CarrinhoProdutos, setCarrinhoProdutos] = useState([
-    {
-      id: 1,
-      nome: "Whey Protein",
-      preco: 83.99,
-      quantidade: 5,
-      imagem:
-        "https://static.netshoes.com.br/produtos/nutri-whey-protein-900-g-pote-integralmedica/99/252-0951-799/252-0951-799_zoom1.jpg?ts=1695093963&ims=544x",
-    },
-    {
-      id: 2,
-      nome: "Whey Protein Gold Standard",
-      preco: 279.9,
-      quantidade: 4,
-      imagem:
-        "https://m.media-amazon.com/images/I/61GDn0-MvwL._AC_UF1000,1000_QL80_.jpg",
-    },
-  ]);
-  const [CarrinhoOpen, setCarrinhoOpen] = useState(true);
+  const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
+  const [CarrinhoOpen, setCarrinhoOpen] = useState(false);
 
-  useEffect(() => {
+  const refreshCarrinho = () => {
     const local = JSON.parse(localStorage.getItem("carrinho") || "{}");
 
     if (!local || !local.produtos || !local.total || !local.quantidade) {
@@ -36,11 +20,66 @@ export const HeaderComponent = () => {
         JSON.stringify({ produtos: [], total: 0, quantidade: 0 }),
       );
     } else {
-      const { produtos, total, quantidade } = JSON.parse(local);
+      const { produtos, total, quantidade } = local;
       setCarrinhoProdutos(produtos);
       setCarrinhoTotal(total);
       setCarrinhoQuantidade(quantidade);
     }
+  };
+
+  const updateCarrinho = (produto, quantidade) => {
+    if (quantidade < 1) {
+      const produtos = CarrinhoProdutos.filter((f) => f.id !== produto.id);
+      const total = CarrinhoTotal - produto.preco;
+      const qtde = CarrinhoQuantidade - 1;
+      setCarrinhoProdutos(produtos);
+      setCarrinhoTotal(total);
+      setCarrinhoQuantidade(qtde);
+
+      localStorage.setItem(
+        "carrinho",
+        JSON.stringify({
+          produtos: produtos,
+          total: total,
+          quantidade: qtde,
+        }),
+      );
+    } else {
+      const produtos = CarrinhoProdutos.map((f) =>
+        f.id === produto.id ? { ...f, quantidade: parseInt(quantidade) } : f,
+      );
+      const total =
+        CarrinhoTotal + produto.preco * (quantidade - produto.quantidade);
+      const qtde = produtos.reduce((acc, curr) => acc + curr.quantidade, 0);
+      setCarrinhoProdutos(produtos);
+      setCarrinhoTotal(total);
+      setCarrinhoQuantidade(qtde);
+
+      localStorage.setItem(
+        "carrinho",
+        JSON.stringify({
+          produtos: produtos,
+          total: total,
+          quantidade: qtde,
+        }),
+      );
+    }
+  };
+
+  const finalizarCompra = () => {
+    Navigate("/finalizar-compra");
+    setCarrinhoOpen(false);
+  };
+
+  useEffect(() => {
+    refreshCarrinho();
+
+    window.addEventListener("storage", (event) => {
+      if (event.key === "carrinho") {
+        refreshCarrinho();
+        setCarrinhoOpen(true);
+      }
+    });
   }, []);
 
   return (
@@ -113,8 +152,9 @@ export const HeaderComponent = () => {
           Contato
         </NavLink>
       </div>
+      {/* Carrinho */}
       <div
-        className={`fixed left-0 top-0 z-[15] w-screen grid-cols-[1fr,auto] bg-black/80 ${CarrinhoOpen ? "grid" : "hidden"}`}
+        className={`fixed left-0 top-0 z-[15] w-screen grid-cols-[1fr,auto] overflow-y-hidden bg-black/80 ${CarrinhoOpen ? "grid" : "hidden"}`}
       >
         <span className="w-full" onClick={() => setCarrinhoOpen(false)}></span>
         <div className="grid h-screen w-full min-w-[320px] max-w-[480px] grid-cols-1 grid-rows-[auto,1fr,auto] overflow-auto bg-white px-[40px] pb-[50px] pt-[40px]">
@@ -126,16 +166,16 @@ export const HeaderComponent = () => {
               <X size={32} />
             </button>
           </div>
-          <div className="flex w-full flex-col gap-4 font-medium">
-            {CarrinhoProdutos.map((produto) => (
+          <div className="flex w-full flex-col gap-4 overflow-auto font-medium">
+            {CarrinhoProdutos.map((produto, index) => (
               <div
-                key={produto.id}
+                key={index}
                 className="grid grid-cols-[auto,1fr,auto] items-center gap-2"
               >
                 <div className="h-[100px] w-[100px] rounded border p-[10px]">
                   <img
                     src={produto.imagem}
-                    className="object-fit h-full w-full max-w-[70px]"
+                    className="h-full w-full max-w-[70px] object-contain"
                   />
                 </div>
                 <div>
@@ -145,6 +185,9 @@ export const HeaderComponent = () => {
                   </p>
                 </div>
                 <input
+                  onChange={(e) => {
+                    updateCarrinho(produto, e.target.value);
+                  }}
                   value={produto.quantidade}
                   type="number"
                   className="h-[28px] w-[66px] rounded border border-[#8f9eb2] px-[10px]"
@@ -157,7 +200,10 @@ export const HeaderComponent = () => {
               <h5>Subtotal</h5>
               <p>R$ {CarrinhoTotal?.toFixed(2)}</p>
             </div>
-            <button className="w-full rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]">
+            <button
+              onClick={() => finalizarCompra()}
+              className="w-full rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
+            >
               Finalizar
             </button>
           </div>

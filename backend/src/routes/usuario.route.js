@@ -13,5 +13,6 @@ router.get("/:id", UsuarioController.show);
 router.post("/", createUsuarioValidator, UsuarioController.create);
 router.put("/:id", updateUsuarioValidator, UsuarioController.update);
 router.delete("/:id", deleteUsuarioValidator, UsuarioController.delete);
+router.post("/login", createUsuarioValidator, UsuarioController.login);
 
 export default router;

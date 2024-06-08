@@ -3,11 +3,11 @@ import { useState } from "react";
 import { NavLink, useNavigate, Outlet } from "react-router-dom";
 
 export const AdminHeader = () => {
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
   const [OpenMenu, setOpenMenu] = useState(false);
 
   const logout = () => {
-    navigate("/login");
+    Navigate("/login");
   };
 
   return (
