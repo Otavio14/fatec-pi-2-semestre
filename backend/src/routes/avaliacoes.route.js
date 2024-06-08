@@ -11,7 +11,7 @@ const router = Router();
 router.get("/", AvaliacoesController.index);
 router.get("/:id", AvaliacoesController.show);
 router.post("/", createAvaliacoesValidator, AvaliacoesController.create);
-router.put("/:id", updateAvaliacoesValidator, AvaliacoesCategorias.update);
-router.delete("/:id", deleteAvaliacoesValidator, AvaliacoesCategorias.delete);
+router.put("/:id", updateAvaliacoesValidator, AvaliacoesController.update);
+router.delete("/:id", deleteAvaliacoesValidator, AvaliacoesController.delete);
 
 export default router;

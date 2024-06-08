@@ -25,7 +25,7 @@ export default class AvaliacaoController {
       },
     });
     if (!avaliacao) {
-      return res.statu(404).json({ message: "Avaliação não encontrada" });
+      return res.status(404).json({ message: "Avaliação não encontrada" });
     }
     res.json(avaliacao);
   }

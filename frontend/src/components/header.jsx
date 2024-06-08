@@ -172,7 +172,7 @@ export const HeaderComponent = () => {
                 key={index}
                 className="grid grid-cols-[auto,1fr,auto] items-center gap-2"
               >
-                <div className="h-[100px] w-[100px] rounded border p-[10px]">
+                <div className="flex h-[100px] w-[100px] items-center justify-center rounded border p-[10px]">
                   <img
                     src={produto.imagem}
                     className="h-full w-full max-w-[70px] object-contain"

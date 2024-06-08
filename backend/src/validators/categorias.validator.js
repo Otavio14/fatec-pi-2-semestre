@@ -1,14 +1,14 @@
 import { body, param } from "express-validator";
 
-export const createCategoraiasValidator = [
+export const createCategoriasValidator = [
   body('nome').isString().withMessage("Nome inválido")
 ];
 
-export const updateCategoraiasValidator = [
+export const updateCategoriasValidator = [
   param("id").isInt().withMessage("ID inválido"),
   body('nome').isString().withMessage("Nome inválido")
 ];
 
-export const deleteCategoraiasValidator = [
+export const deleteCategoriasValidator = [
   param("id").isInt().withMessage("Id inválido")
 ];

@@ -10,7 +10,7 @@ const router = Router();
 
 router.get("/", PedidosController.index);
 router.get("/:id", PedidosController.show);
-router.post("/", createPedidosalidator, PedidosController.create);
+router.post("/", createPedidosValidator, PedidosController.create);
 router.put("/:id", updatePedidosValidator, PedidosController.update);
 router.delete("/:id", deletePedidosValidator, PedidosController.delete);
 

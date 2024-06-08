@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 
 export default class estadosController {
   static async index(_, res) {
-    const estados = await Estado.findMany();
+    const estados = await Estado.findMany({ orderBy: { nome: "asc" } });
     res.json(estados);
   }
 
@@ -25,7 +25,7 @@ export default class estadosController {
       },
     });
     if (!estados) {
-      return res.statu(404).json({ message: "Estado não encontrado" });
+      return res.status(404).json({ message: "Estado não encontrado" });
     }
     res.json(estados);
   }

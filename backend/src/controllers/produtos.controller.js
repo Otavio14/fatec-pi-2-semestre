@@ -25,7 +25,7 @@ export default class ProdutoController {
       },
     });
     if (!produto) {
-      return res.statu(404).json({ message: "Produto não encontrado" });
+      return res.status(404).json({ message: "Produto não encontrado" });
     }
     res.json(produto);
   }

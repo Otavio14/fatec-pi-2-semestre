@@ -1,11 +1,56 @@
 import { useEffect, useState } from "react";
 import { Input } from "../components/input.jsx";
 import { Select } from "../components/select.jsx";
+import { api } from "../shared/api.js";
+import axios from "axios";
 
 export const FinalizarCompraPage = () => {
   const [CarrinhoTotal, setCarrinhoTotal] = useState(0);
   const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const [Confirmacao, setConfirmacao] = useState(false);
+  const [Estados, setEstados] = useState([]);
+  const [Cidades, setCidades] = useState([]);
+  const [Nome, setNome] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Telefone, setTelefone] = useState("");
+  const [Cep, setCep] = useState("");
+  const [Numero, setNumero] = useState(0);
+  const [Estado, setEstado] = useState(0);
+  const [Cidade, setCidade] = useState(0);
+  const [Endereco, setEndereco] = useState("");
+  const [Bairro, setBairro] = useState("");
+  const [NomeCidade, setNomeCidade] = useState("");
+
+  const finalizarCompra = (e) => {
+    e.preventDefault();
+
+    const produtos = CarrinhoProdutos.map((produto) => ({
+      id: produto.id,
+      quantidade: produto.quantidade,
+    }));
+
+    const cliente = {
+      nome: Nome,
+      email: Email,
+      telefone: Telefone,
+      cep: Cep,
+      numero: Numero,
+      estado: Estado,
+      cidade: Cidade,
+      endereco: Endereco,
+      bairro: Bairro,
+    };
+
+    api.post("/clientes", cliente).then((response) => {
+      if (response.status === 201) {
+        localStorage.removeItem("carrinho");
+        setCarrinhoProdutos([]);
+        setCarrinhoTotal(0);
+        setConfirmacao(false);
+        alert("Compra realizada com sucesso!");
+      }
+    });
+  };
 
   useEffect(() => {
     const local = JSON.parse(localStorage.getItem("carrinho") || "{}");
@@ -15,10 +60,37 @@ export const FinalizarCompraPage = () => {
     const { produtos, total } = local;
     setCarrinhoProdutos(produtos);
     setCarrinhoTotal(total);
+
+    api.get("/estados").then((response) => {
+      setEstados(response.data);
+    });
   }, []);
 
+  useEffect(() => {
+    if (!Estado) return;
+
+    api.get(`/cidades/estado/${Estado}`).then((response) => {
+      setCidades(response.data);
+      setCidade(response.data.find((cidade) => cidade.nome === NomeCidade).id);
+    });
+  }, [Estado, NomeCidade]);
+
+  useEffect(() => {
+    if (Cep.length !== 9) return;
+
+    axios.get(`https://viacep.com.br/ws/${Cep}/json/`).then((response) => {
+      if (response.data.erro) return;
+
+      const { logradouro, bairro, localidade, uf } = response.data;
+      setEndereco(logradouro);
+      setBairro(bairro);
+      setEstado(Estados.find((estado) => estado.sigla === uf).id);
+      setNomeCidade(localidade);
+    });
+  }, [Cep, Estados]);
+
   return (
-    <div className="flex flex-col items-center px-20 py-10">
+    <div className="flex flex-col items-center px-4 py-10 sm:px-20">
       <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
         Finalizar Compra
       </h1>
@@ -30,23 +102,24 @@ export const FinalizarCompraPage = () => {
           {CarrinhoProdutos.map((produto, index) => (
             <div
               key={index}
-              className="flex w-full items-center justify-between border-b border-[#d9d9d9] py-4"
+              className="grid w-full grid-cols-[auto,1fr,66px,100px] items-center gap-4 border-b border-[#d9d9d9] p-4"
             >
-              <div className="flex items-center">
+              <div className="flex h-[100px] w-[100px] items-center justify-center rounded border p-[10px]">
                 <img
                   src={produto.imagem}
                   alt={produto.nome}
-                  className="h-[100px] w-[100px] object-cover"
+                  className="h-full w-full max-w-[70px] object-contain"
                 />
-                <div className="ml-[20px]">
-                  <h2 className="text-[18px] font-semibold leading-[140%]">
-                    {produto.nome}
-                  </h2>
-                  <p className="text-[14px] leading-[140%] text-[#9b9b9b]">
-                    Quantidade: {produto.quantidade}
-                  </p>
-                </div>
               </div>
+              <h2 className="text-[18px] font-semibold leading-[140%]">
+                {produto.nome}
+              </h2>
+              <input
+                readOnly
+                value={produto.quantidade}
+                type="number"
+                className="h-[28px] w-[66px] rounded border border-[#8f9eb2] px-[10px]"
+              />
               <p className="text-[18px] font-semibold leading-[140%]">
                 {produto.preco.toLocaleString("pt-br", {
                   style: "currency",
@@ -71,16 +144,20 @@ export const FinalizarCompraPage = () => {
         </button>
       </div>
       {/* Formulário sobre o cliente */}
-      <form className={`w-full flex-col ${Confirmacao ? "flex" : "hidden"}`}>
+      <form
+        className={`w-full flex-col ${Confirmacao ? "flex" : "hidden"}`}
+        onSubmit={finalizarCompra}
+      >
         <h2 className="mt-[20px] w-full pb-[12px] text-center text-[24px] font-semibold leading-[140%]">
           Informações do Cliente
         </h2>
-        <div className="grid grid-cols-3 gap-x-4">
+        <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-3">
           <Input
             Label="Nome"
-            type="text"
             name="nome"
             placeholder="Nome Completo"
+            value={Nome}
+            onChange={(e) => setNome(e.target.value)}
             required
           />
           <Input
@@ -88,6 +165,8 @@ export const FinalizarCompraPage = () => {
             type="email"
             name="email"
             placeholder="E-mail"
+            value={Email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <Input
@@ -95,26 +174,63 @@ export const FinalizarCompraPage = () => {
             type="tel"
             name="telefone"
             placeholder="(00) 00000-0000"
+            value={Telefone}
+            onChange={(e) =>
+              setTelefone(
+                e.target.value
+                  .replace(/\D/g, "")
+                  .replace(/(\d{2})(\d)/, "($1) $2")
+                  .replace(/(\d{5})(\d)/, "$1-$2")
+                  .slice(0, 14),
+              )
+            }
             required
           />
           <Input
             Label="CEP"
-            type="text"
             name="cep"
             placeholder="00000-000"
+            value={Cep}
+            onChange={(e) =>
+              setCep(
+                e.target.value
+                  .replace(/\D/g, "")
+                  .replace(/(\d{5})(\d)/, "$1-$2")
+                  .slice(0, 9),
+              )
+            }
             required
           />
-          <Select Label={"Estado"}>
+          <Select
+            Label={"Estado"}
+            onChange={(e) => setEstado(e.target.value)}
+            value={Estado}
+          >
             <option>Selecione o estado</option>
+            {Estados.map((estado) => (
+              <option key={estado.id} value={estado.id}>
+                {estado.sigla} - {estado.nome}
+              </option>
+            ))}
           </Select>
-          <Select Label={"Cidade"}>
+          <Select
+            Label={"Cidade"}
+            onChange={(e) => setCidade(e.target.value)}
+            value={Cidade}
+          >
             <option>Selecione a cidade</option>
+            {Cidades.map((cidade) => (
+              <option key={cidade.id} value={cidade.id}>
+                {cidade.nome}
+              </option>
+            ))}
           </Select>
           <Input
             Label="Endereço"
-            type="text"
             name="endereco"
             placeholder="Endereço"
+            value={Endereco}
+            onChange={(e) => setEndereco(e.target.value)}
             required
           />
           <Input
@@ -122,17 +238,20 @@ export const FinalizarCompraPage = () => {
             type="number"
             name="numero"
             placeholder="Número"
+            value={Numero}
+            onChange={(e) => setNumero(e.target.value)}
             required
           />
           <Input
             Label="Bairro"
-            type="text"
             name="bairro"
             placeholder="Bairro"
+            value={Bairro}
+            onChange={(e) => setBairro(e.target.value)}
             required
           />
         </div>
-        <div className="mt-8 flex items-center justify-center gap-20">
+        <div className="mt-8 flex items-center justify-center gap-4 sm:gap-20">
           <button
             onClick={() => setConfirmacao(false)}
             type="button"

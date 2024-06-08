@@ -14,6 +14,6 @@ export const Toast = swal.mixin({
   confirmButtonColor: "#2B38D1",
   color: "#0c2d57",
   showConfirmButton: false,
-  timer: 2000,
+  timer: 1000,
   timerProgressBar: true,
 });

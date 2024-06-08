@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 
 export default class cidadesController {
   static async index(_, res) {
-    const cidades = await Cidade.findMany();
+    const cidades = await Cidade.findMany({ orderBy: { nome: "asc" } });
     res.json(cidades);
   }
 
@@ -25,7 +25,19 @@ export default class cidadesController {
       },
     });
     if (!cidades) {
-      return res.statu(404).json({ message: "Cidade não encontrada" });
+      return res.status(404).json({ message: "Cidade não encontrada" });
+    }
+    res.json(cidades);
+  }
+
+  static async showPerEstado(req, res) {
+    const cidades = await Cidade.findMany({
+      where: {
+        id_estados: parseInt(req.params.id_estado),
+      },
+    });
+    if (!cidades) {
+      return res.status(404).json({ message: "Cidade não encontrada" });
     }
     res.json(cidades);
   }

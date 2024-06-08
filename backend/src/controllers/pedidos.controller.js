@@ -1,9 +1,9 @@
-import pedidos from "../models/pedidos.model.js";
+import Pedido from "../models/pedidos.model.js";
 import { validationResult } from "express-validator";
 
 export default class pedidosController {
   static async index(_, res) {
-    const pedidos = await pedidos.findMany();
+    const pedidos = await Pedido.findMany();
     res.json(pedidos);
   }
 
@@ -12,20 +12,20 @@ export default class pedidosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const pedidos = await pedidos.create({
+    const pedidos = await Pedido.create({
       data: req.body,
     });
     res.json(pedidos);
   }
 
   static async show(req, res) {
-    const pedidos = await pedidos.findUnique({
+    const pedidos = await Pedido.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!pedidos) {
-      return res.statu(404).json({ message: "Pedido não encontrado" });
+      return res.status(404).json({ message: "Pedido não encontrado" });
     }
     res.json(pedidos);
   }
@@ -35,7 +35,7 @@ export default class pedidosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const pedidos = await pedidos.findUnique({
+    const pedidos = await Pedido.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -43,7 +43,7 @@ export default class pedidosController {
     if (!pedidos) {
       return res.status(404).json({ message: "Pedido não encontrado" });
     }
-    const updatedpedidos = await pedidos.update({
+    const updatedpedidos = await Pedido.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,7 +57,7 @@ export default class pedidosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const pedidos = await pedidos.findUnique({
+    const pedidos = await Pedido.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -65,7 +65,7 @@ export default class pedidosController {
     if (!pedidos) {
       return res.status(404).json({ message: "Pedido não encontrado" });
     }
-    await pedidos.delete({
+    await Pedido.delete({
       where: {
         id: parseInt(req.params.id),
       },

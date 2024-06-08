@@ -10,6 +10,12 @@ import { UsuarioPage } from "./pages/usuario.jsx";
 import { ProdutosPage } from "./pages/produtosAdmPage.jsx";
 import { AdminRoute } from "./shared/auth.jsx";
 import { FinalizarCompraPage } from "./pages/finalizar-compra.jsx";
+import { AvaliacaoPage } from "./pages/avaliacao.jsx";
+import { FornecedorPage } from "./pages/fornecedor.jsx";
+import { PedidoPage } from "./pages/pedido.jsx";
+import { CupomPage } from "./pages/cupom.jsx";
+import { CategoriaPage } from "./pages/categoria.jsx";
+import { ClientePage } from "./pages/cliente.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -73,6 +79,30 @@ export const routes = createBrowserRouter(
         {
           path: "produtos",
           element: <ProdutosPage />,
+        },
+        {
+          path: "avaliacoes",
+          element: <AvaliacaoPage />,
+        },
+        {
+          path: "fornecedores",
+          element: <FornecedorPage />,
+        },
+        {
+          path: "pedidos",
+          element: <PedidoPage />,
+        },
+        {
+          path: "cupons",
+          element: <CupomPage />,
+        },
+        {
+          path: "categorias",
+          element: <CategoriaPage />,
+        },
+        {
+          path: "clientes",
+          element: <ClientePage />,
         },
       ],
     },

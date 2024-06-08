@@ -1,9 +1,9 @@
-import categorias from "../models/categorias.model.js";
+import Categoria from "../models/categorias.model.js";
 import { validationResult } from "express-validator";
 
 export default class categoriasController {
   static async index(_, res) {
-    const categorias = await categorias.findMany();
+    const categorias = await Categoria.findMany();
     res.json(categorias);
   }
 
@@ -12,20 +12,20 @@ export default class categoriasController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const categorias = await categorias.create({
+    const categorias = await Categoria.create({
       data: req.body,
     });
     res.json(categorias);
   }
 
   static async show(req, res) {
-    const categorias = await categorias.findUnique({
+    const categorias = await Categoria.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!categorias) {
-      return res.statu(404).json({ message: "Categoria não encontrada" });
+      return res.status(404).json({ message: "Categoria não encontrada" });
     }
     res.json(categorias);
   }
@@ -35,7 +35,7 @@ export default class categoriasController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const categorias = await categorias.findUnique({
+    const categorias = await Categoria.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -43,7 +43,7 @@ export default class categoriasController {
     if (!categorias) {
       return res.status(404).json({ message: "Categoria não encontrada" });
     }
-    const updatedcategorias = await categorias.update({
+    const updatedcategorias = await Categoria.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,7 +57,7 @@ export default class categoriasController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const categorias = await categorias.findUnique({
+    const categorias = await Categoria.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -65,7 +65,7 @@ export default class categoriasController {
     if (!categorias) {
       return res.status(404).json({ message: "Categoria não encontrada" });
     }
-    await categorias.delete({
+    await Categoria.delete({
       where: {
         id: parseInt(req.params.id),
       },

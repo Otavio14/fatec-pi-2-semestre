@@ -1,9 +1,9 @@
-import fornecedor from "../models/fornecedor.model.js";
+import Fornecedor from "../models/fornecedores.model.js";
 import { validationResult } from "express-validator";
 
 export default class fornecedorController {
   static async index(_, res) {
-    const fornecedor = await fornecedor.findMany();
+    const fornecedor = await Fornecedor.findMany();
     res.json(fornecedor);
   }
 
@@ -12,20 +12,20 @@ export default class fornecedorController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const fornecedor = await fornecedor.create({
+    const fornecedor = await Fornecedor.create({
       data: req.body,
     });
     res.json(fornecedor);
   }
 
   static async show(req, res) {
-    const fornecedor = await fornecedor.findUnique({
+    const fornecedor = await Fornecedor.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!fornecedor) {
-      return res.statu(404).json({ message: "Fornecedor não encontrado" });
+      return res.status(404).json({ message: "Fornecedor não encontrado" });
     }
     res.json(fornecedor);
   }
@@ -35,7 +35,7 @@ export default class fornecedorController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const fornecedor = await fornecedor.findUnique({
+    const fornecedor = await Fornecedor.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -43,7 +43,7 @@ export default class fornecedorController {
     if (!fornecedor) {
       return res.status(404).json({ message: "Fornecedor não encontrado" });
     }
-    const updatedfornecedor = await fornecedor.update({
+    const updatedfornecedor = await Fornecedor.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,7 +57,7 @@ export default class fornecedorController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const fornecedor = await fornecedor.findUnique({
+    const fornecedor = await Fornecedor.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -65,7 +65,7 @@ export default class fornecedorController {
     if (!fornecedor) {
       return res.status(404).json({ message: "Fornecedor não encontrado" });
     }
-    await fornecedor.delete({
+    await Fornecedor.delete({
       where: {
         id: parseInt(req.params.id),
       },

@@ -4,61 +4,64 @@ import { api } from "../shared/api";
 import { Trash, Pencil } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
 
-export const UsuarioPage = () => {
+export const FornecedorPage = () => {
   const DialogRef = useRef();
   const [ShowModal, setShowModal] = useState(false);
   const [Reload, setReload] = useState(false);
-  const [Usuarios, setUsuarios] = useState([]);
+  const [Fornecedores, setFornecedores] = useState([]);
   const [Id, setId] = useState(0);
   const [Nome, setNome] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Senha, setSenha] = useState("");
-  const [ConfirmacaoSenha, setConfirmacaoSenha] = useState("");
 
   const salvar = (event) => {
     event.preventDefault();
 
-    if (Senha !== ConfirmacaoSenha) return alert("As senhas não coincidem");
-
     const data = {
       nome: Nome,
-      email: Email,
-      senha: Senha,
     };
 
-    api.post("/usuarios", data).then(() => {
-      closeModal();
-      setReload((r) => !r);
-      Toast.fire({
-        title: "Usuário cadastrado com sucesso!",
-        icon: "success",
+    if (Id) {
+      api.put(`/fornecedores/${Id}`, data).then(() => {
+        closeModal();
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Fornecedor alterada com sucesso!",
+          icon: "success",
+        });
       });
-    });
+    } else {
+      api.post("/fornecedores", data).then(() => {
+        closeModal();
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Fornecedor cadastrado com sucesso!",
+          icon: "success",
+        });
+      });
+    }
   };
 
   const openModal = (id) => {
     setId(id ? id : 0);
 
-    api.get(`/usuarios/${id}`).then((response) => {
+    api.get(`/fornecedores/${id}`).then((response) => {
       setShowModal(true);
       setNome(response.data.nome);
-      setEmail(response.data.email);
     });
   };
 
   const deletar = (id) => {
     Swal.fire({
-      title: "Deseja deletar este usuário?",
+      title: "Deseja deletar este fornecedor?",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Sim",
       cancelButtonText: "Não",
     }).then(({ isConfirmed }) => {
       if (isConfirmed)
-        api.delete(`/usuarios/${id}`).then(() => {
+        api.delete(`/fornecedores/${id}`).then(() => {
           setReload((r) => !r);
           Toast.fire({
-            title: "Usuário deletado com sucesso!",
+            title: "Fornecedor deletado com sucesso!",
             icon: "success",
           });
         });
@@ -69,9 +72,6 @@ export const UsuarioPage = () => {
     setShowModal(false);
     setId(0);
     setNome("");
-    setEmail("");
-    setSenha("");
-    setConfirmacaoSenha("");
   };
 
   useEffect(() => {
@@ -81,15 +81,17 @@ export const UsuarioPage = () => {
   }, [ShowModal]);
 
   useEffect(() => {
-    api.get("/usuarios").then((response) => {
-      setUsuarios(response.data);
+    api.get("/fornecedores").then((response) => {
+      setFornecedores(response.data);
     });
   }, [Reload]);
 
   return (
     <div className="flex w-full flex-col p-8">
       <div className="mb-[33px] flex w-full justify-between border-b border-[#d9d9d9] pb-[12px]">
-        <h1 className="text-[38px] font-semibold leading-[140%]">Usuários</h1>
+        <h1 className="text-[38px] font-semibold leading-[140%]">
+          Fornecedores
+        </h1>
         <button
           className="w-fit rounded bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white"
           onClick={() => setShowModal(true)}
@@ -101,25 +103,23 @@ export const UsuarioPage = () => {
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Email</th>
             <th></th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {Usuarios?.map((usuario) => (
-            <tr key={usuario?.id}>
-              <td>{usuario?.nome}</td>
-              <td>{usuario?.email}</td>
+          {Fornecedores?.map((fornecedor) => (
+            <tr key={fornecedor?.id}>
+              <td>{fornecedor?.nome}</td>
               <td>
-                <button onClick={() => openModal(usuario?.id)}>
+                <button onClick={() => openModal(fornecedor?.id)}>
                   <Pencil size={20} />
                 </button>
               </td>
               <td>
                 <button
                   onClick={() => {
-                    deletar(usuario?.id);
+                    deletar(fornecedor?.id);
                   }}
                 >
                   <Trash size={20} />
@@ -141,7 +141,7 @@ export const UsuarioPage = () => {
           className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-12"
         >
           <h1 className="text-[38px] font-semibold leading-[140%]">
-            {Id ? "Editar" : "Cadastrar"} Usuário
+            {Id ? "Editar" : "Cadastrar"} Fornecedor
           </h1>
           <Input
             type="text"
@@ -149,30 +149,6 @@ export const UsuarioPage = () => {
             Label={"Nome"}
             onChange={(e) => setNome(e.target.value)}
             value={Nome}
-            required
-          />
-          <Input
-            type="email"
-            placeholder="Email"
-            Label={"Email"}
-            onChange={(e) => setEmail(e.target.value)}
-            value={Email}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Senha"
-            Label={"Senha"}
-            onChange={(e) => setSenha(e.target.value)}
-            value={Senha}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Confirmação de Senha"
-            Label={"Confirmação de Senha"}
-            onChange={(e) => setConfirmacaoSenha(e.target.value)}
-            value={ConfirmacaoSenha}
             required
           />
           <div className="flex gap-4">

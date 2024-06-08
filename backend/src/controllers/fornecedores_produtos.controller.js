@@ -1,9 +1,9 @@
-import fornecedores_produtos from "../models/fornecedores_produtos.model.js";
+import FornecedorProduto from "../models/fornecedores_produtos.model.js";
 import { validationResult } from "express-validator";
 
 export default class fornecedores_produtosController {
   static async index(_, res) {
-    const fornecedores_produtos = await fornecedores_produtos.findMany();
+    const fornecedores_produtos = await FornecedorProduto.findMany();
     res.json(fornecedores_produtos);
   }
 
@@ -12,20 +12,22 @@ export default class fornecedores_produtosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const fornecedores_produtos = await fornecedores_produtos.create({
+    const fornecedores_produtos = await FornecedorProduto.create({
       data: req.body,
     });
     res.json(fornecedores_produtos);
   }
 
   static async show(req, res) {
-    const fornecedores_produtos = await fornecedores_produtos.findUnique({
+    const fornecedores_produtos = await FornecedorProduto.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!fornecedores_produtos) {
-      return res.statu(404).json({ message: "Forncedor_Produto não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Forncedor_Produto não encontrado" });
     }
     res.json(fornecedores_produtos);
   }
@@ -35,15 +37,17 @@ export default class fornecedores_produtosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const fornecedores_produtos = await fornecedores_produtos.findUnique({
+    const fornecedores_produtos = await FornecedorProduto.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!fornecedores_produtos) {
-      return res.status(404).json({ message: "Forncedor_Produto não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Forncedor_Produto não encontrado" });
     }
-    const updatedfornecedores_produtos = await fornecedores_produtos.update({
+    const updatedfornecedores_produtos = await FornecedorProduto.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,19 +61,23 @@ export default class fornecedores_produtosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const fornecedores_produtos = await fornecedores_produtos.findUnique({
+    const fornecedores_produtos = await FornecedorProduto.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!fornecedores_produtos) {
-      return res.status(404).json({ message: "Forncedor_Produto não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Forncedor_Produto não encontrado" });
     }
-    await fornecedores_produtos.delete({
+    await FornecedorProduto.delete({
       where: {
         id: parseInt(req.params.id),
       },
     });
-    res.status(204).json({ message: "Fornecedor_Produto deletado com sucesso" });
+    res
+      .status(204)
+      .json({ message: "Fornecedor_Produto deletado com sucesso" });
   }
 }

@@ -1,9 +1,9 @@
-import produtos_categorias from "../models/produtos_categorias.model.js";
+import ProdutoCategoria from "../models/produtos_categorias.model.js";
 import { validationResult } from "express-validator";
 
 export default class produtos_categoriasController {
   static async index(_, res) {
-    const produtos_categorias = await Produtos_Categorias.findMany();
+    const produtos_categorias = await ProdutoCategoria.findMany();
     res.json(produtos_categorias);
   }
 
@@ -12,20 +12,22 @@ export default class produtos_categoriasController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const produtos_categorias = await Produtos_Categorias.create({
+    const produtos_categorias = await ProdutoCategoria.create({
       data: req.body,
     });
     res.json(produtos_categorias);
   }
 
   static async show(req, res) {
-    const produtos_categorias = await Produtos_Categorias.findUnique({
+    const produtos_categorias = await ProdutoCategoria.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!produtos_categorias) {
-      return res.statu(404).json({ message: "Produtos_Categoria não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Produtos_Categoria não encontrado" });
     }
     res.json(produtos_categorias);
   }
@@ -35,15 +37,17 @@ export default class produtos_categoriasController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const produtos_categorias = await Produtos_Categorias.findUnique({
+    const produtos_categorias = await ProdutoCategoria.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!produtos_categorias) {
-      return res.status(404).json({ message: "Produtos_Categoria não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Produtos_Categoria não encontrado" });
     }
-    const updatedprodutos_categorias = await Produtos_Categorias.update({
+    const updatedprodutos_categorias = await ProdutoCategoria.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,19 +61,23 @@ export default class produtos_categoriasController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const produtos_categorias = await Produtos_Categorias.findUnique({
+    const produtos_categorias = await ProdutoCategoria.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!produtos_categorias) {
-      return res.status(404).json({ message: "Produtos_Categoria não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Produtos_Categoria não encontrado" });
     }
-    await Produtos_Categorias.delete({
+    await ProdutoCategoria.delete({
       where: {
         id: parseInt(req.params.id),
       },
     });
-    res.status(204).json({ message: "Produtos_Categoria deletado com sucesso" });
+    res
+      .status(204)
+      .json({ message: "Produtos_Categoria deletado com sucesso" });
   }
 }

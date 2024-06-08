@@ -1,9 +1,9 @@
-import produtos_pedidos from "../models/produtos_pedidos.model.js";
+import ProdutoPedido from "../models/produtos_pedidos.model.js";
 import { validationResult } from "express-validator";
 
 export default class produtos_pedidosController {
   static async index(_, res) {
-    const produtos_pedidos = await Produtos_Pedidos.findMany();
+    const produtos_pedidos = await ProdutoPedido.findMany();
     res.json(produtos_pedidos);
   }
 
@@ -12,20 +12,22 @@ export default class produtos_pedidosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const produtos_pedidos = await Produtos_Pedidos.create({
+    const produtos_pedidos = await ProdutoPedido.create({
       data: req.body,
     });
     res.json(produtos_pedidos);
   }
 
   static async show(req, res) {
-    const produtos_pedidos = await Produtos_Pedidos.findUnique({
+    const produtos_pedidos = await ProdutoPedido.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!produtos_pedidos) {
-      return res.statu(404).json({ message: "Produtos_Pedidos não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Produtos_Pedidos não encontrado" });
     }
     res.json(produtos_pedidos);
   }
@@ -35,15 +37,17 @@ export default class produtos_pedidosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const produtos_pedidos = await Produtos_Pedidos.findUnique({
+    const produtos_pedidos = await ProdutoPedido.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!produtos_pedidos) {
-      return res.status(404).json({ message: "Produtos_Pedidos não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Produtos_Pedidos não encontrado" });
     }
-    const updatedprodutos_pedidos = await Produtos_Pedidos.update({
+    const updatedprodutos_pedidos = await ProdutoPedido.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,15 +61,17 @@ export default class produtos_pedidosController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const produtos_pedidos = await Produtos_Pedidos.findUnique({
+    const produtos_pedidos = await ProdutoPedido.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!produtos_pedidos) {
-      return res.status(404).json({ message: "Produtos_Pedidos não encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Produtos_Pedidos não encontrado" });
     }
-    await Produtos_Pedidos.delete({
+    await ProdutoPedido.delete({
       where: {
         id: parseInt(req.params.id),
       },

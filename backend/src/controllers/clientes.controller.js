@@ -1,9 +1,17 @@
-import clientes from "../models/clientes.model.js";
+import Cliente from "../models/clientes.model.js";
 import { validationResult } from "express-validator";
 
 export default class clientesController {
   static async index(_, res) {
-    const clientes = await clientes.findMany();
+    const clientes = await Cliente.findMany({
+      include: {
+        cidade: {
+          include: {
+            estado: true,
+          },
+        },
+      },
+    });
     res.json(clientes);
   }
 
@@ -12,20 +20,20 @@ export default class clientesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const clientes = await clientes.create({
+    const clientes = await Cliente.create({
       data: req.body,
     });
     res.json(clientes);
   }
 
   static async show(req, res) {
-    const clientes = await clientes.findUnique({
+    const clientes = await Cliente.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
     });
     if (!clientes) {
-      return res.statu(404).json({ message: "Cliente não encontrado" });
+      return res.status(404).json({ message: "Cliente não encontrado" });
     }
     res.json(clientes);
   }
@@ -35,7 +43,7 @@ export default class clientesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const clientes = await clientes.findUnique({
+    const clientes = await Cliente.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -43,7 +51,7 @@ export default class clientesController {
     if (!clientes) {
       return res.status(404).json({ message: "Cliente não encontrado" });
     }
-    const updatedclientes = await clientes.update({
+    const updatedclientes = await Cliente.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -57,7 +65,7 @@ export default class clientesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const clientes = await clientes.findUnique({
+    const clientes = await Cliente.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -65,7 +73,7 @@ export default class clientesController {
     if (!clientes) {
       return res.status(404).json({ message: "Cliente não encontrado" });
     }
-    await clientes.delete({
+    await Cliente.delete({
       where: {
         id: parseInt(req.params.id),
       },

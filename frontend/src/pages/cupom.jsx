@@ -4,61 +4,67 @@ import { api } from "../shared/api";
 import { Trash, Pencil } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
 
-export const UsuarioPage = () => {
+export const CupomPage = () => {
   const DialogRef = useRef();
   const [ShowModal, setShowModal] = useState(false);
   const [Reload, setReload] = useState(false);
-  const [Usuarios, setUsuarios] = useState([]);
+  const [Cupons, setCupons] = useState([]);
   const [Id, setId] = useState(0);
   const [Nome, setNome] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Senha, setSenha] = useState("");
-  const [ConfirmacaoSenha, setConfirmacaoSenha] = useState("");
+  const [Porcentagem, setPorcentagem] = useState(0);
 
   const salvar = (event) => {
     event.preventDefault();
 
-    if (Senha !== ConfirmacaoSenha) return alert("As senhas não coincidem");
-
     const data = {
       nome: Nome,
-      email: Email,
-      senha: Senha,
+      porcentagem: +Porcentagem,
     };
 
-    api.post("/usuarios", data).then(() => {
-      closeModal();
-      setReload((r) => !r);
-      Toast.fire({
-        title: "Usuário cadastrado com sucesso!",
-        icon: "success",
+    if (Id) {
+      api.put(`/cupons/${Id}`, data).then(() => {
+        closeModal();
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Cupom alterado com sucesso!",
+          icon: "success",
+        });
       });
-    });
+    } else {
+      api.post("/cupons", data).then(() => {
+        closeModal();
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Cupom cadastrado com sucesso!",
+          icon: "success",
+        });
+      });
+    }
   };
 
   const openModal = (id) => {
     setId(id ? id : 0);
 
-    api.get(`/usuarios/${id}`).then((response) => {
+    api.get(`/cupons/${id}`).then((response) => {
       setShowModal(true);
       setNome(response.data.nome);
-      setEmail(response.data.email);
+      setPorcentagem(response.data.porcentagem);
     });
   };
 
   const deletar = (id) => {
     Swal.fire({
-      title: "Deseja deletar este usuário?",
+      title: "Deseja deletar este cupom?",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Sim",
       cancelButtonText: "Não",
     }).then(({ isConfirmed }) => {
       if (isConfirmed)
-        api.delete(`/usuarios/${id}`).then(() => {
+        api.delete(`/cupons/${id}`).then(() => {
           setReload((r) => !r);
           Toast.fire({
-            title: "Usuário deletado com sucesso!",
+            title: "Cupom deletado com sucesso!",
             icon: "success",
           });
         });
@@ -69,9 +75,7 @@ export const UsuarioPage = () => {
     setShowModal(false);
     setId(0);
     setNome("");
-    setEmail("");
-    setSenha("");
-    setConfirmacaoSenha("");
+    setPorcentagem(0);
   };
 
   useEffect(() => {
@@ -81,15 +85,15 @@ export const UsuarioPage = () => {
   }, [ShowModal]);
 
   useEffect(() => {
-    api.get("/usuarios").then((response) => {
-      setUsuarios(response.data);
+    api.get("/cupons").then((response) => {
+      setCupons(response.data);
     });
   }, [Reload]);
 
   return (
     <div className="flex w-full flex-col p-8">
       <div className="mb-[33px] flex w-full justify-between border-b border-[#d9d9d9] pb-[12px]">
-        <h1 className="text-[38px] font-semibold leading-[140%]">Usuários</h1>
+        <h1 className="text-[38px] font-semibold leading-[140%]">Cupons</h1>
         <button
           className="w-fit rounded bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white"
           onClick={() => setShowModal(true)}
@@ -101,25 +105,25 @@ export const UsuarioPage = () => {
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Email</th>
+            <th>Porcentagem</th>
             <th></th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {Usuarios?.map((usuario) => (
-            <tr key={usuario?.id}>
-              <td>{usuario?.nome}</td>
-              <td>{usuario?.email}</td>
+          {Cupons?.map((cupom) => (
+            <tr key={cupom?.id}>
+              <td>{cupom?.nome}</td>
+              <td>{cupom?.porcentagem}</td>
               <td>
-                <button onClick={() => openModal(usuario?.id)}>
+                <button onClick={() => openModal(cupom?.id)}>
                   <Pencil size={20} />
                 </button>
               </td>
               <td>
                 <button
                   onClick={() => {
-                    deletar(usuario?.id);
+                    deletar(cupom?.id);
                   }}
                 >
                   <Trash size={20} />
@@ -141,10 +145,9 @@ export const UsuarioPage = () => {
           className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-12"
         >
           <h1 className="text-[38px] font-semibold leading-[140%]">
-            {Id ? "Editar" : "Cadastrar"} Usuário
+            {Id ? "Editar" : "Cadastrar"} Cupom
           </h1>
           <Input
-            type="text"
             placeholder="Nome"
             Label={"Nome"}
             onChange={(e) => setNome(e.target.value)}
@@ -152,27 +155,11 @@ export const UsuarioPage = () => {
             required
           />
           <Input
-            type="email"
-            placeholder="Email"
-            Label={"Email"}
-            onChange={(e) => setEmail(e.target.value)}
-            value={Email}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Senha"
-            Label={"Senha"}
-            onChange={(e) => setSenha(e.target.value)}
-            value={Senha}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Confirmação de Senha"
-            Label={"Confirmação de Senha"}
-            onChange={(e) => setConfirmacaoSenha(e.target.value)}
-            value={ConfirmacaoSenha}
+            type="number"
+            placeholder="Porcentagem"
+            Label={"Porcentagem"}
+            onChange={(e) => setPorcentagem(e.target.value)}
+            value={Porcentagem}
             required
           />
           <div className="flex gap-4">
