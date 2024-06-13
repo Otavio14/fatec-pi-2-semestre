@@ -49,6 +49,7 @@ export const LoginPage = () => {
           onChange={(event) => setEmail(event.target.value)}
           required
           type="email"
+          autoComplete="email"
         />
         <Input
           Label={"Senha"}
@@ -57,6 +58,7 @@ export const LoginPage = () => {
           onChange={(event) => setSenha(event.target.value)}
           required
           type="password"
+          autoComplete="password"
         />
         <button
           style={{ transition: "color .3s, background-color .5s" }}

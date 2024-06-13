@@ -4,61 +4,92 @@ import { api } from "../shared/api";
 import { useParams } from "react-router-dom";
 
 export const ProdutoPage = () => {
-  // const [Produto, setProduto] = useState({
-  //   nota: 5,
-  //   nome: "Whey Protein",
-  //   preco: 83.3,
-  //   descricao: `O whey protein é um suplemento fabricado a partir do soro do leite (em inglês, “whey”), um subproduto resultante da fabricação de queijos por coagulação da caseína. Possui alto valor nutricional devido à presença de proteínas com elevado teor de aminoácidos essenciais. Essas  são obtidas por meio de processos industriais de pasteurização, filtração e microfiltração do soro. A quantidade de filtrações e o tamanho dos filtros utilizados estabelecem o tipo e a qualidade do produto obtido -- isolado, concentrado ou hidrolisado. A apresentação final do whey protein é a de um pó parecido com o leite em pó. Saiba mais sobre o que é whey protein, para que serve e benefícios`,
-  // });
-  let Id = useParams()
-  const ProdutoId = Id.id
+  const { id } = useParams();
+  const ProdutoId = Number(id);
 
-  const [Produto, setProduto] = useState([]);
+  const [Produto, setProduto] = useState({});
   const [Quantidade, setQuantidade] = useState(1);
 
+  const adicionarAoCarrinho = () => {
+    const carrinho = JSON.parse(localStorage.getItem("carrinho") || "{}");
+    const newValue = JSON.stringify({
+      ...carrinho,
+      produtos: carrinho.produtos.find((produto) => produto.id === ProdutoId)
+        ? carrinho.produtos.map((produto) =>
+            produto.id === ProdutoId
+              ? { ...produto, quantidade: produto.quantidade + Quantidade }
+              : produto,
+          )
+        : [
+            ...carrinho.produtos,
+            {
+              id: ProdutoId,
+              nome: Produto.nome,
+              preco: Produto.preco,
+              quantidade: Quantidade,
+              imagem: Produto.imagem,
+            },
+          ],
+      total: carrinho.total + Produto.preco,
+      quantidade: carrinho.quantidade + 1,
+    });
+    localStorage.setItem("carrinho", newValue);
+
+    const storageEvent = new StorageEvent("storage", {
+      key: "carrinho",
+      oldValue: carrinho,
+      newValue: newValue,
+      url: window.location.href,
+      storageArea: localStorage,
+    });
+
+    window.dispatchEvent(storageEvent);
+  };
+
   useEffect(() => {
-    api.get(`/produtos/${parseInt(ProdutoId)}`).then((res) => {
-      setProduto(res.data)
-    })
-  }, []);
+    api.get(`/produtos/${Number(ProdutoId)}`).then((response) => {
+      setProduto(response.data);
+    });
+  }, [ProdutoId]);
 
   return (
-    <div className="flex flex-col items-center p-20 bg-[#f8f9ff]">
-      <div className="flex gap-8">
-        <div className="bg-white flex justify-center items-center border border-[#e7eaee] rounded w-full h-[600px] py-[60px] px-[50px] max-w-[600px]">
+    <div className="flex flex-col items-center bg-[#f8f9ff] py-20">
+      <div className="flex w-full flex-col items-center justify-center gap-8 md:flex-row">
+        <div className="flex h-[500px] w-full max-w-[500px] items-center justify-center rounded border border-[#e7eaee] bg-white px-[50px] py-[60px]">
           <img
-            className="object-contain max-w-[450px] max-h-[450px]"
+            className="h-full max-h-[350px] w-full max-w-[350px] object-contain"
             src={Produto.imagem}
           />
         </div>
-        <div className="flex flex-col items-stretch max-w-[480px] mt-[16px] w-[581px]">
+        <div className="mt-[16px] flex w-[581px] max-w-[480px] flex-col items-stretch">
           <h1 className="mb-[12px] text-[30px] font-semibold leading-[40px]">
             {Produto.nome}
           </h1>
-          <div className="flex items-center mb-1 gap-1">
+          <div className="mb-1 flex items-center gap-1">
             {Array(Produto.nota || 0)
               ?.fill(null)
               ?.map((_, index) => (
-                <img key={index} src={Star} className="w-[18px] h-[18px]" />
+                <img key={index} src={Star} className="h-[18px] w-[18px]" />
               ))}
           </div>
-          <p className="text-[30px] font-semibold leading-[40px] text-[#dd3842] border-b border-b-[#8f9eb2] mt-[20px] mb-[22px] pb-[16px] w-full">
+          <p className="mb-[22px] mt-[20px] w-full border-b border-b-[#8f9eb2] pb-[16px] text-[30px] font-semibold leading-[40px] text-[#dd3842]">
             R$ {String(Produto.preco?.toFixed(2))?.replace(".", ",")}
           </p>
-          <p className="text-[#5c728e] leading-[28px] text-justify">
+          <p className="text-justify leading-[28px] text-[#5c728e]">
             {Produto.descricao}
           </p>
-          <div className="flex gap-[10px] mt-[23px] mb-[28px]">
+          <div className="mb-[28px] mt-[23px] flex gap-[10px]">
             <input
               type="number"
               value={Quantidade}
-              onChange={(e) => setQuantidade(e.target.value)}
-              className="border border-[#5c728e] rounded w-full h-[50px] max-w-[120px] pl-[50px] text-[18px] font-medium leading-[28px] bg-transparent"
+              onChange={(e) => setQuantidade(Number(e.target.value))}
+              className="h-[50px] w-full max-w-[120px] rounded border border-[#5c728e] bg-transparent pl-[50px] text-[18px] font-medium leading-[28px]"
             />
 
             <button
+              onClick={adicionarAoCarrinho}
               style={{ transition: "color .2s, background-color .4s" }}
-              className="border border-[#0c2d57] bg-white rounded text-[#0c2d57] w-full py-[14px] px-[15px] hover:border-[#dd3842] hover:bg-[#dd3842] hover:text-white"
+              className="w-full rounded border border-[#0c2d57] bg-white px-[15px] py-[14px] text-[#0c2d57] hover:border-[#dd3842] hover:bg-[#dd3842] hover:text-white"
             >
               Adicionar ao Carrinho
             </button>
