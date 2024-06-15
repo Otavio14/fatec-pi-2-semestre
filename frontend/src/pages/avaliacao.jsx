@@ -122,6 +122,7 @@ export const AvaliacaoPage = () => {
             Textarea
           />
           <button
+            type="button"
             className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
             onClick={closeModal}
           >

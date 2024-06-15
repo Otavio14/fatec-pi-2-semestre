@@ -3,7 +3,15 @@ import { validationResult } from "express-validator";
 
 export default class fornecedorController {
   static async index(_, res) {
-    const fornecedor = await Fornecedor.findMany();
+    const fornecedor = await Fornecedor.findMany({
+      include: {
+        cidade: {
+          include: {
+            estado: true,
+          },
+        },
+      },
+    });
     res.json(fornecedor);
   }
 

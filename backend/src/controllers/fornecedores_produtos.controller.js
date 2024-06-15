@@ -27,7 +27,7 @@ export default class fornecedores_produtosController {
     if (!fornecedores_produtos) {
       return res
         .status(404)
-        .json({ message: "Forncedor_Produto não encontrado" });
+        .json({ message: "Fornecedor Produto não encontrado" });
     }
     res.json(fornecedores_produtos);
   }
@@ -79,5 +79,22 @@ export default class fornecedores_produtosController {
     res
       .status(204)
       .json({ message: "Fornecedor_Produto deletado com sucesso" });
+  }
+
+  static async showProdutosPorFornecedor(req, res) {
+    const fornecedores_produtos = await FornecedorProduto.findMany({
+      where: {
+        id_fornecedores: parseInt(req.params.id),
+      },
+      include: {
+        produto: true,
+      },
+    });
+    if (!fornecedores_produtos) {
+      return res
+        .status(404)
+        .json({ message: "Fornecedor Produto não encontrado" });
+    }
+    res.json(fornecedores_produtos);
   }
 }

@@ -25,5 +25,9 @@ router.delete(
   deleteProdutosCategoriasValidator,
   Produtos_CategoriasController.delete
 );
+router.get(
+  "/categorias-por-produto/:id",
+  Produtos_CategoriasController.showCategoriasPorProduto
+);
 
 export default router;

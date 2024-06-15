@@ -1,16 +1,16 @@
-import { body, param } from 'express-validator';
+import { body, param } from "express-validator";
 
 export const createProdutosCategoriasValidator = [
-  body('produto').isInt().withMessage("Produto inválido"),
-  body('categorias').isInt().withMessage("Categoria inválida")
+  body("id_produtos").isInt().withMessage("Produto inválido"),
+  body("id_categorias").isInt().withMessage("Categoria inválida"),
 ];
 
 export const updateProdutosCategoriasValidator = [
-  param('id').isInt().withMessage("ID inválido"),
-  body('produto').isInt().withMessage("Produto inválido"),
-  body('categorias').isInt().withMessage("Categoria inválida")
+  param("id").isInt().withMessage("ID inválido"),
+  body("id_produtos").isInt().withMessage("Produto inválido"),
+  body("id_categorias").isInt().withMessage("Categoria inválida"),
 ];
 
 export const deleteProdutosCategoriasValidator = [
-  param('id').isInt().withMessage("ID inválido")
+  param("id").isInt().withMessage("ID inválido"),
 ];

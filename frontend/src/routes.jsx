@@ -16,6 +16,8 @@ import { PedidoPage } from "./pages/pedido.jsx";
 import { CupomPage } from "./pages/cupom.jsx";
 import { CategoriaPage } from "./pages/categoria.jsx";
 import { ClientePage } from "./pages/cliente.jsx";
+import { FornecedorProdutoPage } from "./pages/fornecedor-produto.jsx";
+import { ProdutoCategoriaPage } from "./pages/produto-categoria.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -103,6 +105,14 @@ export const routes = createBrowserRouter(
         {
           path: "clientes",
           element: <ClientePage />,
+        },
+        {
+          path: "fornecedores-produtos",
+          element: <FornecedorProdutoPage />,
+        },
+        {
+          path: "produtos-categorias",
+          element: <ProdutoCategoriaPage />,
         },
       ],
     },

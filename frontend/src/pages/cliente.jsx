@@ -247,7 +247,7 @@ export const ClientePage = () => {
                     .replace(/\D/g, "")
                     .replace(/(\d{2})(\d)/, "($1) $2")
                     .replace(/(\d{5})(\d)/, "$1-$2")
-                    .slice(0, 14),
+                    .slice(0, 15),
                 )
               }
               required
@@ -322,9 +322,10 @@ export const ClientePage = () => {
               className="w-fit rounded border bg-[#2B38D1] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
               type="submit"
             >
-              Cadastrar
+              Salvar
             </button>
             <button
+              type="button"
               className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
               onClick={closeModal}
             >

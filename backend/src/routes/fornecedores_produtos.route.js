@@ -25,5 +25,9 @@ router.delete(
   deleteFornecedoresProdutosValidator,
   Fornecedores_ProdutosController.delete
 );
+router.get(
+  "/produtos_por_fornecedor/:id",
+  Fornecedores_ProdutosController.showProdutosPorFornecedor
+);
 
 export default router;

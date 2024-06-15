@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../shared/api";
 import { Input } from "../components/input.jsx";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { Swal } from "../shared/swal";
 export const LoginPage = () => {
   const [Email, setEmail] = useState("");
   const [Senha, setSenha] = useState("");
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
 
   const login = (event) => {
     event.preventDefault();
@@ -16,7 +16,7 @@ export const LoginPage = () => {
       .post("/usuarios/login", { email: Email, senha: Senha })
       .then((response) => {
         localStorage.setItem("token", response.data.token);
-        navigate("/admin");
+        Navigate("/admin");
       })
       .catch(() => {
         Swal.fire({
@@ -26,6 +26,11 @@ export const LoginPage = () => {
         });
       });
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) Navigate("/admin");
+  }, [Navigate]);
 
   return (
     <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3]">

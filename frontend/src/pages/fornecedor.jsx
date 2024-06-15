@@ -3,6 +3,8 @@ import { Input } from "../components/input";
 import { api } from "../shared/api";
 import { Trash, Pencil } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
+import { Select } from "../components/select";
+import axios from "axios";
 
 export const FornecedorPage = () => {
   const DialogRef = useRef();
@@ -11,12 +13,28 @@ export const FornecedorPage = () => {
   const [Fornecedores, setFornecedores] = useState([]);
   const [Id, setId] = useState(0);
   const [Nome, setNome] = useState("");
+  const [Cep, setCep] = useState("");
+  const [Endereco, setEndereco] = useState("");
+  const [Complemento, setComplemento] = useState("");
+  const [Telefone, setTelefone] = useState("");
+  const [Estado, setEstado] = useState("");
+  const [Cidade, setCidade] = useState("");
+  const [Status, setStatus] = useState("");
+  const [Estados, setEstados] = useState([]);
+  const [Cidades, setCidades] = useState([]);
+  const [NomeCidade, setNomeCidade] = useState("");
 
   const salvar = (event) => {
     event.preventDefault();
 
     const data = {
       nome: Nome,
+      cep: Cep,
+      endereco: Endereco,
+      complemento: Complemento,
+      telefone: Telefone,
+      id_cidades: Cidade,
+      status: Status,
     };
 
     if (Id) {
@@ -46,8 +64,43 @@ export const FornecedorPage = () => {
     api.get(`/fornecedores/${id}`).then((response) => {
       setShowModal(true);
       setNome(response.data.nome);
+      setEndereco(response.data.endereco);
+      setCep(response.data.cep);
+      setComplemento(response.data.complemento);
+      setTelefone(response.data.telefone);
+      setEstado(response.data.id_estados);
+      setEstado(response.data.id_estados);
+      setStatus(response.data.status);
     });
   };
+
+  useEffect(() => {
+    api.get("/estados").then((response) => {
+      setEstados(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!Estado) return;
+
+    api.get(`/cidades/estado/${Estado}`).then((response) => {
+      setCidades(response.data);
+      setCidade(response.data.find((cidade) => cidade.nome === NomeCidade).id);
+    });
+  }, [Estado, NomeCidade]);
+
+  useEffect(() => {
+    if (Cep.length !== 9) return;
+
+    axios.get(`https://viacep.com.br/ws/${Cep}/json/`).then((response) => {
+      if (response.data.erro) return;
+
+      const { logradouro, localidade, uf } = response.data;
+      setEndereco(logradouro);
+      setEstado(Estados.find((estado) => estado.sigla === uf).id);
+      setNomeCidade(localidade);
+    });
+  }, [Cep, Estados]);
 
   const deletar = (id) => {
     Swal.fire({
@@ -72,6 +125,14 @@ export const FornecedorPage = () => {
     setShowModal(false);
     setId(0);
     setNome("");
+    setCep("");
+    setEndereco("");
+    setComplemento("");
+    setTelefone("");
+    setEstado("");
+    setCidade("");
+    setStatus("");
+    setCidades([]);
   };
 
   useEffect(() => {
@@ -103,6 +164,9 @@ export const FornecedorPage = () => {
         <thead>
           <tr>
             <th>Nome</th>
+            <th>Cidade</th>
+            <th>Estado</th>
+            <th>Telefone</th>
             <th></th>
             <th></th>
           </tr>
@@ -111,6 +175,9 @@ export const FornecedorPage = () => {
           {Fornecedores?.map((fornecedor) => (
             <tr key={fornecedor?.id}>
               <td>{fornecedor?.nome}</td>
+              <td>{fornecedor?.cidade?.nome}</td>
+              <td>{fornecedor?.cidade?.estado?.sigla}</td>
+              <td>{fornecedor?.telefone}</td>
               <td>
                 <button onClick={() => openModal(fornecedor?.id)}>
                   <Pencil size={20} />
@@ -144,11 +211,89 @@ export const FornecedorPage = () => {
             {Id ? "Editar" : "Cadastrar"} Fornecedor
           </h1>
           <Input
-            type="text"
             placeholder="Nome"
             Label={"Nome"}
             onChange={(e) => setNome(e.target.value)}
             value={Nome}
+            required
+          />
+          <Select
+            Label={"Status"}
+            onChange={(e) => setStatus(e.target.value)}
+            value={Status}
+          >
+            <option>Selecione o status</option>
+            <option>Ativa</option>
+            <option>Inativa</option>
+          </Select>
+          <Input
+            Label="CEP"
+            name="cep"
+            placeholder="00000-000"
+            value={Cep}
+            onChange={(e) =>
+              setCep(
+                e.target.value
+                  .replace(/\D/g, "")
+                  .replace(/(\d{5})(\d)/, "$1-$2")
+                  .slice(0, 9),
+              )
+            }
+            required
+          />
+          <Select
+            Label={"Estado"}
+            onChange={(e) => setEstado(e.target.value)}
+            value={Estado}
+          >
+            <option>Selecione o estado</option>
+            {Estados.map((estado) => (
+              <option key={estado.id} value={estado.id}>
+                {estado.sigla} - {estado.nome}
+              </option>
+            ))}
+          </Select>
+          <Select
+            Label={"Cidade"}
+            onChange={(e) => setCidade(e.target.value)}
+            value={Cidade}
+          >
+            <option>Selecione a cidade</option>
+            {Cidades.map((cidade) => (
+              <option key={cidade.id} value={cidade.id}>
+                {cidade.nome}
+              </option>
+            ))}
+          </Select>
+          <Input
+            placeholder="Endereço"
+            Label={"Endereço"}
+            onChange={(e) => setEndereco(e.target.value)}
+            value={Endereco}
+            required
+          />
+          <Input
+            placeholder="Complemento"
+            Label={"Complemento"}
+            onChange={(e) => setComplemento(e.target.value)}
+            value={Complemento}
+            required
+          />
+          <Input
+            Label="Telefone"
+            type="tel"
+            name="telefone"
+            placeholder="(00) 00000-0000"
+            value={Telefone}
+            onChange={(e) =>
+              setTelefone(
+                e.target.value
+                  .replace(/\D/g, "")
+                  .replace(/(\d{2})(\d)/, "($1) $2")
+                  .replace(/(\d{5})(\d)/, "$1-$2")
+                  .slice(0, 15),
+              )
+            }
             required
           />
           <div className="flex gap-4">
@@ -156,9 +301,10 @@ export const FornecedorPage = () => {
               className="w-fit rounded border bg-[#2B38D1] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
               type="submit"
             >
-              Cadastrar
+              Salvar
             </button>
             <button
+              type="button"
               className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
               onClick={closeModal}
             >

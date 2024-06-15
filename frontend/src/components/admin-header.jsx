@@ -31,7 +31,11 @@ export const AdminHeader = () => {
           <NavLink to="/admin/cupons">Cupons</NavLink>
           <NavLink to="/admin/pedidos">Pedidos</NavLink>
           <NavLink to="/admin/fornecedores">Fornecedores</NavLink>
+          <NavLink to="/admin/fornecedores-produtos">
+            Fornecedores Produtos
+          </NavLink>
           <NavLink to="/admin/produtos">Produtos</NavLink>
+          <NavLink to="/admin/produtos-categorias">Produtos Categorias</NavLink>
           <NavLink to="/admin/usuarios">Usuários</NavLink>
         </div>
         <button
@@ -76,7 +80,11 @@ export const AdminHeader = () => {
           <NavLink to="/admin/cupons">Cupons</NavLink>
           <NavLink to="/admin/pedidos">Pedidos</NavLink>
           <NavLink to="/admin/fornecedores">Fornecedores</NavLink>
+          <NavLink to="/admin/fornecedores-produtos">
+            Fornecedores Produtos
+          </NavLink>
           <NavLink to="/admin/produtos">Produtos</NavLink>
+          <NavLink to="/admin/produtos-categorias">Produtos Categorias</NavLink>
           <NavLink to="/admin/usuarios">Usuários</NavLink>
         </div>
       </div>

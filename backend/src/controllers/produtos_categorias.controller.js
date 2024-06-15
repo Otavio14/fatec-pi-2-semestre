@@ -78,6 +78,23 @@ export default class produtos_categoriasController {
     });
     res
       .status(204)
-      .json({ message: "Produtos_Categoria deletado com sucesso" });
+      .json({ message: "Produtos Categoria deletado com sucesso" });
+  }
+
+  static async showCategoriasPorProduto(req, res) {
+    const produtos_categorias = await ProdutoCategoria.findMany({
+      where: {
+        id_produtos: parseInt(req.params.id),
+      },
+      include: {
+        categoria: true,
+      },
+    });
+    if (!produtos_categorias) {
+      return res
+        .status(404)
+        .json({ message: "Produtos Categoria não encontrado" });
+    }
+    res.json(produtos_categorias);
   }
 }

@@ -2,4 +2,4 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default prisma.fornecedoresproduto;
+export default prisma.fornecedoresProduto;
