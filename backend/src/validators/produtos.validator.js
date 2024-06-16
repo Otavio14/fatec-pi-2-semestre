@@ -1,6 +1,18 @@
 import { body, param } from "express-validator";
 
 export const createProdutoValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateProduto"
+          }
+        }
+      }
+    }
+  */
   body("nome").isString().withMessage("Nome inválido"),
   body("preco").isNumeric().withMessage("Preço inválido"),
   body('estoque').isInt().withMessage("Número em estoque inválido"),
@@ -10,6 +22,18 @@ export const createProdutoValidator = [
 ];
 
 export const updateProdutoValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateProduto"
+          }
+        }
+      }
+    }
+  */
   param("id").isInt().withMessage("ID inválido"),
   body("nome").isString().withMessage("Nome inválido"),
   body("preco").isNumeric().withMessage("Preço inválido"),

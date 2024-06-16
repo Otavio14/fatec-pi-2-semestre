@@ -1,6 +1,18 @@
 import { body, param } from "express-validator";
 
 export const createClientesValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateCliente"
+          }
+        }
+      }
+    }
+  */
   body("id_cidades").isInt().withMessage("Cidade inválida"),
   body("cep").isString().withMessage("CEP inválido"),
   body("email").isString().withMessage("E-mail inválido"),
@@ -12,6 +24,18 @@ export const createClientesValidator = [
 ];
 
 export const updateClientesValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateCliente"
+          }
+        }
+      }
+    }
+  */
   param("id").isInt().withMessage("ID inválido"),
   body("id_cidades").isInt().withMessage("Cidade inválido"),
   body("cep").isString().withMessage("CEP inválido"),
