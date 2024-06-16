@@ -14,7 +14,7 @@ export const createCidadesValidator = [
     }
   */
   body('nome').isString().withMessage("Nome inválido"),
-  body('estado').isInt().withMessage("Estado inválido")
+  body('id_estados').isInt().withMessage("Estado inválido")
 ];
 
 export const updateCidadesValidator = [
@@ -32,7 +32,7 @@ export const updateCidadesValidator = [
   */
   param("id").isInt().withMessage("ID inválido"),
   body('nome').isString().withMessage("Nome inválido"),
-  body('estado').isInt().withMessage("Estado inválido")
+  body('id_estados').isInt().withMessage("Estado inválido")
 ];
 
 export const deleteCidadesValidator = [

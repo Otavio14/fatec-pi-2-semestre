@@ -13,11 +13,11 @@ export const createAvaliacoesValidator = [
       }
     }
   */
-  body("produto").isInt().withMessage("Produto inválido"),
-  body("cliente").isInt().withMessage("Cliente inválido"),
+  body("id_produtos").isInt().withMessage("Produto inválido"),
+  body("id_clientes").isInt().withMessage("Cliente inválido"),
   body("nota").isInt().withMessage("Nota inválida"),
   body("comentario").isString().withMessage("Comentário inválido"),
-  body("dtAvaliacao").isString().withMessage("Data inválida"),
+  body("dt_avaliacao").isString().withMessage("Data inválida"),
 ];
 
 export const updateAvaliacoesValidator = [
@@ -34,11 +34,11 @@ export const updateAvaliacoesValidator = [
     }
   */
   param("id").isInt().withMessage("ID inválido"),
-  body("produto").isInt().withMessage("Produto inválido"),
-  body("cliente").isInt().withMessage("Cliente inválido"),
+  body("id_produtos").isInt().withMessage("Produto inválido"),
+  body("id_clientes").isInt().withMessage("Cliente inválido"),
   body("nota").isInt().withMessage("Nota inválida"),
   body("comentario").isString().withMessage("Comentário inválido"),
-  body("dtAvaliacao").isString().withMessage("Data inválida"),
+  body("dt_avaliacao").isString().withMessage("Data inválida"),
 ];
 
 export const deleteAvaliacoesValidator = [
