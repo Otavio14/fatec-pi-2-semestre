@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
+    "swagger": "node swagger.js",
     "dev": "nodemon server.js"
   },
   "keywords": [],
@@ -17,11 +18,13 @@
     "express": "^4.19.2",
     "express-validator": "^7.0.1",
     "jose": "^5.4.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
     "nodemon": "^3.1.0",
-    "prisma": "^5.14.0"
+    "prisma": "^5.14.0",
+    "swagger-autogen": "^2.23.7"
   }
 }

@@ -1,6 +1,18 @@
 import { body, param } from 'express-validator';
 
 export const createFornecedoresValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateFornecedor"
+          }
+        }
+      }
+    }
+  */
   body('nome').isString().withMessage("Nome inválido"),
   body('endereco').isString().withMessage("Endereco inválido"),
   body('cep').isString().withMessage("CEP inválido"),
@@ -11,6 +23,18 @@ export const createFornecedoresValidator = [
 ];
 
 export const updateFornecedoresValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateFornecedor"
+          }
+        }
+      }
+    }
+  */
   param('id').isInt().withMessage("ID inválido"),
   body('nome').isString().withMessage("Nome inválido"),
   body('endereco').isString().withMessage("Endereco inválido"),

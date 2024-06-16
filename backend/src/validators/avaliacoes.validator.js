@@ -1,6 +1,18 @@
 import { body, param } from "express-validator";
 
 export const createAvaliacoesValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateAvaliacao"
+          }
+        }
+      }
+    }
+  */
   body("produto").isInt().withMessage("Produto inválido"),
   body("cliente").isInt().withMessage("Cliente inválido"),
   body("nota").isInt().withMessage("Nota inválida"),
@@ -9,6 +21,18 @@ export const createAvaliacoesValidator = [
 ];
 
 export const updateAvaliacoesValidator = [
+    /* 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/AddOrUpdateAvaliacao"
+          }
+        }
+      }
+    }
+  */
   param("id").isInt().withMessage("ID inválido"),
   body("produto").isInt().withMessage("Produto inválido"),
   body("cliente").isInt().withMessage("Cliente inválido"),
