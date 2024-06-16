@@ -15,7 +15,7 @@ export const createProdutosPedidosValidator = [
   */
   body("id_pedidos").isInt().withMessage("Pedido inválido"),
   body("id_produtos").isInt().withMessage("Produto inválido"),
-  body("quantidade").isInt().withMessage("Quantidade inválida"), 
+  body("quantidade").isInt().withMessage("Quantidade inválida"),
   body("preco").isNumeric().withMessage("Preço inválido"),
 ];
 
