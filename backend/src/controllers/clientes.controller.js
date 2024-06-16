@@ -1,4 +1,5 @@
 import Cliente from "../models/clientes.model.js";
+import Pedido from "../models/pedidos.model.js";
 import { validationResult } from "express-validator";
 
 export default class clientesController {
@@ -65,6 +66,7 @@ export default class clientesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
     const clientes = await Cliente.findUnique({
       where: {
         id: parseInt(req.params.id),
@@ -73,6 +75,18 @@ export default class clientesController {
     if (!clientes) {
       return res.status(404).json({ message: "Cliente não encontrado" });
     }
+
+    const pedido = await Pedido.findFirst({
+      where: {
+        id_clientes: parseInt(req.params.id),
+      },
+    });
+    if (pedido) {
+      return res
+        .status(400)
+        .json({ message: "Esse cliente possui um pedido em aberto!" });
+    }
+
     await Cliente.delete({
       where: {
         id: parseInt(req.params.id),

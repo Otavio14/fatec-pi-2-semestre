@@ -3,9 +3,11 @@ import { Input } from "../components/input";
 import { api } from "../shared/api";
 import { Trash, Pencil } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
+import { decodeJwt } from "jose";
 
 export const UsuarioPage = () => {
   const DialogRef = useRef();
+  const CurrentUserId = decodeJwt(localStorage.getItem("token") || "")?.id;
   const [ShowModal, setShowModal] = useState(false);
   const [Reload, setReload] = useState(false);
   const [Usuarios, setUsuarios] = useState([]);
@@ -18,7 +20,8 @@ export const UsuarioPage = () => {
   const salvar = (event) => {
     event.preventDefault();
 
-    if (Senha !== ConfirmacaoSenha) return alert("As senhas não coincidem");
+    if (Senha !== ConfirmacaoSenha)
+      return Swal({ title: "As senhas não coincidem", icon: "info" });
 
     const data = {
       nome: Nome,
@@ -26,14 +29,25 @@ export const UsuarioPage = () => {
       senha: Senha,
     };
 
-    api.post("/usuarios", data).then(() => {
-      closeModal();
-      setReload((r) => !r);
-      Toast.fire({
-        title: "Usuário cadastrado com sucesso!",
-        icon: "success",
+    if (Id) {
+      api.put(`/usuarios/${Id}`, data).then(() => {
+        closeModal();
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Usuário alterado com sucesso!",
+          icon: "success",
+        });
       });
-    });
+    } else {
+      api.post("/usuarios", data).then(() => {
+        closeModal();
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Usuário cadastrado com sucesso!",
+          icon: "success",
+        });
+      });
+    }
   };
 
   const openModal = (id) => {
@@ -112,18 +126,22 @@ export const UsuarioPage = () => {
               <td>{usuario?.nome}</td>
               <td>{usuario?.email}</td>
               <td>
-                <button onClick={() => openModal(usuario?.id)}>
-                  <Pencil size={20} />
-                </button>
+                {CurrentUserId === usuario?.id ? null : (
+                  <button onClick={() => openModal(usuario?.id)}>
+                    <Pencil size={20} />
+                  </button>
+                )}
               </td>
               <td>
-                <button
-                  onClick={() => {
-                    deletar(usuario?.id);
-                  }}
-                >
-                  <Trash size={20} />
-                </button>
+                {CurrentUserId === usuario?.id ? null : (
+                  <button
+                    onClick={() => {
+                      deletar(usuario?.id);
+                    }}
+                  >
+                    <Trash size={20} />
+                  </button>
+                )}
               </td>
             </tr>
           ))}

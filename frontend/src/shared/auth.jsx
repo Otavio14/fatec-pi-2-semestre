@@ -13,6 +13,7 @@ const isAuthenticated = () => {
 
 export const AdminRoute = ({ children }) => {
   if (!isAuthenticated()) {
+    localStorage.removeItem("token");
     return <Navigate to="/login" />;
   }
   return children;

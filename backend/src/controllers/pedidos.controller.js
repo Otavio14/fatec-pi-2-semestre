@@ -1,9 +1,10 @@
 import Pedido from "../models/pedidos.model.js";
+import ProdutoPedido from "../models/produtos_pedidos.model.js";
 import { validationResult } from "express-validator";
 
 export default class pedidosController {
   static async index(_, res) {
-    const pedidos = await Pedido.findMany();
+    const pedidos = await Pedido.findMany({ include: { cliente: true } });
     res.json(pedidos);
   }
 
@@ -23,6 +24,7 @@ export default class pedidosController {
       where: {
         id: parseInt(req.params.id),
       },
+      include: { ProdutoPedido: { include: { produto: true } } },
     });
     if (!pedidos) {
       return res.status(404).json({ message: "Pedido não encontrado" });
@@ -65,6 +67,11 @@ export default class pedidosController {
     if (!pedidos) {
       return res.status(404).json({ message: "Pedido não encontrado" });
     }
+    await ProdutoPedido.deleteMany({
+      where: {
+        id_pedidos: parseInt(req.params.id),
+      },
+    });
     await Pedido.delete({
       where: {
         id: parseInt(req.params.id),

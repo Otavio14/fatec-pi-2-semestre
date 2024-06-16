@@ -4,6 +4,7 @@ import {
   createProdutosPedidosValidator,
   updateProdutosPedidosValidator,
   deleteProdutosPedidosValidator,
+  createMultipleProdutosPedidosValidator,
 } from "../validators/produtos_pedidos.validator.js";
 
 const router = Router();
@@ -14,6 +15,11 @@ router.post(
   "/",
   createProdutosPedidosValidator,
   Produtos_PedidosController.create
+);
+router.post(
+  "/multiple",
+  createMultipleProdutosPedidosValidator,
+  Produtos_PedidosController.createMultiple
 );
 router.put(
   "/:id",

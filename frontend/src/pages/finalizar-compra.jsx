@@ -24,31 +24,51 @@ export const FinalizarCompraPage = () => {
   const finalizarCompra = (e) => {
     e.preventDefault();
 
-    const produtos = CarrinhoProdutos.map((produto) => ({
-      id: produto.id,
-      quantidade: produto.quantidade,
-    }));
-
     const cliente = {
       nome: Nome,
       email: Email,
       telefone: Telefone,
       cep: Cep,
-      numero: Numero,
-      estado: Estado,
-      cidade: Cidade,
+      numero: Number(Numero),
+      id_cidades: Number(Cidade),
       endereco: Endereco,
       bairro: Bairro,
     };
 
     api.post("/clientes", cliente).then((response) => {
-      if (response.status === 201) {
-        localStorage.removeItem("carrinho");
-        setCarrinhoProdutos([]);
-        setCarrinhoTotal(0);
-        setConfirmacao(false);
-        alert("Compra realizada com sucesso!");
-      }
+      const pedido = {
+        id_clientes: Number(response.data.id),
+        status: "",
+        endereco: Endereco,
+        dt_pedido: new Date().toISOString(),
+        total: Number(CarrinhoTotal),
+      };
+      api.post("/pedidos", pedido).then((res) => {
+        const pedidos_produtos = CarrinhoProdutos.map((produto) => ({
+          id_pedidos: res.data.id,
+          id_produtos: produto.id,
+          quantidade: produto.quantidade,
+          preco: produto.preco,
+        }));
+        api.post("/produtos-pedidos/multiple", pedidos_produtos).then(() => {
+          setCarrinhoProdutos([]);
+          setCarrinhoTotal(0);
+          setConfirmacao(false);
+          const storageEvent = new StorageEvent("storage", {
+            key: "carrinho",
+            oldValue: localStorage.getItem("carrinho"),
+            newValue: { produtos: [], total: 0, quantidade: 0 },
+            url: window.location.href,
+            storageArea: localStorage,
+          });
+          localStorage.setItem(
+            "carrinho",
+            JSON.stringify({ produtos: [], total: 0, quantidade: 0 }),
+          );
+
+          window.dispatchEvent(storageEvent);
+        });
+      });
     });
   };
 

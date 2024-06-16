@@ -87,13 +87,22 @@ export const ClientePage = () => {
       cancelButtonText: "Não",
     }).then(({ isConfirmed }) => {
       if (isConfirmed)
-        api.delete(`/clientes/${id}`).then(() => {
-          setReload((r) => !r);
-          Toast.fire({
-            title: "Cliente deletado com sucesso!",
-            icon: "success",
+        api
+          .delete(`/clientes/${id}`)
+          .then(() => {
+            setReload((r) => !r);
+            Toast.fire({
+              title: "Cliente deletado com sucesso!",
+              icon: "success",
+            });
+          })
+          .catch((e) => {
+            Swal.fire({
+              title: "Não foi possível deletar o cliente!",
+              text: e.response.data.message,
+              icon: "error",
+            });
           });
-        });
     });
   };
 
