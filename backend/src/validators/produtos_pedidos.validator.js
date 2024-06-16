@@ -16,7 +16,7 @@ export const createProdutosPedidosValidator = [
   body("id_pedidos").isInt().withMessage("Pedido inválido"),
   body("id_produtos").isInt().withMessage("Produto inválido"),
   body("quantidade").isInt().withMessage("Quantidade inválida"), 
-  body("precos").isNumeric().withMessage("Preço inválido"),
+  body("preco").isNumeric().withMessage("Preço inválido"),
 ];
 
 export const createMultipleProdutosPedidosValidator = [
@@ -52,9 +52,9 @@ export const updateProdutosPedidosValidator = [
   body("id_pedidos").isInt().withMessage("Pedido inválido"),
   body("id_produtos").isInt().withMessage("Produto inválido"),
   body("quantidade").isInt().withMessage("Quantidade inválida"), 
-  body("precos").isNumeric().withMessage("Preço inválido"),
+  body("preco").isNumeric().withMessage("Preço inválido"),
 ];
 
 export const deleteProdutosPedidosValidator = [
-  param('id').isInt().withMessage("ID inválido"),
+  param("id").isInt().withMessage("ID inválido"),
 ];
