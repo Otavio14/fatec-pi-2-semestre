@@ -1,6 +1,7 @@
 import { List, SignOut } from "@phosphor-icons/react";
 import { useState } from "react";
 import { NavLink, useNavigate, Outlet } from "react-router-dom";
+import Icone from "../assets/icone-2.png";
 
 export const AdminHeader = () => {
   const Navigate = useNavigate();
@@ -14,16 +15,11 @@ export const AdminHeader = () => {
   return (
     <div className="flex flex-col overflow-hidden md:grid md:grid-cols-[200px,1fr]">
       {/* Desktop */}
-      <div className="hidden h-screen w-[200px] flex-col gap-8 bg-[#2b38d1] p-4 text-white md:flex">
-        <NavLink to="/admin" className="flex flex-col items-center">
-          <img
-            alt="Logo da empresa"
-            src="https://cdn-icons-png.flaticon.com/512/2964/2964514.png"
-            className="mx-auto mt-[16px] h-12 w-12 object-contain"
-          />
-          <p>Suplementos</p>
-        </NavLink>
-        <div className="flex flex-col gap-4 text-white">
+      <div className="hidden h-screen w-[200px] flex-col gap-8 bg-[#D3D0CB] p-4 text-white md:flex">
+        <div className="w-full p-4">
+          <img className="object-fit h-full" src={Icone} />
+        </div>
+        <div className="flex flex-col gap-4 font-semibold text-[#0C2D57]">
           <NavLink to="/admin">Home</NavLink>
           <NavLink to="/admin/avaliacoes">Avaliações</NavLink>
           <NavLink to="/admin/categorias">Categorias</NavLink>
@@ -55,17 +51,14 @@ export const AdminHeader = () => {
         >
           <List size={32} />
         </button>
-        <NavLink
-          to="/admin"
-          className="flex flex-col items-center justify-self-center"
-        >
+        <div className="flex flex-col items-center justify-self-center">
           <img
             alt="Logo da empresa"
             src="https://cdn-icons-png.flaticon.com/512/2964/2964514.png"
             className="m-0 mx-4 h-12 w-12 object-contain"
           />
           <p>Suplementos</p>
-        </NavLink>
+        </div>
         <button onClick={logout} className="justify-self-end px-4 text-white">
           <SignOut size={32} />
         </button>

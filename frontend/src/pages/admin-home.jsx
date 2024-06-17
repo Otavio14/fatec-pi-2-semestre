@@ -1,3 +1,7 @@
 export const AdminHomePage = () => {
-  return <div>Essa tela vai ser a Home Admin, é a parte que só a empresa vê</div>;
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <h1 className="text-[50px] font-bold">Bem Vindo!</h1>
+    </div>
+  );
 };

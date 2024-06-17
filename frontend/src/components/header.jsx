@@ -3,6 +3,7 @@ import UserSvg from "../assets/user.svg";
 import CarrinhoSvg from "../assets/carrinho.svg";
 import { useEffect, useState } from "react";
 import { X } from "@phosphor-icons/react";
+import Icone from "../assets/icone-2.png";
 
 export const HeaderComponent = () => {
   const Navigate = useNavigate();
@@ -85,14 +86,9 @@ export const HeaderComponent = () => {
   return (
     <div className="flex flex-col">
       <div className="flex h-[123px] w-full max-w-full items-center justify-between border-b border-[#b4becb] bg-white px-4">
-        <NavLink to="/" className="flex items-center gap-4 justify-self-start">
-          <img
-            alt="Logo da empresa"
-            src="https://cdn-icons-png.flaticon.com/512/2964/2964514.png"
-            className="m-0 h-12 w-12 object-contain"
-          />
-          <p>Suplementos</p>
-        </NavLink>
+        <div className="h-full p-4">
+          <img className="object-fit h-full" src={Icone} />
+        </div>
         <div className="hidden items-center justify-center gap-4 sm:flex">
           <NavLink
             to="/"
