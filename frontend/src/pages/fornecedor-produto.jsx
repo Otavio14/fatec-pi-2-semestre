@@ -115,8 +115,8 @@ export const FornecedorProdutoPage = () => {
   }, [IdFornecedor, Reload]);
 
   return (
-    <div className="flex w-full flex-col p-8">
-      <div className="mb-[33px] flex w-full justify-between border-b border-[#d9d9d9] pb-[12px]">
+    <div className="flex max-h-screen w-full flex-col p-2 sm:p-8">
+      <div className="mb-[33px] flex w-full flex-wrap justify-center gap-2 border-b border-[#d9d9d9] pb-[12px] text-center sm:justify-between">
         <h1 className="text-[38px] font-semibold leading-[140%]">
           Fornecedor Produtos
         </h1>
@@ -139,40 +139,42 @@ export const FornecedorProdutoPage = () => {
           Cadastrar
         </button>
       </div>
-      <table className="border-collapse border bg-white">
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {FornecedorProdutos?.map((m) => (
-            <tr key={m?.id}>
-              <td>{m?.produto?.nome}</td>
-              <td>{m?.preco}</td>
-              <td>{m?.quantidade}</td>
-              <td>
-                <button onClick={() => openModal(m?.id)}>
-                  <Pencil size={20} />
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => {
-                    deletar(m?.id);
-                  }}
-                >
-                  <Trash size={20} />
-                </button>
-              </td>
+      <div className="w-full overflow-auto">
+        <table className="w-full border-collapse border bg-white">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Preço</th>
+              <th>Quantidade</th>
+              <th></th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {FornecedorProdutos?.map((m) => (
+              <tr key={m?.id}>
+                <td>{m?.produto?.nome}</td>
+                <td>{m?.preco}</td>
+                <td>{m?.quantidade}</td>
+                <td>
+                  <button onClick={() => openModal(m?.id)}>
+                    <Pencil size={20} />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      deletar(m?.id);
+                    }}
+                  >
+                    <Trash size={20} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <dialog
         ref={DialogRef}
         onCancel={closeModal}
@@ -182,10 +184,10 @@ export const FornecedorProdutoPage = () => {
       >
         <form
           onSubmit={salvar}
-          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-12"
+          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-2 sm:p-12"
         >
-          <h1 className="text-[38px] font-semibold leading-[140%]">
-            {Id ? "Editar" : "Cadastrar"} Fornecedor produto
+          <h1 className="text-center text-[38px] font-semibold leading-[140%]">
+            {Id ? "Editar" : "Cadastrar"} Fornecedor Produto
           </h1>
           <Select
             Label={"Fornecedor"}

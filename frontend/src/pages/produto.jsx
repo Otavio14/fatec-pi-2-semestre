@@ -54,14 +54,14 @@ export const ProdutoPage = () => {
 
   return (
     <div className="flex flex-col items-center bg-[#f8f9ff] py-20">
-      <div className="flex w-full flex-col items-center justify-center gap-8 md:flex-row">
-        <div className="flex h-[500px] w-full max-w-[500px] items-center justify-center rounded border border-[#e7eaee] bg-white px-[50px] py-[60px]">
+      <div className="flex w-full flex-col items-center justify-center gap-8 p-2 md:flex-row">
+        <div className="flex h-full w-full max-w-[500px] items-center justify-center rounded border border-[#e7eaee] bg-white py-4 sm:h-[500px] sm:py-0">
           <img
             className="h-full max-h-[350px] w-full max-w-[350px] object-contain"
             src={Produto.imagem}
           />
         </div>
-        <div className="mt-[16px] flex w-[581px] max-w-[480px] flex-col items-stretch">
+        <div className="mt-[16px] flex max-w-[581px] flex-col items-stretch">
           <h1 className="mb-[12px] text-[30px] font-semibold leading-[40px]">
             {Produto.nome}
           </h1>
@@ -89,7 +89,7 @@ export const ProdutoPage = () => {
             <button
               onClick={adicionarAoCarrinho}
               style={{ transition: "color .2s, background-color .4s" }}
-              className="w-full rounded border border-[#0c2d57] bg-white px-[15px] py-[14px] text-[#0c2d57] hover:border-[#dd3842] hover:bg-[#dd3842] hover:text-white"
+              className="w-full rounded border border-[#0c2d57] bg-white px-[15px] text-[#0c2d57] hover:border-[#dd3842] hover:bg-[#dd3842] hover:text-white"
             >
               Adicionar ao Carrinho
             </button>

@@ -164,8 +164,8 @@ export const ClientePage = () => {
   }, [Cep, Estados]);
 
   return (
-    <div className="flex w-full flex-col p-8">
-      <div className="mb-[33px] flex w-full justify-between border-b border-[#d9d9d9] pb-[12px]">
+    <div className="flex max-h-screen w-full flex-col p-2 sm:p-8">
+      <div className="mb-[33px] flex w-full flex-wrap justify-center gap-2 border-b border-[#d9d9d9] pb-[12px] sm:justify-between">
         <h1 className="text-[38px] font-semibold leading-[140%]">Clientes</h1>
         <button
           className="w-fit rounded bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white"
@@ -174,44 +174,46 @@ export const ClientePage = () => {
           Cadastrar
         </button>
       </div>
-      <table className="border-collapse border bg-white">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Cidade</th>
-            <th>Estado</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {Clientes?.map((cliente) => (
-            <tr key={cliente?.id}>
-              <td>{cliente?.nome}</td>
-              <td>{cliente?.email}</td>
-              <td>{cliente?.telefone}</td>
-              <td>{cliente?.cidade?.nome}</td>
-              <td>{cliente?.cidade?.estado?.sigla}</td>
-              <td>
-                <button onClick={() => openModal(cliente?.id)}>
-                  <Pencil size={20} />
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => {
-                    deletar(cliente?.id);
-                  }}
-                >
-                  <Trash size={20} />
-                </button>
-              </td>
+      <div className="w-full overflow-auto">
+        <table className="w-full border-collapse border bg-white">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Cidade</th>
+              <th>Estado</th>
+              <th></th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Clientes?.map((cliente) => (
+              <tr key={cliente?.id}>
+                <td>{cliente?.nome}</td>
+                <td>{cliente?.email}</td>
+                <td>{cliente?.telefone}</td>
+                <td>{cliente?.cidade?.nome}</td>
+                <td>{cliente?.cidade?.estado?.sigla}</td>
+                <td>
+                  <button onClick={() => openModal(cliente?.id)}>
+                    <Pencil size={20} />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      deletar(cliente?.id);
+                    }}
+                  >
+                    <Trash size={20} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <dialog
         ref={DialogRef}
         onCancel={closeModal}
@@ -221,12 +223,12 @@ export const ClientePage = () => {
       >
         <form
           onSubmit={salvar}
-          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-12"
+          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-2 sm:p-12"
         >
-          <h1 className="text-[38px] font-semibold leading-[140%]">
+          <h1 className="text-center text-[38px] font-semibold leading-[140%]">
             {Id ? "Editar" : "Cadastrar"} Cliente
           </h1>
-          <div className="grid grid-cols-3 gap-x-4">
+          <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-3">
             <Input
               Label="Nome"
               name="nome"

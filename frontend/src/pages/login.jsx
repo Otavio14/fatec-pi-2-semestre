@@ -33,10 +33,10 @@ export const LoginPage = () => {
   }, [Navigate]);
 
   return (
-    <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3]">
+    <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3] p-1">
       <form
         onSubmit={login}
-        className="relative flex w-[500px] flex-col justify-center rounded-[10px] bg-white px-[65px] pb-[60px] pt-[33px]"
+        className="relative flex w-full max-w-[500px] flex-col justify-center rounded-[10px] bg-white px-4 pb-[40px] pt-[33px] sm:px-[65px]"
       >
         <NavLink
           to="/"

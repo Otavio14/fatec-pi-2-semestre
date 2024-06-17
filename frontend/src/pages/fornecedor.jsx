@@ -148,8 +148,8 @@ export const FornecedorPage = () => {
   }, [Reload]);
 
   return (
-    <div className="flex w-full flex-col p-8">
-      <div className="mb-[33px] flex w-full justify-between border-b border-[#d9d9d9] pb-[12px]">
+    <div className="flex max-h-screen w-full flex-col p-2 sm:p-8">
+      <div className="mb-[33px] flex w-full flex-wrap justify-center gap-2 border-b border-[#d9d9d9] pb-[12px] sm:justify-between">
         <h1 className="text-[38px] font-semibold leading-[140%]">
           Fornecedores
         </h1>
@@ -160,42 +160,44 @@ export const FornecedorPage = () => {
           Cadastrar
         </button>
       </div>
-      <table className="border-collapse border bg-white">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Cidade</th>
-            <th>Estado</th>
-            <th>Telefone</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {Fornecedores?.map((fornecedor) => (
-            <tr key={fornecedor?.id}>
-              <td>{fornecedor?.nome}</td>
-              <td>{fornecedor?.cidade?.nome}</td>
-              <td>{fornecedor?.cidade?.estado?.sigla}</td>
-              <td>{fornecedor?.telefone}</td>
-              <td>
-                <button onClick={() => openModal(fornecedor?.id)}>
-                  <Pencil size={20} />
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => {
-                    deletar(fornecedor?.id);
-                  }}
-                >
-                  <Trash size={20} />
-                </button>
-              </td>
+      <div className="w-full overflow-auto">
+        <table className="w-full border-collapse border bg-white">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cidade</th>
+              <th>Estado</th>
+              <th>Telefone</th>
+              <th></th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Fornecedores?.map((fornecedor) => (
+              <tr key={fornecedor?.id}>
+                <td>{fornecedor?.nome}</td>
+                <td>{fornecedor?.cidade?.nome}</td>
+                <td>{fornecedor?.cidade?.estado?.sigla}</td>
+                <td>{fornecedor?.telefone}</td>
+                <td>
+                  <button onClick={() => openModal(fornecedor?.id)}>
+                    <Pencil size={20} />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      deletar(fornecedor?.id);
+                    }}
+                  >
+                    <Trash size={20} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <dialog
         ref={DialogRef}
         onCancel={closeModal}
@@ -205,9 +207,9 @@ export const FornecedorPage = () => {
       >
         <form
           onSubmit={salvar}
-          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-12"
+          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-2 sm:p-12"
         >
-          <h1 className="text-[38px] font-semibold leading-[140%]">
+          <h1 className="text-center text-[38px] font-semibold leading-[140%]">
             {Id ? "Editar" : "Cadastrar"} Fornecedor
           </h1>
           <Input

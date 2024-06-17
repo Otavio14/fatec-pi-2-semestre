@@ -4,6 +4,7 @@ import CarrinhoSvg from "../assets/carrinho.svg";
 import { useEffect, useState } from "react";
 import { X } from "@phosphor-icons/react";
 import Icone from "../assets/icone-2.png";
+import { Swal } from "../shared/swal";
 
 export const HeaderComponent = () => {
   const Navigate = useNavigate();
@@ -86,11 +87,12 @@ export const HeaderComponent = () => {
   return (
     <div className="flex flex-col">
       <div className="flex h-[123px] w-full max-w-full items-center justify-between border-b border-[#b4becb] bg-white px-4">
-        <div className="h-full p-4">
+        <div className="h-full py-4">
           <img className="object-fit h-full" src={Icone} />
         </div>
         <div className="hidden items-center justify-center gap-4 sm:flex">
           <NavLink
+            end
             to="/"
             className="text-[16px] font-[500] leading-[26px] transition-colors hover:text-[#dd3842] active:text-[#dd3842]"
           >
@@ -197,7 +199,15 @@ export const HeaderComponent = () => {
               <p>R$ {CarrinhoTotal?.toFixed(2)}</p>
             </div>
             <button
-              onClick={() => finalizarCompra()}
+              onClick={() => {
+                if (CarrinhoQuantidade > 0) finalizarCompra();
+                else
+                  Swal.fire({
+                    title: "Carrinho Vazio",
+                    text: "Adicione produtos ao carrinho para finalizar a compra!",
+                    icon: "info",
+                  });
+              }}
               className="w-full rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
             >
               Finalizar
