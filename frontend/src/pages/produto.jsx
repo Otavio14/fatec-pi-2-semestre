@@ -9,6 +9,9 @@ export const ProdutoPage = () => {
 
   const [Produto, setProduto] = useState({});
   const [Quantidade, setQuantidade] = useState(1);
+  useEffect(() => {
+    console.log(Quantidade)
+  }, [Quantidade]);
 
   const adicionarAoCarrinho = () => {
     const carrinho = JSON.parse(localStorage.getItem("carrinho") || "{}");
@@ -30,7 +33,7 @@ export const ProdutoPage = () => {
               imagem: Produto.imagem,
             },
           ],
-      total: carrinho.total + Produto.preco,
+      total: carrinho.total + Quantidade * Produto.preco,
       quantidade: carrinho.quantidade + 1,
     });
     localStorage.setItem("carrinho", newValue);
