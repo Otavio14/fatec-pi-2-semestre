@@ -80,6 +80,8 @@ export const HeaderComponent = () => {
       if (event.key === "carrinho") {
         refreshCarrinho();
         setCarrinhoOpen(true);
+      } else if (event.key === "carrinho-clear") {
+        refreshCarrinho();
       }
     });
   }, []);

@@ -3,8 +3,11 @@ import { Input } from "../components/input.jsx";
 import { Select } from "../components/select.jsx";
 import { api } from "../shared/api.js";
 import axios from "axios";
+import { Swal } from "../shared/swal.js";
+import { useNavigate } from "react-router-dom";
 
 export const FinalizarCompraPage = () => {
+  const Navigate = useNavigate();
   const [CarrinhoTotal, setCarrinhoTotal] = useState(0);
   const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const [Confirmacao, setConfirmacao] = useState(false);
@@ -38,7 +41,7 @@ export const FinalizarCompraPage = () => {
     api.post("/clientes", cliente).then((response) => {
       const pedido = {
         id_clientes: Number(response.data.id),
-        status: "",
+        status: "Pendente",
         endereco: Endereco,
         dt_pedido: new Date().toISOString(),
         total: Number(CarrinhoTotal),
@@ -55,7 +58,7 @@ export const FinalizarCompraPage = () => {
           setCarrinhoTotal(0);
           setConfirmacao(false);
           const storageEvent = new StorageEvent("storage", {
-            key: "carrinho",
+            key: "carrinho-clear",
             oldValue: localStorage.getItem("carrinho"),
             newValue: { produtos: [], total: 0, quantidade: 0 },
             url: window.location.href,
@@ -67,6 +70,12 @@ export const FinalizarCompraPage = () => {
           );
 
           window.dispatchEvent(storageEvent);
+          Swal.fire({
+            title: "Compra finalizada com sucesso!",
+            icon: "success",
+          }).then(() => {
+            Navigate("/");
+          });
         });
       });
     });

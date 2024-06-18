@@ -175,37 +175,44 @@ export const ProdutosPage = () => {
             Cadastrar Produto
           </h1>
           <Input
+            Label={"Nome"}
             placeholder="Nome"
             value={NomeProduto}
             onChange={(e) => setNomeProduto(e.target.value)}
           />
           <Input
+            Label={"Preço"}
             type="number"
             placeholder="Preço"
             value={PrecoProduto}
             onChange={(e) => setPrecoProduto(e.target.value)}
           />
           <Input
+            Label={"Quantidade em Estoque"}
             type="number"
             placeholder="Qtde em estoque"
             value={EstoqueProduto}
             onChange={(e) => setEstoqueProduto(e.target.value)}
           />
           <Input
-            placeholder="Descrição"
-            value={DescricaoProduto}
-            onChange={(e) => setDescricaoProduto(e.target.value)}
-          />
-          <Input
+            Label={"Data de Validade"}
             type="date"
-            placeholder="Data de Validade"
             value={ValidadeProduto}
             onChange={(e) => setValidadeProduto(e.target.value)}
           />
           <Input
-            placeholder="Imagem URL"
+            Label={"URL da Imagem"}
+            placeholder="htttp://..."
             value={ImagemProduto}
             onChange={(e) => setImagemProduto(e.target.value)}
+          />
+          <Input
+            Label={"Descrição"}
+            Textarea
+            Rows={8}
+            placeholder="Descrição"
+            value={DescricaoProduto}
+            onChange={(e) => setDescricaoProduto(e.target.value)}
           />
           <div className="flex gap-4">
             <button
