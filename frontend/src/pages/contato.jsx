@@ -15,7 +15,7 @@ export const ContatoPage = () => {
   return (
     <div
       style={{ minHeight: "calc(100vh - 123px)" }}
-      className="flex h-full flex-col justify-center p-2 sm:p-8"
+      className="flex h-full flex-col items-center justify-center p-2 sm:p-8"
     >
       <div className="flex flex-col items-center gap-8 md:flex-row">
         <div className="flex flex-col gap-5">
