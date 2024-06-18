@@ -9,9 +9,6 @@ export const ProdutoPage = () => {
 
   const [Produto, setProduto] = useState({});
   const [Quantidade, setQuantidade] = useState(1);
-  useEffect(() => {
-    console.log(Quantidade)
-  }, [Quantidade]);
 
   const adicionarAoCarrinho = () => {
     const carrinho = JSON.parse(localStorage.getItem("carrinho") || "{}");
