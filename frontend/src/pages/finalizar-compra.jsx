@@ -133,7 +133,7 @@ export const FinalizarCompraPage = () => {
               key={index}
               className="grid w-full grid-cols-[auto,1fr,66px,100px] items-center gap-4 border-b border-[#d9d9d9] p-4"
             >
-              <div className="flex h-[100px] w-[100px] items-center justify-center rounded border p-[10px]">
+              <div className="flex h-[75px] md:h-[100px] w-[50px] md:w-[100px] items-center justify-center rounded border p-[10px]">
                 <img
                   src={produto.imagem}
                   alt={produto.nome}
