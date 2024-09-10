@@ -34,6 +34,35 @@ DATABASE_URL= # Caminho para o arquivo do banco de dados do Prisma
 PORT= # Porta a ser utilizada
 JWT_SECRET = # 256 Bit secret
 ```
+# Resultado visual
+
+# Home
+![home](./frontend/public/home.png)
+
+# Contato
+![contact](./frontend/public/contact.png)
+
+# Carrinho-lateral
+![side cart](./frontend/public/side-cart.png)
+
+# Página do produto
+![product page](./frontend/public/product-page.png)
+
+# Carrinho
+![overall-cart](./frontend/public/over-all-cart.png)
+
+# Finalização da compra
+![final stage](./frontend/public/final-stage.png)
+
+# Home do admin
+![admin home](./frontend/public/admin-home.png)
+
+# Registro de produtos
+![product register](./frontend/public/product-register.png)
+
+# Recebimento do pedido
+![request](./frontend/public/request.png)
+
 ## Autores
 
 - [Bruno](https://www.github.com/brunojohannn)
