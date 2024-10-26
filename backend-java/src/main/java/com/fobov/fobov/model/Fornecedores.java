@@ -63,4 +63,13 @@ public class Fornecedores{
     public void setTelefone(String telefone){
         this.telefone = telefone;
     }
+
+    // STATUS
+    public String getStatus(){
+        return status;
+    }
+
+    public void setStatus(String status){
+        this.status = status;
+    }
 }
