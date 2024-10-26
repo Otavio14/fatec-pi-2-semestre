@@ -23,7 +23,7 @@ public class FornecedoresRepository{
 
     public List <Fornecedores> findAll(){
         List<Fornecedores> fornecedores = new ArrayList<>();
-        String sql = "SELECT id, nome FROM fornecedores";
+        String sql = "SELECT id_fornecedores, nome FROM fornecedores";
 
         try{
             Connection connection = DATA_SOURCE.getConnection();
@@ -32,7 +32,7 @@ public class FornecedoresRepository{
 
             while (resultSet.next()) {
                 Fornecedores fornecedores = new Fornecedores();
-                fornecedores.setId(resultSet.getInt("id"));
+                fornecedores.setId(resultSet.getInt("id_fornecedores"));
                 fornecedores.setId(resultSet.getString("nome"));
                 fornecedores.add(fornecedores);
 
@@ -48,7 +48,7 @@ public class FornecedoresRepository{
 
     public Fornecedores findById(int id){
         Fornecedores fornecedores = new Fornecedores();
-        String sql = "SELECT id, nome FROM fornecedores WHERE id = ?";
+        String sql = "SELECT id, nome FROM fornecedores WHERE id_fornecedores = ?";
         
         try{
             Connection connection = DATA_SOURCE.getConnection();
@@ -57,7 +57,7 @@ public class FornecedoresRepository{
             
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                fornecedores.setId(resultSet.getInt("id"));
+                fornecedores.setId(resultSet.getInt("id_fornecedores"));
                 fornecedores.setNome(resultSet.getNome("nome"));
             }
         }
@@ -88,7 +88,7 @@ public class FornecedoresRepository{
     }
 
     public boolean update(int id, Fornecedores fornecedores){
-        String sql = "UPDATE fornecedores SET nome = ? WHERE id = ?";
+        String sql = "UPDATE fornecedores SET nome = ? WHERE id_fornecedores = ?";
 
         try{
             Connection connection = DATA_SOURCE.getConnection();
@@ -108,7 +108,7 @@ public class FornecedoresRepository{
     }
 
     public booleam delete(int id){
-        String sql = "DELETE FROM fornecedores WHERE id = ?";
+        String sql = "DELETE FROM fornecedores WHERE id_fornecedores = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();

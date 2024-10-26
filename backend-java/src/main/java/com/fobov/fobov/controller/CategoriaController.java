@@ -20,9 +20,9 @@ public class CategoriaController {
         return CATEGORIA_REPOSITORY.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Categoria getCategoriaById(@PathVariable int id) {
-        return CATEGORIA_REPOSITORY.findById(id);
+    @GetMapping("/{id_categoria}")
+    public Categoria getCategoriaById(@PathVariable int id_categoria) {
+        return CATEGORIA_REPOSITORY.findById(id_categoria);
     }
 
     @PostMapping
@@ -30,13 +30,13 @@ public class CategoriaController {
         return CATEGORIA_REPOSITORY.save(categoria);
     }
 
-    @PutMapping("/{id}")
-    public boolean updateCategoria(@PathVariable int id, @RequestBody Categoria categoria) {
-        return CATEGORIA_REPOSITORY.update(id, categoria);
+    @PutMapping("/{id_categoria}")
+    public boolean updateCategoria(@PathVariable int id_categoria, @RequestBody Categoria categoria) {
+        return CATEGORIA_REPOSITORY.update(id_categoria, categoria);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteCategoria(@PathVariable int id) {
-        return CATEGORIA_REPOSITORY.delete(id);
+    @DeleteMapping("/{id_categoria}")
+    public boolean deleteCategoria(@PathVariable int id_categoria) {
+        return CATEGORIA_REPOSITORY.delete(id_categoria);
     }
 }

@@ -20,7 +20,7 @@ public class CategoriaRepository {
 
     public List<Categoria> findAll() {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT id, nome FROM categoria";
+        String sql = "SELECT id_categoria, nome FROM categoria";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
@@ -29,7 +29,7 @@ public class CategoriaRepository {
 
             while (resultSet.next()) {
                 Categoria categoria = new Categoria();
-                categoria.setId(resultSet.getInt("id"));
+                categoria.setId(resultSet.getInt("id_categoria"));
                 categoria.setNome(resultSet.getString("nome"));
                 categorias.add(categoria);
             }
@@ -42,7 +42,7 @@ public class CategoriaRepository {
 
     public Categoria findById(int id) {
         Categoria categoria = new Categoria();
-        String sql = "SELECT id, nome FROM categoria WHERE id = ?";
+        String sql = "SELECT id, nome FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
@@ -51,7 +51,7 @@ public class CategoriaRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) { // Check if there is a result
-                categoria.setId(resultSet.getInt("id"));
+                categoria.setId(resultSet.getInt("id_categoria"));
                 categoria.setNome(resultSet.getString("nome"));
             }
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class CategoriaRepository {
     }
 
     public boolean update(int id, Categoria categoria) {
-        String sql = "UPDATE categoria SET nome = ? WHERE id = ?";
+        String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
@@ -97,7 +97,7 @@ public class CategoriaRepository {
     }
 
     public boolean delete(int id) {
-        String sql = "DELETE FROM categoria WHERE id = ?";
+        String sql = "DELETE FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();

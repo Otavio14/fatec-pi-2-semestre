@@ -1,15 +1,15 @@
 package com.fobov.fobov.model;
 
 public class Fornecedores{
-    private int id;
+    private int id_fornecedores;
     private String nome;
     
     public int getId(){
-        return id;
+        return id_fornecedores;
     }
 
-    public void setId(int id){
-        this.id = id;
+    public void setId(int id_fornecedores){
+        this.id_fornecedores = id_fornecedores;
     }
 
     public String getNome(){
