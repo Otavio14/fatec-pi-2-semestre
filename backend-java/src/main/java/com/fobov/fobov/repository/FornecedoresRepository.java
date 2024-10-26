@@ -33,7 +33,7 @@ public class FornecedoresRepository{
             while (resultSet.next()) {
                 Fornecedores fornecedores = new Fornecedores();
                 fornecedores.setId(resultSet.getInt("id_fornecedores"));
-                fornecedores.setId(resultSet.getString("nome"));
+                fornecedores.setNome(resultSet.getString("nome"));
                 fornecedores.add(fornecedores);
 
             }
@@ -46,14 +46,14 @@ public class FornecedoresRepository{
         return fornecedores;
     }
 
-    public Fornecedores findById(int id){
+    public Fornecedores findById(int id_fornecedores){
         Fornecedores fornecedores = new Fornecedores();
-        String sql = "SELECT id, nome FROM fornecedores WHERE id_fornecedores = ?";
+        String sql = "SELECT id_fornecedores, nome FROM fornecedores WHERE id_fornecedores = ?";
         
         try{
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.preparedStatement(sql);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, id_fornecedores);
             
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -87,14 +87,14 @@ public class FornecedoresRepository{
         return false;
     }
 
-    public boolean update(int id, Fornecedores fornecedores){
+    public boolean update(int id_fornecedores, Fornecedores fornecedores){
         String sql = "UPDATE fornecedores SET nome = ? WHERE id_fornecedores = ?";
 
         try{
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setStrinf (1,fornecedores.getNome());
-            preparedStatement.setInt(2, id);
+            preparedStatement.setStrinf (1, fornecedores.getNome());
+            preparedStatement.setInt(2, id_fornecedores);
 
             preparedStatement.executeUpdate();
             return true;
@@ -107,13 +107,13 @@ public class FornecedoresRepository{
         return false;
     }
 
-    public booleam delete(int id){
+    public boolean delete(int id_fornecedores){
         String sql = "DELETE FROM fornecedores WHERE id_fornecedores = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, id_fornecedores);
 
             preparedStatement.executeUpdate();
             return true;

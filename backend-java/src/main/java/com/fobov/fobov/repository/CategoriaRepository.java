@@ -40,14 +40,14 @@ public class CategoriaRepository {
         return categorias;
     }
 
-    public Categoria findById(int id) {
+    public Categoria findById(int id_categoria) {
         Categoria categoria = new Categoria();
-        String sql = "SELECT id, nome FROM categoria WHERE id_categoria = ?";
+        String sql = "SELECT id_categoria, nome FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, id_categoria);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) { // Check if there is a result
@@ -78,14 +78,14 @@ public class CategoriaRepository {
         return false;
     }
 
-    public boolean update(int id, Categoria categoria) {
+    public boolean update(int id_categoria, Categoria categoria) {
         String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, categoria.getNome());
-            preparedStatement.setInt(2, id);
+            preparedStatement.setInt(2, id_categoria);
 
             preparedStatement.executeUpdate();
             return true;
@@ -96,13 +96,13 @@ public class CategoriaRepository {
         return false;
     }
 
-    public boolean delete(int id) {
+    public boolean delete(int id_categoria) {
         String sql = "DELETE FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, id_categoria);
 
             preparedStatement.executeUpdate();
             return true;
