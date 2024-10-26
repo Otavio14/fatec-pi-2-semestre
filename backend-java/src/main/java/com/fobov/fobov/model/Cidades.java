@@ -1,9 +1,8 @@
 package com.fobov.fobov.model;
 
-public class Cidade {
+public class Cidades {
     private int id_cidade;
     private String nome;
-    private int id_estado;
 
     // ID
     public int getId() {
