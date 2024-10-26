@@ -20,7 +20,7 @@ public class CategoriaRepository {
 
     public List<Categoria> findAll() {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT id, nome FROM categoria";
+        String sql = "SELECT id_categoria, nome FROM categoria";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
@@ -29,7 +29,7 @@ public class CategoriaRepository {
 
             while (resultSet.next()) {
                 Categoria categoria = new Categoria();
-                categoria.setId(resultSet.getInt("id"));
+                categoria.setId(resultSet.getInt("id_categoria"));
                 categoria.setNome(resultSet.getString("nome"));
                 categorias.add(categoria);
             }
@@ -40,18 +40,18 @@ public class CategoriaRepository {
         return categorias;
     }
 
-    public Categoria findById(int id) {
+    public Categoria findById(int id_categoria) {
         Categoria categoria = new Categoria();
-        String sql = "SELECT id, nome FROM categoria WHERE id = ?";
+        String sql = "SELECT id_categoria, nome FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, id_categoria);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) { // Check if there is a result
-                categoria.setId(resultSet.getInt("id"));
+                categoria.setId(resultSet.getInt("id_categoria"));
                 categoria.setNome(resultSet.getString("nome"));
             }
         } catch (Exception e) {
@@ -78,14 +78,14 @@ public class CategoriaRepository {
         return false;
     }
 
-    public boolean update(int id, Categoria categoria) {
-        String sql = "UPDATE categoria SET nome = ? WHERE id = ?";
+    public boolean update(int id_categoria, Categoria categoria) {
+        String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, categoria.getNome());
-            preparedStatement.setInt(2, id);
+            preparedStatement.setInt(2, id_categoria);
 
             preparedStatement.executeUpdate();
             return true;
@@ -96,13 +96,13 @@ public class CategoriaRepository {
         return false;
     }
 
-    public boolean delete(int id) {
-        String sql = "DELETE FROM categoria WHERE id = ?";
+    public boolean delete(int id_categoria) {
+        String sql = "DELETE FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, id_categoria);
 
             preparedStatement.executeUpdate();
             return true;

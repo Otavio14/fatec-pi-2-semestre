@@ -1,15 +1,15 @@
 package com.fobov.fobov.model;
 
 public class Categoria {
-    private int id;
+    private int id_categoria;
     private String nome;
 
     public int getId() {
-        return id;
+        return id_categoria;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int id_categoria) {
+        this.id_categoria = id_categoria;
     }
 
     public String getNome() {

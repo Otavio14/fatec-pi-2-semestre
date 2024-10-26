@@ -23,9 +23,9 @@ public class FornecedoresController{
         return FORNECEDORES_REPOSITORY.findAll();
     }
 
-    @GetMapping
-    public Fornecedores getFornecedoresById(@PathVariable int id){
-        return FORNECEDORES_REPOSITORY.findById(id);
+    @GetMapping("/{id_fornecedores}")
+    public Fornecedores getFornecedoresById(@PathVariable int id_fornecedores){
+        return FORNECEDORES_REPOSITORY.findById(id_fornecedores);
     }
 
     @PostMapping
@@ -33,13 +33,13 @@ public class FornecedoresController{
         return FORNECEDORES_REPOSITORY.save(fornecedores);
     }
 
-    @PutMapping("/{id}")
-    public boolean updateFornecedores(@PathVariable int id, @RequestBody Fornecedores fornecedores){
-        return FORNECEDORES_REPOSITORY.update(id, fornecedores);
+    @PutMapping("/{id_fornecedores}")
+    public boolean updateFornecedores(@PathVariable int id_fornecedores, @RequestBody Fornecedores fornecedores){
+        return FORNECEDORES_REPOSITORY.update(id_fornecedores, fornecedores);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteFornecedores(@PathVariable int id){
-        return FORNECEDORES_REPOSITORY.delete(id);
+    @DeleteMapping("/{id_fornecedores}")
+    public boolean deleteFornecedores(@PathVariable int id_fornecedores){
+        return FORNECEDORES_REPOSITORY.delete(id_fornecedores);
     }
 }
