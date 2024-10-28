@@ -81,4 +81,12 @@ public class Clientes {
     public void setNumero(String numero) {
         this.numero = numero;
     }
+
+    // CHAVE ESTRANGEIRA ID_CIDADES
+    public int getIdCidades(){
+        return id_cidades;
+    }
+    public void setIdCidades(int id_cidades){
+        this.id_cidades = id_cidades;
+    }
 }
