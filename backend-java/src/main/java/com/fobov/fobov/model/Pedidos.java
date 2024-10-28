@@ -8,6 +8,7 @@ public class Pedidos {
     private String endereco;
     private String status;
     private double total;
+    private int id_clientes;
 
     // ID
     public int getId() {
@@ -52,5 +53,14 @@ public class Pedidos {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    // CHAVE ESTRANGEIRA ID_CLIENTES
+    public int getIdClientes(){
+        return id_clientes;
+    }
+
+    public void setIdClientes(int id_clientes){
+        this.id_clientes = id_clientes;
     }
 }
