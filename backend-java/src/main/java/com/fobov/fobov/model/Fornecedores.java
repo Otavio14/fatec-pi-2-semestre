@@ -72,4 +72,12 @@ public class Fornecedores{
     public void setStatus(String status){
         this.status = status;
     }
+
+    // CHAVE ESTRANGEIRA ID_CIDADES
+    public int getIdCidades(){
+        return id_cidades;
+    }
+    public void setIdCidades(int id_cidades){
+        this.id_cidades = id_cidades;
+    }
 }
