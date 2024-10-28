@@ -1,8 +1,6 @@
 package com.fobov.fobov.controller;
 
-import com.fobov.fobov.model.Categoria;
 import com.fobov.fobov.model.Fornecedores;
-import com.fobov.fobov.repository.CategoriaRepository;
 import com.fobov.fobov.repository.FornecedoresRepository;
 
 import org.springframework.web.bind.annotation.*;
