@@ -9,6 +9,7 @@ import java.util.Date;
     private double preco;
     private int estoque;
     private String descricao;
+    private int id_categoria;
 
     // ID
     public int getId() {
@@ -63,4 +64,14 @@ import java.util.Date;
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    // CHAVE ESTRANGEIRA ID_CATEGORIA
+    public int getIdCategoria(){
+        return id_categoria;
+    }
+
+    public void setIdCategoria(){
+        this.id_categoria = id_categoria;
+    }
+
 }
