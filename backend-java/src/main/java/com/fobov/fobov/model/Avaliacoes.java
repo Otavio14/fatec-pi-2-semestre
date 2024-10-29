@@ -7,6 +7,8 @@ public class Avaliacoes {
     private int nota;
     private String comentario;
     private Date dt_avaliacao;
+    private int id_clientes;
+    private int id_produtos;
 
     // ID
     public int getId() {
@@ -35,12 +37,28 @@ public class Avaliacoes {
         this.comentario = comentario;
     }
 
-    // DATA DA AVALLIAÇÃO
+    // DATA DA AVALIAÇÃO
     public Date getDtAvaliacao() {
         return dt_avaliacao;
     }
 
     public void setDtAvaliacao(Date dt_avaliacao) {
         this.dt_avaliacao = dt_avaliacao;
+    }
+
+    // CHAVE ESTRANGEIRA ID_CLIENTES
+    public int getIdClientes(){
+        return id_clientes;
+    }
+    public void setIdClientes(int id_clientes){
+        this.id_clientes = id_clientes;
+    }
+
+    // CHAVE ESTRANGEIRA id_produtos
+    public int getIdCidades(){
+        return id_produtos;
+    }
+    public void setIdCidades(int id_produtos){
+        this.id_produtos = id_produtos;
     }
 }
