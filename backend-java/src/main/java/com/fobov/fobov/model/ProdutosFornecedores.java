@@ -7,6 +7,9 @@ public class ProdutosFornecedores {
     private double preco;
     private int quantidade;
     private Date data;
+    private int id_produtos;
+    private int id_fornecedores;
+
 
     // ID
     public int getId() {
@@ -42,5 +45,21 @@ public class ProdutosFornecedores {
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    // CHAVE ESTRANGEIRA id_produtos
+    public int getIdCidades(){
+        return id_produtos;
+    }
+    public void setIdCidades(int id_produtos){
+        this.id_produtos = id_produtos;
+    }
+
+    // CHAVE ESTRANGEIRA id_fornecedores
+    public int getIdCidades(){
+        return id_fornecedores;
+    }
+    public void setIdCidades(int id_fornecedores){
+        this.id_fornecedores = id_fornecedores;
     }
 }
