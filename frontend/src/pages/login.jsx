@@ -72,6 +72,12 @@ export const LoginPage = () => {
           Entrar
         </button>
       </form>
+      <NavLink
+        to="/cadastro"
+        className="absolute right-[20px] top-[15px] text-[#8f9eb2]"
+      >
+        Cadastrar-se
+      </NavLink>
     </div>
   );
 };
