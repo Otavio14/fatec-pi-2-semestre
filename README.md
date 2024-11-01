@@ -1,4 +1,4 @@
-# FATEC - PI 2º Semestre
+# FATEC - PI 2º - 3° Semestre
 
 Projeto destinado à criação de uma aplicação para o Projeto Integrado no curso de Análise e Desenvolvimento de Sistemas na FATEC.
 
