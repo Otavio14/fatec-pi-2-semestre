@@ -19,6 +19,7 @@ import { ClientePage } from "./pages/cliente.jsx";
 import { FornecedorProdutoPage } from "./pages/fornecedor-produto.jsx";
 import { ProdutoCategoriaPage } from "./pages/produto-categoria.jsx";
 import { CadastroPage } from "./pages/cadastro.jsx";
+import { ProfilePage } from "./pages/profile.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -69,6 +70,15 @@ export const routes = createBrowserRouter(
           <FinalizarCompraPage />
         </>
       ),
+    },
+    {
+      path: "/perfil",
+      element: (
+        <>
+          <HeaderComponent />
+          <ProfilePage />
+        </>
+      )
     },
     {
       path: "/admin",

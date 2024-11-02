@@ -1,0 +1,16 @@
+cliente:
+login --começado
+cadastro -- começado
+autenticação de login para conclusão de compra
+terminar contato
+avaliar produto
+página meus pedidos
+página p/ cada pedido
+Página p/ perfil (alterar endereço, email, senha)
+Filtro produtos por categoria
+na hora da compra, adicionar cupom
+
+adm:
+accounts management
+editar estado do pedido do cliente (esperando pagamento, saiu para entrega...)
+
