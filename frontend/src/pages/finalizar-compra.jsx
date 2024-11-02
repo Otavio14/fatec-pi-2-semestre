@@ -165,12 +165,20 @@ export const FinalizarCompraPage = () => {
             currency: "BRL",
           })}
         </h2>
-        <button
+        {localStorage.getItem("tokenTeste") == "1234" ? <button
           onClick={() => setConfirmacao(true)}
           className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
         >
           Continuar
-        </button>
+        </button> : <button
+          onClick={() => {
+            localStorage.setItem("ConfirmarCarrinho", true)
+            Navigate("/login")
+          }}
+          className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
+        >
+          Continuar
+        </button>}
       </div>
       {/* Formulário sobre o cliente */}
       <form
@@ -178,26 +186,9 @@ export const FinalizarCompraPage = () => {
         onSubmit={finalizarCompra}
       >
         <h2 className="mt-[20px] w-full pb-[12px] text-center text-[24px] font-semibold leading-[140%]">
-          Informações do Cliente
+          Contato
         </h2>
         <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-3">
-          <Input
-            Label="Nome"
-            name="nome"
-            placeholder="Nome Completo"
-            value={Nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-          <Input
-            Label="E-mail"
-            type="email"
-            name="email"
-            placeholder="E-mail"
-            value={Email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
           <Input
             Label="Telefone"
             type="tel"
@@ -255,9 +246,9 @@ export const FinalizarCompraPage = () => {
             ))}
           </Select>
           <Input
-            Label="Endereço"
-            name="endereco"
-            placeholder="Endereço"
+            Label="Rua"
+            name="rua"
+            placeholder="Rua"
             value={Endereco}
             onChange={(e) => setEndereco(e.target.value)}
             required
