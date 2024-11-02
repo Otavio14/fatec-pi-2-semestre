@@ -23,7 +23,7 @@ export const ProfilePage = () => {
             <div className="flex flex-col w-[25%]">
                 <Input Label={"nome"} value={userData.nome} />
                 <Input Label={"email"} value={userData.email} />
-                <Input Label={"celular"} value={userData.celular ? userData.senha : "Adicionar"} />
+                <Input Label={"celular"} value={userData.celular ? userData.senha : ""} />
                 <button className="border-2 border-black" onClick={() => setShow(!show)}>Endereço</button>
             </div>
             <EnderecoModal
@@ -33,7 +33,7 @@ export const ProfilePage = () => {
                 bairro={userData.endereco.bairro}
                 rua={userData.endereco.rua}
                 numero={userData.endereco.numero}
-                 />
+            />
         </div>
     )
 }
