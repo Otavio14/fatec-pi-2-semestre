@@ -46,10 +46,11 @@ model Cliente {
   cep        String
   email      String
   telefone   String
+  senha      String
   bairro     String
   numero     Int
   endereco   String
-  cidade     Cidade      @relation(fields: [id_cidades], references: [id])
+  cidade     Cidade    @relation(fields: [id_cidades], references: [id])
   Avaliacao  Avaliacao[]
   Pedido     Pedido[]
 }
