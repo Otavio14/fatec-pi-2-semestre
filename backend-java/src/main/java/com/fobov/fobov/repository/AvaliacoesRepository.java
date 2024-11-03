@@ -1,5 +1,6 @@
 package com.fobov.fobov.repository;
 
+import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Avaliacao;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class AvaliacoesRepository {
+public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
     private final DataSource DATA_SOURCE;
 
     public AvaliacoesRepository(DataSource dataSource) {
@@ -43,7 +44,7 @@ public class AvaliacoesRepository {
         return avaliacaoList;
     }
 
-    public Avaliacao findById(int id) {
+    public Avaliacao findById(Integer id) {
         Avaliacao avaliacao = null;
         String sql = "SELECT id_avaliacoes, nota, comentario, dt_avaliacao, id_clientes, id_produtos FROM avaliacoes WHERE id_avaliacoes = ?";
 
@@ -85,7 +86,7 @@ public class AvaliacoesRepository {
         return false;
     }
 
-    public boolean update(int id_avaliacoes, Avaliacao avaliacao) {
+    public boolean update(Integer id, Avaliacao avaliacao) {
         String sql = "UPDATE avaliacoes SET nota = ?, comentario = ?, dt_avaliacao = ? WHERE id_avaliacoes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -93,7 +94,7 @@ public class AvaliacoesRepository {
             preparedStatement.setInt(1, avaliacao.getNota());
             preparedStatement.setString(2, avaliacao.getComentario());
             preparedStatement.setDate(3, java.sql.Date.valueOf(avaliacao.getDtAvaliacao().toLocalDate()));
-            preparedStatement.setInt(4, id_avaliacoes);
+            preparedStatement.setInt(4, id);
 
             preparedStatement.executeUpdate();
             return true;
@@ -104,12 +105,12 @@ public class AvaliacoesRepository {
         return false;
     }
 
-    public boolean delete(int id_avaliacoes) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM avaliacoes WHERE id_avaliacoes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_avaliacoes);
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
             return true;

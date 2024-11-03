@@ -8,6 +8,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public List<Produto> findAll() {
         List<Produto> produtoList = new ArrayList<>();
-        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, id_categoria FROM produtos";
+        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, imagem FROM produtos";
 
         try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -29,10 +31,11 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 Produto produto = new Produto();
                 produto.setId(resultSet.getInt("id_produtos"));
                 produto.setNome(resultSet.getString("nome"));
-                produto.setDtValidade(resultSet.getTimestamp("dt_validade").toLocalDateTime());
+                produto.setDtValidade(LocalDate.parse(resultSet.getString("dt_validade"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 produto.setPreco(resultSet.getDouble("preco"));
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
+                produto.setImagem(resultSet.getString("imagem"));
                 produtoList.add(produto);
             }
         } catch (Exception e) {
@@ -44,7 +47,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public Produto findById(Integer id) {
         Produto produto = null;
-        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, id_categoria FROM produtos WHERE id_produtos = ?";
+        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, imagem FROM produtos WHERE id_produtos = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -53,10 +56,11 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 produto = new Produto();
                 produto.setId(resultSet.getInt("id_produtos"));
                 produto.setNome(resultSet.getString("nome"));
-                produto.setDtValidade(resultSet.getTimestamp("dt_validade").toLocalDateTime());
+                produto.setDtValidade(LocalDate.parse(resultSet.getString("dt_validade"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 produto.setPreco(resultSet.getDouble("preco"));
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
+                produto.setImagem(resultSet.getString("imagem"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,14 +70,16 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
     }
 
     public boolean save(Produto produto) {
-        String sql = "INSERT INTO produtos (nome, dt_validade, preco, estoque, descricao) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO produtos (nome, dt_validade, preco, estoque, descricao, imagem) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setDate(2, java.sql.Date.valueOf(produto.getDtValidade().toLocalDate()));
+            preparedStatement.setString(2, produto.getDtValidade().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             preparedStatement.setDouble(3, produto.getPreco());
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
+            preparedStatement.setString(6, produto.getImagem());
+
 
             preparedStatement.executeUpdate();
             return true;
@@ -85,15 +91,16 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
     }
 
     public boolean update(Integer id, Produto produto) {
-        String sql = "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, estoque = ?, descricao = ? WHERE id_produtos = ?";
+        String sql = "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, estoque = ?, descricao = ?, imagem = ? WHERE id_produtos = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setDate(2, java.sql.Date.valueOf(produto.getDtValidade().toLocalDate()));
+            preparedStatement.setString(2, produto.getDtValidade().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             preparedStatement.setDouble(3, produto.getPreco());
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
-            preparedStatement.setInt(6, id);
+            preparedStatement.setString(6, produto.getImagem());
+            preparedStatement.setInt(7, id);
 
             preparedStatement.executeUpdate();
             return true;

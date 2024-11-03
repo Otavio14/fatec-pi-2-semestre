@@ -1,5 +1,6 @@
 package com.fobov.fobov.repository;
 
+import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cliente;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClienteRepository {
+public class ClienteRepository implements Crud<Cliente, Integer> {
     private final DataSource DATA_SOURCE;
 
     public ClienteRepository(DataSource dataSource) {
@@ -46,13 +47,13 @@ public class ClienteRepository {
         return clienteList;
     }
 
-    public Cliente findById(int id_clientes) {
+    public Cliente findById(Integer id) {
         Cliente cliente = null;
         String sql = "SELECT id_clientes, nome, cep, endereco, email, telefone, bairro, numero, id_cidades FROM clientes WHERE id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_clientes);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 cliente = new Cliente();
@@ -95,7 +96,7 @@ public class ClienteRepository {
         return false;
     }
 
-    public boolean update(int id_clientes, Cliente cliente) {
+    public boolean update(Integer id, Cliente cliente) {
         String sql = "UPDATE clientes SET nome = ?, cep = ?, endereco = ?, email = ?, telefone = ?, bairro = ?, numero = ? WHERE id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -107,7 +108,7 @@ public class ClienteRepository {
             preparedStatement.setString(5, cliente.getTelefone());
             preparedStatement.setString(6, cliente.getBairro());
             preparedStatement.setString(7, cliente.getNumero());
-            preparedStatement.setInt(8, id_clientes); // ID do cliente a ser atualizado
+            preparedStatement.setInt(8, id); // ID do cliente a ser atualizado
 
             preparedStatement.executeUpdate();
             return true;
@@ -118,12 +119,12 @@ public class ClienteRepository {
         return false;
     }
 
-    public boolean delete(int id_clientes) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM clientes WHERE id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_clientes);
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
             return true;

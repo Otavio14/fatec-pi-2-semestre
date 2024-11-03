@@ -1,6 +1,6 @@
 package com.fobov.fobov.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Produto {
     private int id;
@@ -8,7 +8,16 @@ public class Produto {
     private double preco;
     private int estoque;
     private String descricao;
-    private LocalDateTime dtValidade;
+    private LocalDate dtValidade;
+    private String imagem;
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
 
     public int getId() {
         return id;
@@ -50,11 +59,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getDtValidade() {
+    public LocalDate getDtValidade() {
         return dtValidade;
     }
 
-    public void setDtValidade(LocalDateTime dtValidade) {
+    public void setDtValidade(LocalDate dtValidade) {
         this.dtValidade = dtValidade;
     }
 }
