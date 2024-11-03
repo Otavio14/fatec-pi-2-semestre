@@ -1,25 +1,25 @@
 package com.fobov.fobov.repository;
 
-import com.fobov.fobov.model.Clientes;
+import com.fobov.fobov.model.Cliente;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 
 @Repository
-public class ClientesRepository {
+public class ClienteRepository {
     private final DataSource DATA_SOURCE;
 
-    public ClientesRepository(DataSource dataSource) {
+    public ClienteRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
     }
 
-    public List<Clientes> findAll() {
-        List<Clientes> clientesList = new ArrayList<>();
+    public List<Cliente> findAll() {
+        List<Cliente> clienteList = new ArrayList<>();
         String sql = "SELECT id_clientes, nome, cep, endereco, email, telefone, bairro, numero, id_cidades FROM clientes";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -27,7 +27,7 @@ public class ClientesRepository {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Clientes cliente = new Clientes();
+                Cliente cliente = new Cliente();
                 cliente.setId(resultSet.getInt("id_clientes"));
                 cliente.setNome(resultSet.getString("nome"));
                 cliente.setCep(resultSet.getString("cep"));
@@ -36,18 +36,18 @@ public class ClientesRepository {
                 cliente.setTelefone(resultSet.getString("telefone"));
                 cliente.setBairro(resultSet.getString("bairro"));
                 cliente.setNumero(resultSet.getString("numero"));
-                cliente.setIdCidades(resultSet.getInt("id_cidades")); // Chave estrangeira
-                clientesList.add(cliente);
+                cliente.setIdCidade(resultSet.getInt("id_cidades"));
+                clienteList.add(cliente);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return clientesList;
+        return clienteList;
     }
 
-    public Clientes findById(int id_clientes) {
-        Clientes cliente = null;
+    public Cliente findById(int id_clientes) {
+        Cliente cliente = null;
         String sql = "SELECT id_clientes, nome, cep, endereco, email, telefone, bairro, numero, id_cidades FROM clientes WHERE id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -55,7 +55,7 @@ public class ClientesRepository {
             preparedStatement.setInt(1, id_clientes);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                cliente = new Clientes();
+                cliente = new Cliente();
                 cliente.setId(resultSet.getInt("id_clientes"));
                 cliente.setNome(resultSet.getString("nome"));
                 cliente.setCep(resultSet.getString("cep"));
@@ -64,7 +64,7 @@ public class ClientesRepository {
                 cliente.setTelefone(resultSet.getString("telefone"));
                 cliente.setBairro(resultSet.getString("bairro"));
                 cliente.setNumero(resultSet.getString("numero"));
-                cliente.setIdCidades(resultSet.getInt("id_cidades")); // Chave estrangeira
+                cliente.setIdCidade(resultSet.getInt("id_cidades"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class ClientesRepository {
         return cliente;
     }
 
-    public boolean save(Clientes cliente) {
+    public boolean save(Cliente cliente) {
         String sql = "INSERT INTO clientes (nome, cep, endereco, email, telefone, bairro, numero) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -95,7 +95,7 @@ public class ClientesRepository {
         return false;
     }
 
-    public boolean update(int id_clientes, Clientes cliente) {
+    public boolean update(int id_clientes, Cliente cliente) {
         String sql = "UPDATE clientes SET nome = ?, cep = ?, endereco = ?, email = ?, telefone = ?, bairro = ?, numero = ? WHERE id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -112,7 +112,7 @@ public class ClientesRepository {
             preparedStatement.executeUpdate();
             return true;
         } catch (Exception e) {
-            e.printStackTrace ();
+            e.printStackTrace();
         }
 
         return false;

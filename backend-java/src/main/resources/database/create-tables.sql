@@ -1,19 +1,19 @@
 -- Tabela de categorias  
 CREATE TABLE categoria (
-    id_categoria INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_categoria INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL
 );
 
 -- Tabela de estados
 CREATE TABLE estados (
-    id_estado INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_estado INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     sigla CHAR(2) NOT NULL
 );
 
 -- Tabela de cidades
 CREATE TABLE cidades (
-    id_cidade INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_cidade INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     id_estado INTEGER,
     FOREIGN KEY (id_estado) REFERENCES estados(id_estado)
@@ -21,7 +21,7 @@ CREATE TABLE cidades (
 
 -- Tabela de fornecedores
 CREATE TABLE fornecedores (
-    id_fornecedores INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_fornecedores INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     id_cidade INTEGER,
     cep TEXT NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE fornecedores (
 
 -- Tabela de clientes
 CREATE TABLE clientes (
-    id_clientes INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_clientes INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     id_cidade INTEGER,
     cep TEXT NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE clientes (
 
 -- Tabela de produtos
 CREATE TABLE produtos (
-    id_produtos INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_produtos INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     dt_validade DATETIME,
     preco DECIMAL(10,2) NOT NULL,
@@ -60,14 +60,14 @@ CREATE TABLE produtos (
 
 -- Tabela de cupons
 CREATE TABLE cupons (
-    id_cupons INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_cupons INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     porcentagem DECIMAL(5,2) NOT NULL
 );
 
 -- Tabela de pedidos
 CREATE TABLE pedidos (
-    id_pedidos INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_pedidos INTEGER PRIMARY KEY AUTOINCREMENT,
     id_clientes INTEGER,
     dt_pedido DATETIME NOT NULL,
     endereco TEXT NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE pedidos (
 
 -- Tabela de avaliações
 CREATE TABLE avaliacoes (
-    id_avaliacoes INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_avaliacoes INTEGER PRIMARY KEY AUTOINCREMENT,
     id_clientes INTEGER,
     id_produtos INTEGER,
     nota INTEGER NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE avaliacoes (
 
 -- Tabela de relacionamento entre produtos e pedidos
 CREATE TABLE produtos_pedidos (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_produtos INTEGER,
     id_pedidos INTEGER,
     preco DECIMAL(10,2) NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE produtos_pedidos (
 
 -- Tabela de relacionamento entre produtos e fornecedores
 CREATE TABLE produtos_fornecedores (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_produtos INTEGER,
     id_fornecedores INTEGER,
     preco DECIMAL(10,2) NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE produtos_fornecedores (
 
 -- Tabela de relacionamento entre clientes e cupons
 CREATE TABLE clientes_cupons (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_cupons INTEGER,
     id_clientes INTEGER,
     data_utilizacao DATETIME NOT NULL,

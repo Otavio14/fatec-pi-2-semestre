@@ -1,5 +1,5 @@
 INSERT INTO
-    categoria (id, nome)
+    categoria (id_categoria, nome)
 VALUES
     (1, "Suplemento"),
     (2, "Acessório"),

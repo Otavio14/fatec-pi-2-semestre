@@ -1,20 +1,18 @@
 package com.fobov.fobov.model;
 
-public class Cupons {
-    private int id_cupons;
+public class Cupom {
+    private int id;
     private String nome;
     private double porcentagem;
 
-    // ID
     public int getId() {
-        return id_cupons;
+        return id;
     }
 
-    public void setId(int id_cupons) {
-        this.id_cupons = id_cupons;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    // NOME
     public String getNome() {
         return nome;
     }
@@ -23,7 +21,6 @@ public class Cupons {
         this.nome = nome;
     }
 
-    // PORCENTAGEM
     public double getPorcentagem() {
         return porcentagem;
     }

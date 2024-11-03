@@ -1,5 +1,6 @@
 package com.fobov.fobov.repository;
 
+import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Categoria;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class CategoriaRepository {
+public class CategoriaRepository implements Crud<Categoria, Integer> {
     private final DataSource DATA_SOURCE;
 
     public CategoriaRepository(DataSource dataSource) {
@@ -40,14 +41,14 @@ public class CategoriaRepository {
         return categorias;
     }
 
-    public Categoria findById(int id_categoria) {
+    public Categoria findById(Integer id) {
         Categoria categoria = new Categoria();
         String sql = "SELECT id_categoria, nome FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id_categoria);
+            preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) { // Check if there is a result
@@ -78,14 +79,14 @@ public class CategoriaRepository {
         return false;
     }
 
-    public boolean update(int id_categoria, Categoria categoria) {
+    public boolean update(Integer id, Categoria categoria) {
         String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, categoria.getNome());
-            preparedStatement.setInt(2, id_categoria);
+            preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
             return true;
@@ -96,13 +97,13 @@ public class CategoriaRepository {
         return false;
     }
 
-    public boolean delete(int id_categoria) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id_categoria);
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
             return true;

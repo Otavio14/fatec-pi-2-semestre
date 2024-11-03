@@ -1,68 +1,62 @@
 package com.fobov.fobov.repository;
 
-import com.fobov.fobov.model.Produtos;
+import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Produto;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 
 @Repository
-public class ProdutosRepository {
+public class ProdutoRepository implements Crud<Produto, Integer> {
     private final DataSource DATA_SOURCE;
 
-    public ProdutosRepository(DataSource dataSource) {
+    public ProdutoRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
     }
 
-    public List<Produtos> findAll() {
-        List<Produtos> produtosList = new ArrayList<>();
+    public List<Produto> findAll() {
+        List<Produto> produtoList = new ArrayList<>();
         String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, id_categoria FROM produtos";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Produtos produto = new Produtos();
+                Produto produto = new Produto();
                 produto.setId(resultSet.getInt("id_produtos"));
                 produto.setNome(resultSet.getString("nome"));
-                produto.setDtValidade(resultSet.getDate("dt_validade").toLocalDate()); // Converte para LocalDate
+                produto.setDtValidade(resultSet.getTimestamp("dt_validade").toLocalDateTime());
                 produto.setPreco(resultSet.getDouble("preco"));
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
-                produto.setIdCategoria(resultSet.getInt("id_categoria"));
-                produtosList.add(produto);
+                produtoList.add(produto);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return produtosList;
+        return produtoList;
     }
 
-    public Produtos findById(int id_produtos) {
-        Produtos produto = null;
+    public Produto findById(Integer id) {
+        Produto produto = null;
         String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, id_categoria FROM produtos WHERE id_produtos = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_produtos);
+        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                produto = new Produtos();
+                produto = new Produto();
                 produto.setId(resultSet.getInt("id_produtos"));
                 produto.setNome(resultSet.getString("nome"));
-                produto.setDtValidade(resultSet.getDate("dt_validade").toLocalDate()); // Converte para LocalDate
+                produto.setDtValidade(resultSet.getTimestamp("dt_validade").toLocalDateTime());
                 produto.setPreco(resultSet.getDouble("preco"));
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
-                produto.setIdCategoria(resultSet.getInt("id_categoria"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,15 +65,14 @@ public class ProdutosRepository {
         return produto;
     }
 
-    public boolean save(Produtos produto) {
+    public boolean save(Produto produto) {
         String sql = "INSERT INTO produtos (nome, dt_validade, preco, estoque, descricao) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setDate(2, Date.valueOf(produto.getDtValidade())); // Converte LocalDate para Date
-            preparedStatement.setDouble(3, produto.getPreco()); // Usa setDouble
-            preparedStatement.setInt(4, produto.getEstoque()); // Usa setInt
+            preparedStatement.setDate(2, java.sql.Date.valueOf(produto.getDtValidade().toLocalDate()));
+            preparedStatement.setDouble(3, produto.getPreco());
+            preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
 
             preparedStatement.executeUpdate();
@@ -91,17 +84,16 @@ public class ProdutosRepository {
         return false;
     }
 
-    public boolean update(int id_produtos, Produtos produto) {
+    public boolean update(Integer id, Produto produto) {
         String sql = "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, estoque = ?, descricao = ? WHERE id_produtos = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setDate(2, Date.valueOf(produto.getDtValidade())); // Converte LocalDate para Date
-            preparedStatement.setDouble(3, produto.getPreco()); // Usa setDouble
-            preparedStatement.setInt(4, produto.getEstoque()); // Usa setInt
+            preparedStatement.setDate(2, java.sql.Date.valueOf(produto.getDtValidade().toLocalDate()));
+            preparedStatement.setDouble(3, produto.getPreco());
+            preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
-            preparedStatement.setInt(6, id_produtos);
+            preparedStatement.setInt(6, id);
 
             preparedStatement.executeUpdate();
             return true;
@@ -112,12 +104,11 @@ public class ProdutosRepository {
         return false;
     }
 
-    public boolean delete(int id_produtos) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM produtos WHERE id_produtos = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_produtos);
+        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
             return true;
