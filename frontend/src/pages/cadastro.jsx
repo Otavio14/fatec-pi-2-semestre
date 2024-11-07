@@ -7,14 +7,25 @@ import { Step2 } from "../components/cadastro-steps/cadastro-step2"
 import { useForm } from "../hooks/useForm"
 
 export const CadastroPage = () => {
-    const [nome, setNome] = useState("")
-    const [email, setEmail] = useState("")
-    const [senha, setSenha] = useState("")
 
-    const userData = {
-        nome: nome,
-        email: email,
-        senha: senha
+    const formData = {
+        nome: "",
+        email: "",
+        senha: "",
+        cep: "",
+        estado: "",
+        cidade: "",
+        bairro: "",
+        endereco: "",
+        numero: "",
+    }
+
+    const [data, setData] = useState(formData)
+
+    function dataChanger(name, value) {
+         setData((prev) => {
+            return { ...prev, [name]:value }
+         })
     }
 
     const cadastro = (e) => {
@@ -35,7 +46,7 @@ export const CadastroPage = () => {
         setStep2(!step2)
     }
 
-    const formComponents = [<Step1 />, <Step2 />]
+    const formComponents = [<Step1 data={data} dataChanger={dataChanger}/>, <Step2 data={data} dataChanger={dataChanger}/>]
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useForm(formComponents)
 
     return (
@@ -55,6 +66,7 @@ export const CadastroPage = () => {
                 <div>
                     {currentComponent}
                 </div>
+                <div className="flex flex row justify-center ">
                 {!isFirstStep && (
                     <button
                         style={{ transition: "color .3s, background-color .5s" }}
@@ -80,6 +92,7 @@ export const CadastroPage = () => {
                         Enviar
                     </button>
                 )}
+                </div>
             </form>
             <NavLink
                 to="/login"

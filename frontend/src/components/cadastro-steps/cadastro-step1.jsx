@@ -2,33 +2,33 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Input } from "../input";
 
-export const Step1 = ({ show, setShow }) => {
+export const Step1 = ({ data, dataChanger }) => {
 
     return (
         <>
             <Input
                 Label={"Nome Completo"}
-                // value={nome}
+                value={data.nome}
                 placeholder={"Digite seu nome e sobrenome"}
-                // onChange={(event) => setNome(event.target.value)}
+                onChange={(event) => dataChanger("nome", event.target.value)}
                 required
                 type="text"
                 autoComplete="text"
             />
             <Input
                 Label={"Email"}
-                // value={email}
+                value={data.email}
                 placeholder={"Digite seu email"}
-                // onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => dataChanger("email", event.target.value)}
                 required
                 type="email"
                 autoComplete="email"
             />
             <Input
                 Label={"Senha"}
-                // value={senha}
+                value={data.senha}
                 placeholder={"*********"}
-                // onChange={(event) => setSenha(event.target.value)}
+                onChange={(event) => dataChanger("senha", event.target.value)}
                 required
                 type="password"
                 autoComplete="password"
