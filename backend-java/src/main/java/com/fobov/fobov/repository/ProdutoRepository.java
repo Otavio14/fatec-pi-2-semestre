@@ -2,6 +2,8 @@ package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Produto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -23,15 +25,21 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public List<Produto> findAll() {
         List<Produto> produtoList = new ArrayList<>();
-        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, imagem FROM produtos";
+        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, " +
+                "descricao, imagem FROM produtos";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Produto produto = new Produto();
                 produto.setId(resultSet.getInt("id_produtos"));
                 produto.setNome(resultSet.getString("nome"));
-                produto.setDtValidade(LocalDate.parse(resultSet.getString("dt_validade"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                produto.setDtValidade(
+                        LocalDate.parse(resultSet.getString("dt_validade"),
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 produto.setPreco(resultSet.getDouble("preco"));
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
@@ -47,16 +55,21 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public Produto findById(Integer id) {
         Produto produto = null;
-        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, descricao, imagem FROM produtos WHERE id_produtos = ?";
+        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, " +
+                "descricao, imagem FROM produtos WHERE id_produtos = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 produto = new Produto();
                 produto.setId(resultSet.getInt("id_produtos"));
                 produto.setNome(resultSet.getString("nome"));
-                produto.setDtValidade(LocalDate.parse(resultSet.getString("dt_validade"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                produto.setDtValidade(
+                        LocalDate.parse(resultSet.getString("dt_validade"),
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 produto.setPreco(resultSet.getDouble("preco"));
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
@@ -69,12 +82,17 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
         return produto;
     }
 
-    public boolean save(Produto produto) {
-        String sql = "INSERT INTO produtos (nome, dt_validade, preco, estoque, descricao, imagem) VALUES (?, ?, ?, ?, ?, ?)";
+    public ResponseEntity<String> save(Produto produto) {
+        String sql =
+                "INSERT INTO produtos (nome, dt_validade, preco, estoque, " +
+                        "descricao, imagem) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setString(2, produto.getDtValidade().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            preparedStatement.setString(2, produto.getDtValidade()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             preparedStatement.setDouble(3, produto.getPreco());
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
@@ -82,20 +100,28 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto cadastrado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, Produto produto) {
-        String sql = "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, estoque = ?, descricao = ?, imagem = ? WHERE id_produtos = ?";
+    public ResponseEntity<String> update(Integer id, Produto produto) {
+        String sql =
+                "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, " +
+                        "estoque = ?, descricao = ?, imagem = ? WHERE " +
+                        "id_produtos = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setString(2, produto.getDtValidade().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            preparedStatement.setString(2, produto.getDtValidade()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             preparedStatement.setDouble(3, produto.getPreco());
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
@@ -103,26 +129,32 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
             preparedStatement.setInt(7, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto alterado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM produtos WHERE id_produtos = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 }

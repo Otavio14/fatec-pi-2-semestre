@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Categoria;
 import com.fobov.fobov.repository.CategoriaRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class CategoriaController implements Crud<Categoria, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Categoria categoria) {
+    public ResponseEntity<String> save(@RequestBody Categoria categoria) {
         return CATEGORIA_REPOSITORY.save(categoria);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Categoria categoria) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Categoria categoria) {
         return CATEGORIA_REPOSITORY.update(id, categoria);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return CATEGORIA_REPOSITORY.delete(id);
     }
 }

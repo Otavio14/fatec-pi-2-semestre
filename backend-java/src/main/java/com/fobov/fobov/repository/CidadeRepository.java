@@ -2,6 +2,8 @@ package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cidade;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -24,7 +26,8 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
         String sql = "SELECT id_cidades, nome, id_estados FROM cidades";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -43,10 +46,12 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
 
     public Cidade findById(Integer id) {
         Cidade cidade = null;
-        String sql = "SELECT id_cidades, nome, id_estados FROM cidades WHERE id_cidades = ?";
+        String sql = "SELECT id_cidades, nome, id_estados FROM cidades WHERE " +
+                "id_cidades = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -62,52 +67,61 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
         return cidade;
     }
 
-    public boolean save(Cidade cidade) {
+    public ResponseEntity<String> save(Cidade cidade) {
         String sql = "INSERT INTO cidades (nome) VALUES (?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, cidade.getNome());
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Cidade cadastrada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, Cidade cidade) {
+    public ResponseEntity<String> update(Integer id, Cidade cidade) {
         String sql = "UPDATE cidades SET nome = ? WHERE id_cidades = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, cidade.getNome());
             preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Cidade alterada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM cidades WHERE id_cidades = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Cidade excluída com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 }

@@ -2,6 +2,8 @@ package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Categoria;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -25,7 +27,8 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -43,11 +46,14 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
 
     public Categoria findById(Integer id) {
         Categoria categoria = new Categoria();
-        String sql = "SELECT id_categoria, nome FROM categoria WHERE id_categoria = ?";
+        String sql =
+                "SELECT id_categoria, nome FROM categoria WHERE id_categoria " +
+                        "= ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,55 +68,64 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
         return categoria;
     }
 
-    public boolean save(Categoria categoria) {
+    public ResponseEntity<String> save(Categoria categoria) {
         String sql = "INSERT INTO categoria (nome) VALUES (?)";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sql);
             preparedStatement.setString(1, categoria.getNome());
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Categoria cadastrada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, Categoria categoria) {
+    public ResponseEntity<String> update(Integer id, Categoria categoria) {
         String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sql);
             preparedStatement.setString(1, categoria.getNome());
             preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Categoria alterada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM categoria WHERE id_categoria = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Categoria excluída com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 }

@@ -50,11 +50,11 @@ export const LoginPage = () => {
             text: "Email ou senha incorretos",
           })
       })
-      .catch(() => {
+      .catch((error) => {
         Swal.fire({
-          icon: "error",
+          icon: "warning",
           title: "Atenção!",
-          text: "Email ou senha incorretos",
+          text: error?.response?.data || "Email ou senha incorretos",
         });
       });
   };
@@ -67,6 +67,7 @@ export const LoginPage = () => {
   return (
     <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3] p-1">
       <form
+        onSubmit={login}
         onSubmit={login}
         className="relative flex w-full max-w-[500px] flex-col justify-center rounded-[10px] bg-white px-4 pb-[40px] pt-[33px] sm:px-[65px]"
       >

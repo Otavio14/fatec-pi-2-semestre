@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Avaliacao;
 import com.fobov.fobov.repository.AvaliacoesRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class AvaliacaoController implements Crud<Avaliacao, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Avaliacao avalicoes) {
+    public ResponseEntity<String> save(@RequestBody Avaliacao avalicoes) {
         return AVALIACAO_REPOSITORY.save(avalicoes);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Avaliacao avalicoes) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Avaliacao avalicoes) {
         return AVALIACAO_REPOSITORY.update(id, avalicoes);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return AVALIACAO_REPOSITORY.delete(id);
     }
 }

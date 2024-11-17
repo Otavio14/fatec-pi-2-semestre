@@ -6,6 +6,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -80,9 +82,9 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
         return usuario;
     }
 
-    public boolean save(Usuario usuario) {
+    public ResponseEntity<String> save(Usuario usuario) {
         String sqlCosultar =
-                "SELECT id FROM usuarios WHERE email = ?" + "UNION" +
+                "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
                         "SELECT id_clientes FROM clientes WHERE email = ?";
 
         String sqlInsert =
@@ -100,7 +102,8 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return false;
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Email já utilizado!");
             } else {
                 preparedStatement.clearParameters();
                 preparedStatement.clearBatch();
@@ -113,38 +116,66 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 preparedStatement.setString(3, usuario.getSenha());
 
                 preparedStatement.executeUpdate();
-                return true;
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("Usuário cadastrado com sucesso!");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, Usuario usuario) {
-        String sql = "UPDATE usuarios SET nome = ?, email = ?, senha = ? " +
-                "WHERE id = ?";
+    public ResponseEntity<String> update(Integer id, Usuario usuario) {
+        String sqlCosultar =
+                "SELECT id FROM usuarios WHERE email = ? AND id != ?" +
+                        " UNION " +
+                        "SELECT id_clientes FROM clientes WHERE email = ?";
+
+        String sqlUpdate =
+                "UPDATE usuarios SET nome = ?, email = ?, senha = ? " +
+                        "WHERE id = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
-            preparedStatement.setString(1, usuario.getNome());
-            preparedStatement.setString(2, usuario.getEmail());
-            preparedStatement.setString(3, usuario.getSenha());
-            preparedStatement.setInt(4, id);
 
-            preparedStatement.executeUpdate();
-            return true;
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sqlCosultar);
+            preparedStatement.setString(1, usuario.getEmail());
+            preparedStatement.setInt(2, usuario.getId());
+            preparedStatement.setString(3, usuario.getEmail());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Email já utilizado!");
+            } else {
+                preparedStatement.clearParameters();
+                preparedStatement.clearBatch();
+                preparedStatement.clearWarnings();
+                preparedStatement.close();
+
+                preparedStatement = connection.prepareStatement(sqlUpdate);
+                preparedStatement.setString(1, usuario.getNome());
+                preparedStatement.setString(2, usuario.getEmail());
+                preparedStatement.setString(3, usuario.getSenha());
+                preparedStatement.setInt(4, id);
+
+                preparedStatement.executeUpdate();
+
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("Usuário alterado com sucesso!");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM usuarios WHERE id = ?";
 
         try {
@@ -154,18 +185,19 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Usuário excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 
-    public String login(Usuario usuario) {
+    public ResponseEntity<String> login(Usuario usuario) {
         String sql = "SELECT id_clientes AS id, nome, email, senha, 0 AS " +
-                "admin FROM" +
-                " clientes WHERE email = ?" + " UNION " +
+                "admin FROM" + " clientes WHERE email = ?" + " UNION " +
                 "SELECT id, nome, email, senha, 1 AS admin FROM usuarios " +
                 "WHERE email = ? LIMIT 1";
 
@@ -188,19 +220,22 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 calendar.setTime(now);
                 calendar.add(Calendar.HOUR, 20);
 
-                return Jwts.builder().signWith(key)
-                        .claim("id", resultSet.getInt("id"))
-                        .claim("nome", resultSet.getString("nome"))
-                        .claim("email", resultSet.getString("email"))
-                        .claim("admin", resultSet.getInt("admin") == 1)
-                        .expiration(calendar.getTime()).compact();
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(Jwts.builder().signWith(key)
+                                .claim("id", resultSet.getInt("id"))
+                                .claim("nome", resultSet.getString("nome"))
+                                .claim("email", resultSet.getString("email"))
+                                .claim("admin", resultSet.getInt("admin") == 1)
+                                .expiration(calendar.getTime()).compact());
             } else {
-                return "Dados inválidos!";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Dados inválidos!");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "Dados inválidos!";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Dados inválidos!");
     }
 }

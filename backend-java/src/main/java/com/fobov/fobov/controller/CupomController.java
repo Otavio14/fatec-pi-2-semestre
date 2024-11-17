@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cupom;
 import com.fobov.fobov.repository.CupomRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class CupomController implements Crud<Cupom, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Cupom cupom) {
+    public ResponseEntity<String> save(@RequestBody Cupom cupom) {
         return CUPOM_REPOSITORY.save(cupom);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Cupom cupom) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Cupom cupom) {
         return CUPOM_REPOSITORY.update(id, cupom);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return CUPOM_REPOSITORY.delete(id);
     }
 }

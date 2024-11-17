@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Estado;
 import com.fobov.fobov.repository.EstadoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class EstadoController implements Crud<Estado, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Estado estado) {
+    public ResponseEntity<String> save(@RequestBody Estado estado) {
         return ESTADO_REPOSITORY.save(estado);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Estado estado) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Estado estado) {
         return ESTADO_REPOSITORY.update(id, estado);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return ESTADO_REPOSITORY.delete(id);
     }
 }

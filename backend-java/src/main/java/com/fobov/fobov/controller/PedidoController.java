@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Pedido;
 import com.fobov.fobov.repository.PedidoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,23 @@ public class PedidoController implements Crud<Pedido, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Pedido pedido) {
+    public ResponseEntity<String> save(@RequestBody Pedido pedido) {
         return PEDIDO_REPOSITORY.save(pedido);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Pedido pedido) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Pedido pedido) {
         return PEDIDO_REPOSITORY.update(id, pedido);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PEDIDO_REPOSITORY.delete(id);
+    }
+
+    @GetMapping("/cliente/{id}")
+    public List<Pedido> findAllByClienteId(@PathVariable Integer id) {
+        return PEDIDO_REPOSITORY.findAllByClienteId(id);
     }
 }

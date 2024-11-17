@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Produto;
 import com.fobov.fobov.repository.ProdutoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class ProdutoController implements Crud<Produto, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Produto produto) {
+    public ResponseEntity<String> save(@RequestBody Produto produto) {
         return PRODUTO_REPOSITORY.save(produto);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Produto produto) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Produto produto) {
         return PRODUTO_REPOSITORY.update(id, produto);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PRODUTO_REPOSITORY.delete(id);
     }
 }
