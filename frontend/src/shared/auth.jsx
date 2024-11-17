@@ -1,7 +1,7 @@
 import { decodeJwt } from "jose";
 import { Navigate } from "react-router-dom";
 
-const isAuthenticated = () => {
+export const isAuthenticated = () => {
   const token = localStorage.getItem("token");
 
   if (!token || token === "") return false;
@@ -10,6 +10,26 @@ const isAuthenticated = () => {
 
   return exp * 1000 >= Date.now();
 };
+
+export const isAdmin = () => {
+  const token = localStorage.getItem("token");
+
+  if (!token || token === "") return false;
+
+  const { admin } = decodeJwt(token);
+
+  return admin;
+};
+
+export const getAuthId = () => {
+  const token = localStorage.getItem("token");
+
+  if (!token || token === "") return false;
+
+  const { id } = decodeJwt(token);
+
+  return id;
+}
 
 export const AdminRoute = ({ children }) => {
   if (!isAuthenticated()) {

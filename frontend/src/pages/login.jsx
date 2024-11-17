@@ -3,33 +3,30 @@ import { api } from "../shared/api";
 import { Input } from "../components/input.jsx";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Swal } from "../shared/swal";
+import { isAdmin, isAuthenticated } from "../shared/auth.jsx";
 
 export const LoginPage = () => {
   const [Email, setEmail] = useState("");
   const [Senha, setSenha] = useState("");
   const Navigate = useNavigate();
 
-  ////////////////
-  const user = {
-    email: "mail@mail.com",
-    senha: "1234"
-  }
+  // const loginTeste = (e) => {
+  //   e.preventDefault()
 
-  const loginTeste = (e) => {
-    e.preventDefault()
+  //   if(Email === user.email && Senha == user.senha){
+  //     localStorage.setItem("tokenTeste", "1234")
+  //     {
+  //       !!localStorage.getItem("ConfirmarCarrinho") ? Navigate("/finalizar-compra", { replace: true }) :
+  //       Navigate("/home")
+  //     }
+  //   } else{
+  //     alert("Erro")
+  //   }
+  // }
 
-    if(Email === user.email && Senha == user.senha){
-      localStorage.setItem("tokenTeste", "1234")
-      {
-        !!localStorage.getItem("ConfirmarCarrinho") ? Navigate("/finalizar-compra", { replace: true }) :
-        Navigate("/home")
-      }
-    } else{
-      alert("Erro")
-    }
-  }
+  //////////////////
 
-//////////////////
+
 
   const login = (event) => {
     event.preventDefault();
@@ -37,8 +34,21 @@ export const LoginPage = () => {
     api
       .post("/usuarios/login", { email: Email, senha: Senha })
       .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        Navigate("/admin");
+        if (response.data == "Dados inválidos!") {
+          Swal.fire({
+            icon: "error",
+            title: "Atenção!",
+            text: "Email ou senha incorretos",
+          });
+          return
+        }
+        localStorage.setItem("token", response.data);
+        isAuthenticated() ? isAdmin() ? Navigate("/admin") : Navigate("/") :
+          Swal.fire({
+            icon: "error",
+            title: "Atenção!",
+            text: "Email ou senha incorretos",
+          })
       })
       .catch(() => {
         Swal.fire({
@@ -57,7 +67,7 @@ export const LoginPage = () => {
   return (
     <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3] p-1">
       <form
-        onSubmit={loginTeste}
+        onSubmit={login}
         className="relative flex w-full max-w-[500px] flex-col justify-center rounded-[10px] bg-white px-4 pb-[40px] pt-[33px] sm:px-[65px]"
       >
         <NavLink

@@ -6,6 +6,7 @@ import { X } from "@phosphor-icons/react";
 import Icone from "../assets/icone-2.png";
 import { Swal } from "../shared/swal";
 import { api } from "../shared/api"
+import { getAuthId, isAdmin, isAuthenticated } from "../shared/auth";
 
 export const HeaderComponent = () => {
   const Navigate = useNavigate();
@@ -14,17 +15,37 @@ export const HeaderComponent = () => {
   const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const [CarrinhoOpen, setCarrinhoOpen] = useState(false);
 
-  /////////////////////////////
+  const usuario = {
+    bairro
+      :
+      "",
+    cep
+      :
+      "",
+    email
+      :
+      "",
+    endereco
+      :
+      "",
+    id
+      :
+      "",
+    idCidade
+      :
+      "",
+    nome
+      :
+      "",
+    numero
+      :
+      "",
+    telefone
+      :
+      "",
+  }
 
-  const usuarioTeste = "João ManoGomes Silva"
-
-  ////////////////////////////
-
-  useEffect(() => {
-    api.get(`/clientes`).then((res) => {
-      console.log({ resolution: res })
-    }).catch((err) => console.log({ erro: err }))
-  }, []);
+  const [usuarioInfo, setUsuarioInfo] = useState(usuario)
 
   const refreshCarrinho = () => {
     const local = JSON.parse(localStorage.getItem("carrinho") || "{}");
@@ -41,6 +62,27 @@ export const HeaderComponent = () => {
       setCarrinhoQuantidade(quantidade);
     }
   };
+
+  useEffect(() => {
+    if (!!localStorage.getItem("token")) {
+      if (isAuthenticated() == true) {
+        if (isAdmin() == false) {
+          const id = getAuthId()
+          api.get(`/clientes/${id}`).then((res) => {
+            console.log({ resas: res.data })
+            setUsuarioInfo((prev) => {
+              return { ...prev, ...res.data }
+            })
+            console.log({ useState: usuarioInfo })
+          }).catch((err) => {
+            console.log({ header: err })
+          })
+        }
+      }
+    } else {
+      console.log("Deslogado")
+    }
+  }, []);
 
   const updateCarrinho = (produto, quantidade) => {
     if (quantidade < 1) {
@@ -121,14 +163,14 @@ export const HeaderComponent = () => {
           </NavLink>
         </div>
         <div className="flex h-full w-fit gap-4 sm:gap-8">
-          <NavLink to={!!localStorage.getItem("tokenTeste") ? "/perfil" : "/login"} className="flex items-center gap-[12px]">
+          <NavLink to={!!localStorage.getItem("token") ? isAdmin() ? "/admin" : "/perfil" : "/login"} className="flex items-center gap-[12px]">
             <img src={UserSvg} className="h-6 w-6 object-cover" />
             <div className="hidden flex-col sm:flex">
               <p className="text-[12px] font-semibold leading-[15px] text-[#8f9eb2]">
-                {!!localStorage.getItem("tokenTeste") ? "Perfil" : "Login"}
+                {!!localStorage.getItem("token") ? "Perfil" : "Login"}
               </p>
-              <p className="text-[16px] leading-[26px] text-[#0c2d57]">{!!localStorage.getItem("tokenTeste") ?
-                usuarioTeste.split(" ")[0] : "Conta"}</p>
+              <p className="text-[16px] leading-[26px] text-[#0c2d57]">{!!localStorage.getItem("token") ?
+                usuarioInfo.nome.split(" ")[0] : "Entrar"}</p>
             </div>
           </NavLink>
           <div

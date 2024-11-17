@@ -5750,4 +5750,15 @@ VALUES (
     "65",
     "cliente@gmail.com",
     "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe"
+), (
+    2,
+    "João Manoel",
+    14173,
+    "13334-100",
+    "R. Dom Pedro I",
+    "(19) 3885-1923",
+    "Cidade Nova I",
+    "65",
+    "joao@gmail.com",
+    "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe"
 );
