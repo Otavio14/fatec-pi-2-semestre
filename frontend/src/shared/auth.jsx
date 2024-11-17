@@ -6,9 +6,14 @@ export const isAuthenticated = () => {
 
   if (!token || token === "") return false;
 
-  const { exp } = decodeJwt(token);
-
-  return exp * 1000 >= Date.now();
+  try {
+    const { exp } = decodeJwt(token);
+    return exp * 1000 >= Date.now();
+  } catch (error) {
+    console.error("Erro ao decodificar o token:", error);
+    localStorage.removeItem("token");
+    return false;
+  };
 };
 
 export const isAdmin = () => {
