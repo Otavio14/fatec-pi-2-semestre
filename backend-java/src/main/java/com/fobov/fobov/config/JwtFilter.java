@@ -48,22 +48,24 @@ public class JwtFilter extends OncePerRequestFilter {
             boolean admin = Jwts.parser().verifyWith(key).build()
                     .parseSignedClaims(token).getPayload()
                     .get("admin", Boolean.class);
+
+            filterChain.doFilter(request, response);
 //            boolean hasRoleAdmin =
 //                    SecurityContextHolder.getContext().getAuthentication()
 //                            .getAuthorities().stream().anyMatch(
 //                                    grantedAuthority -> grantedAuthority
 //                                    .getAuthority()
 //                                            .equals("ADMIN"));
-            Authentication authentication =
-                    SecurityContextHolder.getContext().getAuthentication();
-
-            System.out.println(authentication.getCredentials());
-            System.out.println(authentication.getAuthorities());
-            if (admin) {
-                filterChain.doFilter(request, response);
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
+//            Authentication authentication =
+//                    SecurityContextHolder.getContext().getAuthentication();
+//
+//            System.out.println(authentication.getCredentials());
+//            System.out.println(authentication.getAuthorities());
+//            if (admin) {
+//                filterChain.doFilter(request, response);
+//            } else {
+//                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
