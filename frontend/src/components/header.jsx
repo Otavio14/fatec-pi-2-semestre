@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { X } from "@phosphor-icons/react";
 import Icone from "../assets/icone-2.png";
 import { Swal } from "../shared/swal";
+import { api } from "../shared/api"
 
 export const HeaderComponent = () => {
   const Navigate = useNavigate();
@@ -13,11 +14,17 @@ export const HeaderComponent = () => {
   const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const [CarrinhoOpen, setCarrinhoOpen] = useState(false);
 
-/////////////////////////////
+  /////////////////////////////
 
-const usuarioTeste = "João ManoGomes Silva"
+  const usuarioTeste = "João ManoGomes Silva"
 
-////////////////////////////
+  ////////////////////////////
+
+  useEffect(() => {
+    api.get(`/clientes/${parseInt(localStorage.getItem("tokenTeste"))}`).then((res) => {
+      console.log({ res, res })
+    }).catch((err) => console.log({ erro: err }))
+  }, []);
 
   const refreshCarrinho = () => {
     const local = JSON.parse(localStorage.getItem("carrinho") || "{}");
@@ -114,14 +121,14 @@ const usuarioTeste = "João ManoGomes Silva"
           </NavLink>
         </div>
         <div className="flex h-full w-fit gap-4 sm:gap-8">
-          <NavLink to={localStorage.getItem("tokenTeste") == "1234" ? "/perfil" : "/login"} className="flex items-center gap-[12px]">
+          <NavLink to={!!localStorage.getItem("tokenTeste") ? "/perfil" : "/login"} className="flex items-center gap-[12px]">
             <img src={UserSvg} className="h-6 w-6 object-cover" />
             <div className="hidden flex-col sm:flex">
               <p className="text-[12px] font-semibold leading-[15px] text-[#8f9eb2]">
-                {localStorage.getItem("tokenTeste") == "1234" ? "Perfil" : "Login"}
+                {!!localStorage.getItem("tokenTeste") ? "Perfil" : "Login"}
               </p>
-              <p className="text-[16px] leading-[26px] text-[#0c2d57]">{localStorage.getItem("tokenTeste") == "1234" ?
-              usuarioTeste.split(" ")[0] : "Conta"}</p>
+              <p className="text-[16px] leading-[26px] text-[#0c2d57]">{!!localStorage.getItem("tokenTeste") ?
+                usuarioTeste.split(" ")[0] : "Conta"}</p>
             </div>
           </NavLink>
           <div

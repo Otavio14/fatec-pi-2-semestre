@@ -2,12 +2,12 @@ cliente:
     -Páginas:
         login --começado
         cadastro -- começado
+        Página p/ perfil (alterar endereço, email, senha) -- começado
         página meus pedidos
         página p/ cada pedido
-        Página p/ perfil (alterar endereço, email, senha)
     
     -features:
-        autenticação de login para conclusão de compra
+        autenticação de login para conclusão de compra -- começado
         terminar contato
         avaliar produto
         Filtro produtos por categoria

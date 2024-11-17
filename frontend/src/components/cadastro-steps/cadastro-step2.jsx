@@ -1,60 +1,60 @@
 import React from "react";
 import { Input } from "../input";
 
-export const Step2 = () => {
+export const Step2 = ({ data, updateFieldData }) => {
 
     return (
         <>
             <Input
                 Label={"CEP"}
-                // value={nome}
+                value={data.cep || ""}
                 placeholder={"Digite seu CEP"}
-                // onChange={(event) => setNome(event.target.value)}
+                onChange={(e) => updateFieldData("cep", e.target.value)}
                 required
                 type="text"
                 autoComplete="text"
             />
             <Input
                 Label={"Estado"}
-                // value={nome}
+                value={data.estado || ""}
                 placeholder={"Digite seu Estado"}
-                // onChange={(event) => setNome(event.target.value)}
+                onChange={(e) => updateFieldData("estado", e.target.value)}
                 required
                 type="text"
                 autoComplete="text"
             />
             <Input
                 Label={"Cidade"}
-                // value={email}
+                value={data.cidade || ""}
                 placeholder={"Digite sua cidade"}
-                // onChange={(event) => setEmail(event.target.value)}
+                onChange={(e) => updateFieldData("cidade", e.target.value)}
                 required
                 type="text"
                 autoComplete="text"
             />
             <Input
                 Label={"Bairro"}
-                // value={email}
+                value={data.bairro || ""}
                 placeholder={"Digite seu bairro"}
-                // onChange={(event) => setEmail(event.target.value)}
+                onChange={(e) => updateFieldData("bairro", e.target.value)}
                 required
                 type="text"
                 autoComplete="text"
             />
             <Input
                 Label={"Rua"}
-                // value={senha}
+                value={data.endereco || ""}
                 placeholder={"Digite sua rua"}
-                // onChange={(event) => setSenha(event.target.value)}
+                onChange={(e) => updateFieldData("endereco", e.target.value)}
                 required
                 type="text"
                 autoComplete="text"
             />
             <Input
                 Label={"Número"}
-                // value={senha}
+                value={data.numero || ""}
                 placeholder={"Digite seu número"}
-                // onChange={(event) => setSenha(event.target.value)}
+                onChange={(e) => updateFieldData("numero", parseInt(e.target.value))}
                 required
                 type="text"
                 autoComplete="text"
