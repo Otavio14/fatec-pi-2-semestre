@@ -12,24 +12,25 @@ export const LoginPage = () => {
   ////////////////
   const user = {
     email: "mail@mail.com",
-    senha: "1234"
-  }
+    senha: "1234",
+  };
 
   const loginTeste = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if(Email === user.email && Senha == user.senha){
-      localStorage.setItem("tokenTeste", "1234")
+    if (Email === user.email && Senha == user.senha) {
+      localStorage.setItem("tokenTeste", "1234");
       {
-        !!localStorage.getItem("ConfirmarCarrinho") ? Navigate("/finalizar-compra", { replace: true }) :
-        Navigate("/home")
+        !!localStorage.getItem("ConfirmarCarrinho")
+          ? Navigate("/finalizar-compra", { replace: true })
+          : Navigate("/home");
       }
-    } else{
-      alert("Erro")
+    } else {
+      alert("Erro");
     }
-  }
+  };
 
-//////////////////
+  //////////////////
 
   const login = (event) => {
     event.preventDefault();
@@ -37,14 +38,14 @@ export const LoginPage = () => {
     api
       .post("/usuarios/login", { email: Email, senha: Senha })
       .then((response) => {
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data);
         Navigate("/admin");
       })
-      .catch(() => {
+      .catch((error) => {
         Swal.fire({
-          icon: "error",
+          icon: "warning",
           title: "Atenção!",
-          text: "Email ou senha incorretos",
+          text: error?.response?.data || "Email ou senha incorretos",
         });
       });
   };
@@ -57,7 +58,7 @@ export const LoginPage = () => {
   return (
     <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3] p-1">
       <form
-        onSubmit={loginTeste}
+        onSubmit={login}
         className="relative flex w-full max-w-[500px] flex-col justify-center rounded-[10px] bg-white px-4 pb-[40px] pt-[33px] sm:px-[65px]"
       >
         <NavLink

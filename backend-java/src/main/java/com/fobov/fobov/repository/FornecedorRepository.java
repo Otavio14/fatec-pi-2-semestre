@@ -2,6 +2,8 @@ package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Fornecedor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -24,7 +26,10 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
         String sql = "SELECT id_fornecedores, nome, cep, endereco, " +
                 "complemento, telefone, status, id_cidade FROM fornecedores";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Fornecedor fornecedor = new Fornecedor();
@@ -51,7 +56,9 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                 "complemento, telefone, status, id_cidade FROM fornecedores " +
                 "WHERE id_fornecedores = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -72,12 +79,14 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
         return fornecedor;
     }
 
-    public boolean save(Fornecedor fornecedor) {
+    public ResponseEntity<String> save(Fornecedor fornecedor) {
         String sql = "INSERT INTO fornecedores (nome, cep, endereco, " +
                 "complemento, telefone, status, id_cidade) VALUES (?, ?, ?, " +
                 "?, ?, ?, ?)";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, fornecedor.getNome());
             preparedStatement.setString(2, fornecedor.getCep());
             preparedStatement.setString(3, fornecedor.getEndereco());
@@ -87,20 +96,24 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
             preparedStatement.setInt(7, fornecedor.getIdCidade());
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Fornecedor cadastrado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, Fornecedor fornecedor) {
+    public ResponseEntity<String> update(Integer id, Fornecedor fornecedor) {
         String sql = "UPDATE fornecedores SET nome = ?, cep = ?, endereco = " +
                 "?, complemento = ?, telefone = ?, status = ?, id_cidade = ? " +
                 "WHERE id_fornecedores = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, fornecedor.getNome());
             preparedStatement.setString(2, fornecedor.getCep());
             preparedStatement.setString(3, fornecedor.getEndereco());
@@ -111,26 +124,32 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
             preparedStatement.setInt(8, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Fornecedor alterado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM fornecedores WHERE id_fornecedores = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Fornecedor excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 }

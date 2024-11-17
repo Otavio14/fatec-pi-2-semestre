@@ -2,6 +2,8 @@ package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cliente;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -25,8 +27,8 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 "telefone, bairro, numero, id_cidade FROM clientes";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement =
-                     connection.prepareStatement(sql);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -56,8 +58,8 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 "id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement =
-                     connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -79,70 +81,124 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
         return cliente;
     }
 
-    public boolean save(Cliente cliente) {
-        String sql = "INSERT INTO clientes (nome, cep, endereco, email, " +
-                "telefone, bairro, numero) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public ResponseEntity<String> save(Cliente cliente) {
+        String sqlCosultar =
+                "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
+                        "SELECT id_clientes FROM clientes WHERE email = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement =
-                     connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, cliente.getNome());
-            preparedStatement.setString(2, cliente.getCep());
-            preparedStatement.setString(3, cliente.getEndereco());
-            preparedStatement.setString(4, cliente.getEmail());
-            preparedStatement.setString(5, cliente.getTelefone());
-            preparedStatement.setString(6, cliente.getBairro());
-            preparedStatement.setString(7, cliente.getNumero());
+        String sqlInsert =
+                "INSERT INTO clientes (nome, cep, endereco, email, " +
+                        "telefone, bairro, numero) VALUES (?, ?, ?, ?, ?, ?, " +
+                        "?)";
 
-            preparedStatement.executeUpdate();
-            return true;
+        try {
+            Connection connection = DATA_SOURCE.getConnection();
+
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sqlCosultar);
+            preparedStatement.setString(1, cliente.getEmail());
+            preparedStatement.setString(2, cliente.getEmail());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Email já utilizado!");
+            } else {
+                preparedStatement.clearParameters();
+                preparedStatement.clearBatch();
+                preparedStatement.clearWarnings();
+                preparedStatement.close();
+
+                preparedStatement = connection.prepareStatement(sqlInsert);
+                preparedStatement.setString(1, cliente.getNome());
+                preparedStatement.setString(2, cliente.getCep());
+                preparedStatement.setString(3, cliente.getEndereco());
+                preparedStatement.setString(4, cliente.getEmail());
+                preparedStatement.setString(5, cliente.getTelefone());
+                preparedStatement.setString(6, cliente.getBairro());
+                preparedStatement.setString(7, cliente.getNumero());
+
+                preparedStatement.executeUpdate();
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("Cliente cadastrado com sucesso!");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, Cliente cliente) {
-        String sql = "UPDATE clientes SET nome = ?, cep = ?, endereco = ?, " +
-                "email = ?, telefone = ?, bairro = ?, numero = ? WHERE " +
-                "id_clientes = ?";
+    public ResponseEntity<String> update(Integer id, Cliente cliente) {
+        String sqlCosultar =
+                "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
+                        "SELECT id_clientes FROM clientes WHERE email = ? AND" +
+                        " id_clientes != ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement =
-                     connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, cliente.getNome());
-            preparedStatement.setString(2, cliente.getCep());
-            preparedStatement.setString(3, cliente.getEndereco());
-            preparedStatement.setString(4, cliente.getEmail());
-            preparedStatement.setString(5, cliente.getTelefone());
-            preparedStatement.setString(6, cliente.getBairro());
-            preparedStatement.setString(7, cliente.getNumero());
-            preparedStatement.setInt(8, id); // ID do cliente a ser atualizado
+        String sqlUpdate =
+                "UPDATE clientes SET nome = ?, cep = ?, endereco = ?, " +
+                        "email = ?, telefone = ?, bairro = ?, numero = ? " +
+                        "WHERE " + "id_clientes = ?";
 
-            preparedStatement.executeUpdate();
-            return true;
+        try {
+            Connection connection = DATA_SOURCE.getConnection();
+
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(sqlCosultar);
+            preparedStatement.setString(1, cliente.getEmail());
+            preparedStatement.setString(2, cliente.getEmail());
+            preparedStatement.setInt(3, cliente.getId());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Email já utilizado!");
+            } else {
+                preparedStatement.clearParameters();
+                preparedStatement.clearBatch();
+                preparedStatement.clearWarnings();
+                preparedStatement.close();
+
+                preparedStatement = connection.prepareStatement(sqlUpdate);
+                preparedStatement.setString(1, cliente.getNome());
+                preparedStatement.setString(2, cliente.getCep());
+                preparedStatement.setString(3, cliente.getEndereco());
+                preparedStatement.setString(4, cliente.getEmail());
+                preparedStatement.setString(5, cliente.getTelefone());
+                preparedStatement.setString(6, cliente.getBairro());
+                preparedStatement.setString(7, cliente.getNumero());
+                preparedStatement.setInt(8, id);
+
+                preparedStatement.executeUpdate();
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("Cliente alterado com sucesso!");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM clientes WHERE id_clientes = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement =
-                     connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Cliente excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 }

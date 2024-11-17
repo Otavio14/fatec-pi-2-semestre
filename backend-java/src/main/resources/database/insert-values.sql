@@ -4,9 +4,6 @@ VALUES
     (1, "Admin", "admin@gmail.com",
     "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe");
 
-VALUES
-    ("Admin", "admin@gmail.com", "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe");
-
 INSERT INTO
     categoria (id_categoria, nome)
 VALUES
@@ -16,6 +13,7 @@ VALUES
 
 INSERT INTO
     produtos (
+        id_produtos,
         nome,
         preco,
         estoque,
@@ -25,6 +23,7 @@ INSERT INTO
     )
 VALUES
     (
+        1,
         "Whey Protein",
         "129.99",
         "65",
@@ -33,6 +32,7 @@ VALUES
         "https://static.netshoes.com.br/produtos/nutri-whey-protein-900-g-pote-integralmedica/99/252-0951-799/252-0951-799_zoom1.jpg?ts=1695093963&ims=544x"
     ),
     (
+        2,
         "Creatina Hardcore Reload",
         "89.9",
         "120",
@@ -41,6 +41,7 @@ VALUES
         "https://static.netshoes.com.br/produtos/creatina-monohidratada-hardcore-reload-300-gr-integralmedica/01/252-0831-001/252-0831-001_zoom1.jpg?ts=1695418005"
     ),
     (
+        3,
         "BCAA 2400 Max Titanium",
         "59.9",
         "18",
@@ -49,6 +50,7 @@ VALUES
         "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157363/bcaa-2400-max-titanium-60-capsulas-1.jpg?v=638343757987300000"
     ),
     (
+        4,
         "Whey Protein Gold Standard",
         "280",
         "12",
@@ -57,6 +59,7 @@ VALUES
         "https://m.media-amazon.com/images/I/61GDn0-MvwL._AC_UF1000,1000_QL80_.jpg"
     ),
     (
+        5,
         "PRÉ-TREINO HAZE HARDCORE 300G - GROWTH SUPPLEMENTS",
         "103",
         "14",
@@ -65,6 +68,7 @@ VALUES
         "https://www.gsuplementos.com.br/upload/growth-layout-personalizado/produto/1500/haze-hardcore-pre-workout-growth-v2.png"
     ),
     (
+        6,
         "ÓLEO DE CÁRTAMO (75 CAPS) - GROWTH SUPPLEMENTS",
         "27",
         "20",
@@ -73,6 +77,7 @@ VALUES
         "https://www.gsuplementos.com.br/upload/produto/layout/109/oleocartamococochiacromovite75caps-growth-supplements-v3.webp"
     ),
     (
+        7,
         "100% Whey Refil 900G - Max TitaniumChocolate",
         "120",
         "16",
@@ -81,6 +86,7 @@ VALUES
         "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157335-800-800?v=638343733617100000&width=800&height=800&aspect=true"
     ),
     (
+        8,
         "Night Train - Max Titanium - Frutas Vermelhas 300g",
         "93",
         "12",
@@ -89,6 +95,7 @@ VALUES
         "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157632-800-800?v=638351478086870000&width=800&height=800&aspect=true"
     ),
     (
+        9,
         "Glutamine Isolates",
         "46",
         "8",
@@ -97,6 +104,7 @@ VALUES
         "https://integralmedica.vtexassets.com/arquivos/ids/165360-1600-auto?v=638203736165170000&width=1600&height=auto&aspect=true"
     ),
     (
+        10,
         "MY WHEY – High quality protein powder",
         "107",
         "24",
@@ -105,6 +113,7 @@ VALUES
         "https://integralmedica.vtexassets.com/arquivos/ids/165294-1600-auto?v=638203647214530000&width=1600&height=auto&aspect=true"
     ),
     (
+        11,
         "BETA-ALANINA EM PÓ - GROWTH SUPPLEMENTS",
         "63",
         "12",
@@ -113,6 +122,7 @@ VALUES
         "https://www.gsuplementos.com.br/upload/produto/layout/1205/beta-alanina-em-po-growth-supplements-v2.webp"
     ),
     (
+        12,
         "BEBIDA LÁCTEA UHT DE PROTEÍNAS - GROWTH SUPPLEMENTS",
         "6",
         "80",
@@ -120,6 +130,22 @@ VALUES
         "2024-12-10",
         "https://www.gsuplementos.com.br/upload/produto/layout/2200/growth-whey-pronto-growth-supplements-v2.webp"
     );
+
+INSERT INTO
+    produtos_categorias (id, id_produto, id_categoria)
+VALUES
+    (1, 1, 1),
+    (2, 2, 1),
+    (3, 3, 1),
+    (4, 4, 1),
+    (5, 5, 1),
+    (6, 6, 1),
+    (7, 7, 1),
+    (8, 8, 1),
+    (9, 9, 1),
+    (10, 10, 1),
+    (11, 11, 1),
+    (12, 12, 1);
 
 INSERT INTO
     estados (id_estado, nome, sigla)
@@ -5738,7 +5764,8 @@ INSERT INTO
         bairro,
         numero,
         email,
-        senha)
+        senha
+    )
 VALUES (
     1,
     "Cliente de testes",
@@ -5751,3 +5778,14 @@ VALUES (
     "cliente@gmail.com",
     "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe"
 );
+
+INSERT INTO
+    pedidos (id_pedidos, id_clientes, dt_pedido, endereco, status, total)
+VALUES
+    (1, 1, datetime("now","localtime"), "Rua Nome da Rua", "Pendente", 100);
+
+INSERT INTO
+    produtos_pedidos (id, id_produtos, id_pedidos, preco, quantidade)
+VALUES
+    (1, 1, 1, 129.99, 1),
+    (2, 2, 1, 89.9, 1);

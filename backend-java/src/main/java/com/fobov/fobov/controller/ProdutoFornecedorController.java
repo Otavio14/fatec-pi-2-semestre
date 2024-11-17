@@ -3,16 +3,19 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.ProdutoFornecedor;
 import com.fobov.fobov.repository.ProdutoFornecedorRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/fornecedores_produtos")
-public class ProdutoFornecedorController implements Crud<ProdutoFornecedor, Integer> {
+public class ProdutoFornecedorController
+        implements Crud<ProdutoFornecedor, Integer> {
     private final ProdutoFornecedorRepository PRODUTO_FORNECEDOR_REPOSITORY;
 
-    public ProdutoFornecedorController(ProdutoFornecedorRepository PRODUTO_FORNECEDOR_REPOSITORY) {
+    public ProdutoFornecedorController(
+            ProdutoFornecedorRepository PRODUTO_FORNECEDOR_REPOSITORY) {
         this.PRODUTO_FORNECEDOR_REPOSITORY = PRODUTO_FORNECEDOR_REPOSITORY;
     }
 
@@ -27,17 +30,19 @@ public class ProdutoFornecedorController implements Crud<ProdutoFornecedor, Inte
     }
 
     @PostMapping
-    public boolean save(@RequestBody ProdutoFornecedor produtoFornecedor) {
+    public ResponseEntity<String> save(
+            @RequestBody ProdutoFornecedor produtoFornecedor) {
         return PRODUTO_FORNECEDOR_REPOSITORY.save(produtoFornecedor);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody ProdutoFornecedor produtoFornecedor) {
+    public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody
+    ProdutoFornecedor produtoFornecedor) {
         return PRODUTO_FORNECEDOR_REPOSITORY.update(id, produtoFornecedor);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PRODUTO_FORNECEDOR_REPOSITORY.delete(id);
     }
 }

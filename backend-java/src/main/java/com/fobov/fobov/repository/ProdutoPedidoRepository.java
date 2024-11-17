@@ -2,6 +2,8 @@ package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.ProdutoPedido;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -21,10 +23,13 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
 
     public List<ProdutoPedido> findAll() {
         List<ProdutoPedido> produtoPedidoList = new ArrayList<>();
-        String sql = "SELECT id, preco, quantidade, id_produtos, id_pedidos FROM produtos_pedidos";
+        String sql =
+                "SELECT id, preco, quantidade, id_produtos, id_pedidos FROM " +
+                        "produtos_pedidos";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -45,10 +50,13 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
 
     public ProdutoPedido findById(Integer id) {
         ProdutoPedido produtoPedido = null;
-        String sql = "SELECT id, preco, quantidade, id_produtos, id_pedidos FROM produtos_pedidos WHERE id = ?";
+        String sql =
+                "SELECT id, preco, quantidade, id_produtos, id_pedidos FROM " +
+                        "produtos_pedidos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -66,54 +74,68 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
         return produtoPedido;
     }
 
-    public boolean save(ProdutoPedido produtoPedido) {
-        String sql = "INSERT INTO produtos_pedidos (preco, quantidade) VALUES (?, ?)";
+    public ResponseEntity<String> save(ProdutoPedido produtoPedido) {
+        String sql =
+                "INSERT INTO produtos_pedidos (preco, quantidade) VALUES (?, " +
+                        "?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setDouble(1, produtoPedido.getPreco());
             preparedStatement.setInt(2, produtoPedido.getQuantidade());
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto pedido cadastrado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar o cadastro!");
     }
 
-    public boolean update(Integer id, ProdutoPedido produtoPedido) {
-        String sql = "UPDATE produtos_pedidos SET preco = ?, quantidade = ? WHERE id = ?";
+    public ResponseEntity<String> update(Integer id,
+                                         ProdutoPedido produtoPedido) {
+        String sql =
+                "UPDATE produtos_pedidos SET preco = ?, quantidade = ? WHERE " +
+                        "id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setDouble(1, produtoPedido.getPreco());
             preparedStatement.setInt(2, produtoPedido.getQuantidade());
             preparedStatement.setInt(3, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto pedido alterado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a alteração!");
     }
 
-    public boolean delete(Integer id) {
+    public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM produtos_pedidos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-            return true;
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto pedido excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível realizar a exclusão!");
     }
 }

@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cidade;
 import com.fobov.fobov.repository.CidadeRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class CidadeController implements Crud<Cidade, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Cidade cidade) {
+    public ResponseEntity<String> save(@RequestBody Cidade cidade) {
         return CIDADE_REPOSITORY.save(cidade);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Cidade cidade) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Cidade cidade) {
         return CIDADE_REPOSITORY.update(id, cidade);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return CIDADE_REPOSITORY.delete(id);
     }
 }

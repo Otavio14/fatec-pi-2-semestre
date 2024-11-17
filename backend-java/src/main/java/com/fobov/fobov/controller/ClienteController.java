@@ -3,6 +3,7 @@ package com.fobov.fobov.controller;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cliente;
 import com.fobov.fobov.repository.ClienteRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,18 @@ public class ClienteController implements Crud<Cliente, Integer> {
     }
 
     @PostMapping
-    public boolean save(@RequestBody Cliente cliente) {
+    public ResponseEntity<String> save(@RequestBody Cliente cliente) {
         return CLIENTE_REPOSITORY.save(cliente);
     }
 
     @PutMapping("/{id}")
-    public boolean update(@PathVariable Integer id, @RequestBody Cliente cliente) {
+    public ResponseEntity<String> update(@PathVariable Integer id,
+                                         @RequestBody Cliente cliente) {
         return CLIENTE_REPOSITORY.update(id, cliente);
     }
 
     @DeleteMapping("/{id}")
-    public boolean delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         return CLIENTE_REPOSITORY.delete(id);
     }
 }
