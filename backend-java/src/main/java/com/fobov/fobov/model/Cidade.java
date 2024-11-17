@@ -1,8 +1,9 @@
 package com.fobov.fobov.model;
 
-public class Categoria {
+public class Cidade {
     private int id;
     private String nome;
+    private int idEstado;
 
     public int getId() {
         return id;
@@ -18,5 +19,13 @@ public class Categoria {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public int getIdEstado() {
+        return idEstado;
+    }
+
+    public void setIdEstado(int idEstado) {
+        this.idEstado = idEstado;
     }
 }

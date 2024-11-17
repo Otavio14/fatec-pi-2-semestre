@@ -1,5 +1,6 @@
 package com.fobov.fobov.controller;
 
+import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Categoria;
 import com.fobov.fobov.repository.CategoriaRepository;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
-public class CategoriaController {
+public class CategoriaController implements Crud<Categoria, Integer> {
     private final CategoriaRepository CATEGORIA_REPOSITORY;
 
     public CategoriaController(CategoriaRepository CATEGORIA_REPOSITORY) {
@@ -16,27 +17,27 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public List<Categoria> getAllCategorias() {
+    public List<Categoria> findAll() {
         return CATEGORIA_REPOSITORY.findAll();
     }
 
-    @GetMapping("/{id_categoria}")
-    public Categoria getCategoriaById(@PathVariable int id_categoria) {
-        return CATEGORIA_REPOSITORY.findById(id_categoria);
+    @GetMapping("/{id}")
+    public Categoria findById(@PathVariable Integer id) {
+        return CATEGORIA_REPOSITORY.findById(id);
     }
 
     @PostMapping
-    public boolean createCategoria(@RequestBody Categoria categoria) {
+    public boolean save(@RequestBody Categoria categoria) {
         return CATEGORIA_REPOSITORY.save(categoria);
     }
 
-    @PutMapping("/{id_categoria}")
-    public boolean updateCategoria(@PathVariable int id_categoria, @RequestBody Categoria categoria) {
-        return CATEGORIA_REPOSITORY.update(id_categoria, categoria);
+    @PutMapping("/{id}")
+    public boolean update(@PathVariable Integer id, @RequestBody Categoria categoria) {
+        return CATEGORIA_REPOSITORY.update(id, categoria);
     }
 
-    @DeleteMapping("/{id_categoria}")
-    public boolean deleteCategoria(@PathVariable int id_categoria) {
-        return CATEGORIA_REPOSITORY.delete(id_categoria);
+    @DeleteMapping("/{id}")
+    public boolean delete(@PathVariable Integer id) {
+        return CATEGORIA_REPOSITORY.delete(id);
     }
 }
