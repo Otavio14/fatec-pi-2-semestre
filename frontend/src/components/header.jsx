@@ -21,8 +21,8 @@ export const HeaderComponent = () => {
   ////////////////////////////
 
   useEffect(() => {
-    api.get(`/clientes/${parseInt(localStorage.getItem("tokenTeste"))}`).then((res) => {
-      console.log({ resolution, res })
+    api.get(`/clientes`).then((res) => {
+      console.log({ resolution: res })
     }).catch((err) => console.log({ erro: err }))
   }, []);
 

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProfileInfo } from "../components/profile-modals/profile-info";
 import { ProfilePedidos } from "../components/profile-modals/profile-pedidos";
+import { api } from "../shared/api";
 
 export const ProfilePage = () => {
     const [showProfile, setShowProfile] = useState(true)
@@ -18,6 +19,14 @@ export const ProfilePage = () => {
             numero: "392",
         },
     }
+
+    useEffect(() => {
+        api.get(`/clientes/${1}`).then((res) => {
+            console.log({ress: res.data})
+        }).catch((err) => {
+            console.log({erro: err})
+        })
+    }, []);
 
     function SwitchModals(modalNumber){
         if(modalNumber == 1){
