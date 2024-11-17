@@ -1,20 +1,18 @@
 package com.fobov.fobov.model;
 
-public class Estados {
-    private int id_estado;
+public class Estado {
+    private int id;
     private String nome;
     private String sigla;
 
-    // ID
     public int getId() {
-        return id_estado;
+        return id;
     }
 
-    public void setId(int id_estado) {
-        this.id_estado = id_estado;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    // NOME
     public String getNome() {
         return nome;
     }
@@ -23,7 +21,6 @@ public class Estados {
         this.nome = nome;
     }
 
-    // SIGLA
     public String getSigla() {
         return sigla;
     }

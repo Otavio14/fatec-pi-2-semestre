@@ -1,73 +1,73 @@
 package com.fobov.fobov.repository;
 
-import com.fobov.fobov.model.Cupons;
+import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Cidade;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 
 @Repository
-public class CuponsRepository {
+public class CidadeRepository implements Crud<Cidade, Integer> {
     private final DataSource DATA_SOURCE;
 
-    public CuponsRepository(DataSource dataSource) {
+    public CidadeRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
     }
 
-    public List<Cupons> findAll() {
-        List<Cupons> cuponsList = new ArrayList<>();
-        String sql = "SELECT id_cupons, nome, porcentagem FROM cupons";
+    public List<Cidade> findAll() {
+        List<Cidade> cidadeList = new ArrayList<>();
+        String sql = "SELECT id_cidades, nome, id_estados FROM cidades";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Cupons cupom = new Cupons();
-                cupom.setId(resultSet.getInt("id_cupons"));
-                cupom.setNome(resultSet.getString("nome"));
-                cupom.setPorcentagem(resultSet.getDouble("porcentagem"));
-                cuponsList.add(cupom);
+                Cidade cidade = new Cidade();
+                cidade.setId(resultSet.getInt("id_cidades"));
+                cidade.setNome(resultSet.getString("nome"));
+                cidade.setIdEstado(resultSet.getInt("id_estados"));
+                cidadeList.add(cidade);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return cuponsList;
+        return cidadeList;
     }
 
-    public Cupons findById(int id_cupons) {
-        Cupons cupom = null;
-        String sql = "SELECT id_cupons, nome, porcentagem FROM cupons WHERE id_cupons = ?";
+    public Cidade findById(Integer id) {
+        Cidade cidade = null;
+        String sql = "SELECT id_cidades, nome, id_estados FROM cidades WHERE id_cidades = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_cupons);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                cupom = new Cupons();
-                cupom.setId(resultSet.getInt("id_cupons"));
-                cupom.setNome(resultSet.getString("nome"));
-                cupom.setPorcentagem(resultSet.getDouble("porcentagem"));
+                cidade = new Cidade();
+                cidade.setId(resultSet.getInt("id_cidades"));
+                cidade.setNome(resultSet.getString("nome"));
+                cidade.setIdEstado(resultSet.getInt("id_estados"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return cupom;
+        return cidade;
     }
 
-    public boolean save(Cupons cupom) {
-        String sql = "INSERT INTO cupons (nome, porcentagem) VALUES (?, ?)";
+    public boolean save(Cidade cidade) {
+        String sql = "INSERT INTO cidades (nome) VALUES (?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, cupom.getNome());
-            preparedStatement.setDouble(2, cupom.getPorcentagem());
+            preparedStatement.setString(1, cidade.getNome());
 
             preparedStatement.executeUpdate();
             return true;
@@ -78,14 +78,13 @@ public class CuponsRepository {
         return false;
     }
 
-    public boolean update(int id_cupons, Cupons cupom) {
-        String sql = "UPDATE cupons SET nome = ?, porcentagem = ? WHERE id_cupons = ?";
+    public boolean update(Integer id, Cidade cidade) {
+        String sql = "UPDATE cidades SET nome = ? WHERE id_cidades = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, cupom.getNome());
-            preparedStatement.setDouble(2, cupom.getPorcentagem());
-            preparedStatement.setInt(3, id_cupons); // ID do cupom a ser atualizado
+            preparedStatement.setString(1, cidade.getNome());
+            preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
             return true;
@@ -96,12 +95,12 @@ public class CuponsRepository {
         return false;
     }
 
-    public boolean delete(int id_cupons) {
-        String sql = "DELETE FROM cupons WHERE id_cupons = ?";
+    public boolean delete(Integer id) {
+        String sql = "DELETE FROM cidades WHERE id_cidades = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_cupons);
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
             return true;

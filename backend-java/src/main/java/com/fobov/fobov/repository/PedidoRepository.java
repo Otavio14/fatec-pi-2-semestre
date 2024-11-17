@@ -1,26 +1,26 @@
 package com.fobov.fobov.repository;
 
-import com.fobov.fobov.model.Pedidos;
+import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Pedido;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.DataSource;
 
 @Repository
-public class PedidosRepository {
+public class PedidoRepository implements Crud<Pedido, Integer> {
     private final DataSource DATA_SOURCE;
 
-    public PedidosRepository(DataSource dataSource) {
+    public PedidoRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
     }
 
-    public List<Pedidos> findAll() {
-        List<Pedidos> pedidosList = new ArrayList<>();
+    public List<Pedido> findAll() {
+        List<Pedido> pedidoList = new ArrayList<>();
         String sql = "SELECT id_pedidos, dt_pedido, endereco, status, total, id_clientes FROM pedidos";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -28,38 +28,38 @@ public class PedidosRepository {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                Pedidos pedido = new Pedidos();
+                Pedido pedido = new Pedido();
                 pedido.setId(resultSet.getInt("id_pedidos"));
-                pedido.setDtPedido(resultSet.getDate("dt_pedido")); // Usa java.sql.Date
+                pedido.setDtPedido(resultSet.getTimestamp("dt_pedido").toLocalDateTime());
                 pedido.setEndereco(resultSet.getString("endereco"));
                 pedido.setStatus(resultSet.getString("status"));
                 pedido.setTotal(resultSet.getDouble("total"));
-                pedido.setIdClientes(resultSet.getInt("id_clientes"));
-                pedidosList.add(pedido);
+                pedido.setIdCliente(resultSet.getInt("id_clientes"));
+                pedidoList.add(pedido);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return pedidosList;
+        return pedidoList;
     }
 
-    public Pedidos findById(int id_pedidos) {
-        Pedidos pedido = null;
+    public Pedido findById(Integer id) {
+        Pedido pedido = null;
         String sql = "SELECT id_pedidos, dt_pedido, endereco, status, total, id_clientes FROM pedidos WHERE id_pedidos = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_pedidos);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                pedido = new Pedidos();
+                pedido = new Pedido();
                 pedido.setId(resultSet.getInt("id_pedidos"));
-                pedido.setDtPedido(resultSet.getDate("dt_pedido")); // Usa java.sql.Date
+                pedido.setDtPedido(resultSet.getTimestamp("dt_pedido").toLocalDateTime());
                 pedido.setEndereco(resultSet.getString("endereco"));
                 pedido.setStatus(resultSet.getString("status"));
                 pedido.setTotal(resultSet.getDouble("total"));
-                pedido.setIdClientes(resultSet.getInt("id_clientes"));
+                pedido.setIdCliente(resultSet.getInt("id_clientes"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,16 +68,16 @@ public class PedidosRepository {
         return pedido;
     }
 
-    public boolean save(Pedidos pedido) {
+    public boolean save(Pedido pedido) {
         String sql = "INSERT INTO pedidos (dt_pedido, endereco, status, total, id_clientes) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setDate(1, new Date(pedido.getDtPedido().getTime())); // Converte java.util.Date para java.sql.Date
+            preparedStatement.setDate(1, java.sql.Date.valueOf(pedido.getDtPedido().toLocalDate()));
             preparedStatement.setString(2, pedido.getEndereco());
             preparedStatement.setString(3, pedido.getStatus());
             preparedStatement.setDouble(4, pedido.getTotal());
-            preparedStatement.setInt(5, pedido.getIdClientes()); // Chave estrangeira
+            preparedStatement.setInt(5, pedido.getIdCliente());
 
             preparedStatement.executeUpdate();
             return true;
@@ -88,17 +88,17 @@ public class PedidosRepository {
         return false;
     }
 
-    public boolean update(int id_pedidos, Pedidos pedido) {
+    public boolean update(Integer id, Pedido pedido) {
         String sql = "UPDATE pedidos SET dt_pedido = ?, endereco = ?, status = ?, total = ?, id_clientes = ? WHERE id_pedidos = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setDate(1, new Date(pedido.getDtPedido().getTime())); // Converte java.util.Date para java.sql.Date
+            preparedStatement.setDate(1, java.sql.Date.valueOf(pedido.getDtPedido().toLocalDate()));
             preparedStatement.setString(2, pedido.getEndereco());
-            preparedStatement.set Double(3, pedido.getTotal());
+            preparedStatement.setDouble(3, pedido.getTotal());
             preparedStatement.setString(4, pedido.getStatus());
-            preparedStatement.setInt(5, pedido.getIdClientes()); // Chave estrangeira
-            preparedStatement.setInt(6, id_pedidos);
+            preparedStatement.setInt(5, pedido.getIdCliente());
+            preparedStatement.setInt(6, id);
 
             preparedStatement.executeUpdate();
             return true;
@@ -109,12 +109,12 @@ public class PedidosRepository {
         return false;
     }
 
-    public boolean delete(int id_pedidos) {
+    public boolean delete(Integer id) {
         String sql = "DELETE FROM pedidos WHERE id_pedidos = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id_pedidos);
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
             return true;

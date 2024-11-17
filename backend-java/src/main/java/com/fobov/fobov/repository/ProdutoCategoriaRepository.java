@@ -1,7 +1,7 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
-import com.fobov.fobov.model.Categoria;
+import com.fobov.fobov.model.ProdutoCategoria;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class CategoriaRepository implements Crud<Categoria, Integer> {
+public class ProdutoCategoriaRepository implements Crud<ProdutoCategoria, Integer> {
     private final DataSource DATA_SOURCE;
 
-    public CategoriaRepository(DataSource dataSource) {
+    public ProdutoCategoriaRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
     }
 
-    public List<Categoria> findAll() {
-        List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT id_categoria, nome FROM categoria";
+    public List<ProdutoCategoria> findAll() {
+        List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
+        String sql = "SELECT id, id_produto, id_categoria FROM produtos_categorias";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
@@ -29,21 +29,22 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Categoria categoria = new Categoria();
-                categoria.setId(resultSet.getInt("id_categoria"));
-                categoria.setNome(resultSet.getString("nome"));
-                categorias.add(categoria);
+                ProdutoCategoria produtoCategoria = new ProdutoCategoria();
+                produtoCategoria.setId(resultSet.getInt("id"));
+                produtoCategoria.setIdProduto(resultSet.getInt("id_produto"));
+                produtoCategoria.setIdCategoria(resultSet.getInt("id_categoria"));
+                produtoCategorias.add(produtoCategoria);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return categorias;
+        return produtoCategorias;
     }
 
-    public Categoria findById(Integer id) {
-        Categoria categoria = new Categoria();
-        String sql = "SELECT id_categoria, nome FROM categoria WHERE id_categoria = ?";
+    public ProdutoCategoria findById(Integer id) {
+        ProdutoCategoria produtoCategoria = new ProdutoCategoria();
+        String sql = "SELECT id, id_produto, id_categoria FROM produtos_categorias WHERE id = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
@@ -52,23 +53,25 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                categoria.setId(resultSet.getInt("id_categoria"));
-                categoria.setNome(resultSet.getString("nome"));
+                produtoCategoria.setId(resultSet.getInt("id"));
+                produtoCategoria.setIdProduto(resultSet.getInt("id_produto"));
+                produtoCategoria.setIdCategoria(resultSet.getInt("id_categoria"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return categoria;
+        return produtoCategoria;
     }
 
-    public boolean save(Categoria categoria) {
-        String sql = "INSERT INTO categoria (nome) VALUES (?)";
+    public boolean save(ProdutoCategoria produtoCategoria) {
+        String sql = "INSERT INTO produtos_categorias (id_produto, id_categoria) VALUES (?, ?)";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, categoria.getNome());
+            preparedStatement.setInt(1, produtoCategoria.getIdProduto());
+            preparedStatement.setInt(2, produtoCategoria.getIdCategoria());
 
             preparedStatement.executeUpdate();
             return true;
@@ -79,14 +82,15 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
         return false;
     }
 
-    public boolean update(Integer id, Categoria categoria) {
-        String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
+    public boolean update(Integer id, ProdutoCategoria produtoCategoria) {
+        String sql = "UPDATE produtos_categorias SET id_produto = ?, id_categoria = ? WHERE id = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, categoria.getNome());
-            preparedStatement.setInt(2, id);
+            preparedStatement.setInt(1, produtoCategoria.getIdProduto());
+            preparedStatement.setInt(2, produtoCategoria.getIdCategoria());
+            preparedStatement.setInt(3, id);
 
             preparedStatement.executeUpdate();
             return true;
@@ -98,7 +102,7 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
     }
 
     public boolean delete(Integer id) {
-        String sql = "DELETE FROM categoria WHERE id_categoria = ?";
+        String sql = "DELETE FROM produtos_categorias WHERE id = ?";
 
         try {
             Connection connection = DATA_SOURCE.getConnection();
