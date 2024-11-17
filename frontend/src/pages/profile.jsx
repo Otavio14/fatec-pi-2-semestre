@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Input } from "../components/input";
-import { EnderecoModal } from "../components/endereco-modal.jsx";
+import { ProfileInfo } from "../components/profile-modals/profile-info";
+import { ProfilePedidos } from "../components/profile-modals/profile-pedidos";
 
 export const ProfilePage = () => {
-
+    const [showProfile, setShowProfile] = useState(true)
     const [show, setShow] = useState(false)
+    const [showPedidos, setShowPedidos] = useState(false);
 
     const userData = {
         nome: "João Manoel",
@@ -18,22 +19,36 @@ export const ProfilePage = () => {
         },
     }
 
+    function SwitchModals(modalNumber){
+        if(modalNumber == 1){
+            setShowProfile(true)
+            setShowPedidos(false)
+        }
+        if(modalNumber == 2){
+            setShowPedidos(true)
+            setShowProfile(false)
+        }
+    }
+
+    const AsideButton = ({ nome, evento }) => {
+        return (
+            <button className="shadow-md hover:bg-violet-600"
+                onClick={evento}>
+                {nome}
+            </button>
+        )
+    }
+
     return (
-        <div className="flex justify-center">
-            <div className="flex flex-col w-[25%]">
-                <Input Label={"nome"} value={userData.nome} />
-                <Input Label={"email"} value={userData.email} />
-                <Input Label={"celular"} value={userData.celular ? userData.senha : ""} />
-                <button className="border-2 border-black" onClick={() => setShow(!show)}>Endereço</button>
+        <div className="flex flex-row shadow-lg w-3/4 height-fit place-self-center mt-5">
+            <div className="flex flex-col shadow-md height-fit w-1/4">
+                <AsideButton nome={"Meu perfil"} evento={() => SwitchModals(1)} />
+                <AsideButton nome={"Meus pedidos"} evento={() => SwitchModals(2)}/>
             </div>
-            <EnderecoModal
-                show={show}
-                setShow={setShow}
-                cep={userData.endereco.cep}
-                bairro={userData.endereco.bairro}
-                rua={userData.endereco.rua}
-                numero={userData.endereco.numero}
-            />
+            <div className="flex flex-col shadow-md w-3/4">
+                <ProfileInfo show={showProfile} setShow={setShowProfile} userData={userData}/>
+                <ProfilePedidos show={showPedidos} setShow={setShowPedidos} />
+            </div>
         </div>
     )
 }
