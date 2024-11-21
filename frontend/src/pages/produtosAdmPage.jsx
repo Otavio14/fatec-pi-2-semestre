@@ -4,6 +4,7 @@ import { Input } from "../components/input.jsx";
 import Swal from "sweetalert2";
 import { Pencil, Trash } from "@phosphor-icons/react";
 import { Toast } from "../shared/swal.js";
+import { Select } from "../components/select";
 
 export const ProdutosPage = () => {
   const DialogRef = useRef();
@@ -14,6 +15,7 @@ export const ProdutosPage = () => {
   const [DescricaoProduto, setDescricaoProduto] = useState("");
   const [ValidadeProduto, setValidadeProduto] = useState("");
   const [ImagemProduto, setImagemProduto] = useState("");
+  const [Ativo, setAtivo] = useState(0);
   const [Reload, setReload] = useState(false);
   const [ShowModal, setShowModal] = useState(false);
   const [Id, setId] = useState(0);
@@ -26,8 +28,9 @@ export const ProdutosPage = () => {
       preco: Number(PrecoProduto),
       estoque: Number(EstoqueProduto),
       descricao: DescricaoProduto,
-      dt_validade: ValidadeProduto,
+      dtValidade: ValidadeProduto,
       imagem: ImagemProduto,
+      ativo: Ativo,
     };
 
     if (Id) {
@@ -60,8 +63,9 @@ export const ProdutosPage = () => {
       setPrecoProduto(response.data.preco);
       setEstoqueProduto(response.data.estoque);
       setDescricaoProduto(response.data.descricao);
-      setValidadeProduto(response.data.dt_validade);
+      setValidadeProduto(response.data.dtValidade);
       setImagemProduto(response.data.imagem);
+      setAtivo(response.data.ativo);
     });
   };
 
@@ -93,6 +97,7 @@ export const ProdutosPage = () => {
     setDescricaoProduto("");
     setValidadeProduto("");
     setImagemProduto("");
+    setAtivo(0);
   };
 
   useEffect(() => {
@@ -126,6 +131,7 @@ export const ProdutosPage = () => {
               <th>Preço</th>
               <th>Estoque</th>
               <th>Validade</th>
+              <th>Ativo</th>
               <th></th>
               <th></th>
             </tr>
@@ -137,10 +143,11 @@ export const ProdutosPage = () => {
                 <td>{produto?.preco}</td>
                 <td>{produto?.estoque}</td>
                 <td>
-                  {new Date(produto?.dt_validade + "T00:00").toLocaleDateString(
+                  {new Date(produto?.dtValidade + "T00:00").toLocaleDateString(
                     "pt-BR",
                   )}
                 </td>
+                <td>{produto?.ativo ? "Sim" : "Não"}</td>
                 <td>
                   <button onClick={() => openModal(produto?.id)}>
                     <Pencil size={20} />
@@ -214,6 +221,14 @@ export const ProdutosPage = () => {
             value={DescricaoProduto}
             onChange={(e) => setDescricaoProduto(e.target.value)}
           />
+          <Select
+            Label={"Ativo?"}
+            onChange={(e) => setAtivo(e.target.value)}
+            value={Ativo}
+          >
+            <option value={0}>Não</option>
+            <option value={1}>Sim</option>
+          </Select>
           <div className="flex gap-4">
             <button
               className="w-fit rounded border bg-[#2B38D1] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"

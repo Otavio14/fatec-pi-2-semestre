@@ -23,7 +23,7 @@ public class CupomRepository implements Crud<Cupom, Integer> {
 
     public List<Cupom> findAll() {
         List<Cupom> cupomList = new ArrayList<>();
-        String sql = "SELECT id_cupons, nome, porcentagem FROM cupons";
+        String sql = "SELECT id, nome, porcentagem FROM cupons";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -32,7 +32,7 @@ public class CupomRepository implements Crud<Cupom, Integer> {
 
             while (resultSet.next()) {
                 Cupom cupom = new Cupom();
-                cupom.setId(resultSet.getInt("id_cupons"));
+                cupom.setId(resultSet.getInt("id"));
                 cupom.setNome(resultSet.getString("nome"));
                 cupom.setPorcentagem(resultSet.getDouble("porcentagem"));
                 cupomList.add(cupom);
@@ -46,8 +46,8 @@ public class CupomRepository implements Crud<Cupom, Integer> {
 
     public Cupom findById(Integer id) {
         Cupom cupom = null;
-        String sql = "SELECT id_cupons, nome, porcentagem FROM cupons WHERE " +
-                "id_cupons = ?";
+        String sql = "SELECT id, nome, porcentagem FROM cupons WHERE " +
+                "id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -56,7 +56,7 @@ public class CupomRepository implements Crud<Cupom, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 cupom = new Cupom();
-                cupom.setId(resultSet.getInt("id_cupons"));
+                cupom.setId(resultSet.getInt("id"));
                 cupom.setNome(resultSet.getString("nome"));
                 cupom.setPorcentagem(resultSet.getDouble("porcentagem"));
             }
@@ -89,7 +89,7 @@ public class CupomRepository implements Crud<Cupom, Integer> {
 
     public ResponseEntity<String> update(Integer id, Cupom cupom) {
         String sql =
-                "UPDATE cupons SET nome = ?, porcentagem = ? WHERE id_cupons " +
+                "UPDATE cupons SET nome = ?, porcentagem = ? WHERE id " +
                         "= ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -111,7 +111,7 @@ public class CupomRepository implements Crud<Cupom, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM cupons WHERE id_cupons = ?";
+        String sql = "DELETE FROM cupons WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(

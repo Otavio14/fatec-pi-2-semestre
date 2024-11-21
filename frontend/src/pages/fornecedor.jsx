@@ -33,7 +33,7 @@ export const FornecedorPage = () => {
       endereco: Endereco,
       complemento: Complemento,
       telefone: Telefone,
-      id_cidades: Cidade,
+      idCidade: Cidade,
       status: Status,
     };
 
@@ -68,8 +68,8 @@ export const FornecedorPage = () => {
       setCep(response.data.cep);
       setComplemento(response.data.complemento);
       setTelefone(response.data.telefone);
-      setEstado(response.data.id_estados);
-      setEstado(response.data.id_estados);
+      setEstado(response.data.idEstado);
+      setEstado(response.data.idEstado);
       setStatus(response.data.status);
     });
   };

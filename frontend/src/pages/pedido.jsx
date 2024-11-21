@@ -33,7 +33,7 @@ export const PedidoPage = () => {
     }
 
     const data = {
-      id_clientes: Number(Cliente),
+      idCliente: Number(Cliente),
       status: Status,
       endereco: Endereco,
       dt_pedido: DtPedido,
@@ -43,8 +43,8 @@ export const PedidoPage = () => {
     if (Id) {
       api.put(`/pedidos/${Id}`, data).then((res) => {
         const pedidos_produtos = ProdutosPedidos?.map((produto) => ({
-          id_pedidos: Number(res.data.id),
-          id_produtos: Number(produto?.id_produtos),
+          idPedido: Number(res.data.id),
+          idProduto: Number(produto?.idProduto),
           quantidade: Number(produto?.quantidade),
           preco: Number(produto?.preco),
         }));
@@ -61,8 +61,8 @@ export const PedidoPage = () => {
     } else {
       api.post("/pedidos", data).then((res) => {
         const pedidos_produtos = ProdutosPedidos?.map((produto) => ({
-          id_pedidos: Number(res.data.id),
-          id_produtos: Number(produto?.id_produtos),
+          idPedido: Number(res.data.id),
+          idProduto: Number(produto?.idProduto),
           quantidade: Number(produto?.quantidade),
           preco: Number(produto?.preco),
         }));
@@ -85,7 +85,7 @@ export const PedidoPage = () => {
     api.get(`/pedidos/${id}`).then((response) => {
       setShowModal(true);
       setStatus(response.data.status);
-      setCliente(response.data.id_clientes);
+      setCliente(response.data.idCliente);
       setEndereco(response.data.endereco);
       setDtPedido(
         new Date(response.data.dt_pedido).toISOString().substring(0, 16),
@@ -126,7 +126,7 @@ export const PedidoPage = () => {
 
   const adicionarProduto = (produto) => {
     setProdutosPedidos((p) => {
-      const index = p.findIndex((f) => f?.id_produtos === produto?.id);
+      const index = p.findIndex((f) => f?.idProduto === produto?.id);
 
       if (index >= 0) {
         return [
@@ -136,8 +136,8 @@ export const PedidoPage = () => {
         ];
       } else {
         const produtoPedido = {
-          id_pedidos: Id,
-          id_produtos: produto?.id,
+          idPedido: Id,
+          idProduto: produto?.id,
           preco: produto?.preco,
           quantidade: 1,
           produto: {
@@ -154,9 +154,9 @@ export const PedidoPage = () => {
   const removerProduto = (produto) => {
     setProdutosPedidos((p) => {
       const qtde = p.find(
-        (f) => f?.id_produtos === produto?.id_produtos,
+        (f) => f?.idProduto === produto?.idProduto,
       )?.quantidade;
-      const index = p.findIndex((f) => f?.id_produtos === produto?.id);
+      const index = p.findIndex((f) => f?.idProduto === produto?.id);
 
       if (qtde > 1) {
         return [
@@ -165,7 +165,7 @@ export const PedidoPage = () => {
           ...p.slice(index + 1),
         ];
       } else {
-        return p.filter((f) => f?.id_produtos !== produto?.id_produtos);
+        return p.filter((f) => f?.idProduto !== produto?.idProduto);
       }
     });
   };
@@ -329,7 +329,7 @@ export const PedidoPage = () => {
                     <td>{produto?.nome}</td>
                     <td>R$ {produto?.preco?.toFixed(2)}</td>
                     <td>{produto?.estoque}</td>
-                    <td>{produto?.dt_validade}</td>
+                    <td>{produto?.dtValidade}</td>
                     <td>
                       <button
                         onClick={() => adicionarProduto(produto)}

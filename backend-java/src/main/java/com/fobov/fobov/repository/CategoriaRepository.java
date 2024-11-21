@@ -23,17 +23,16 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
 
     public List<Categoria> findAll() {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT id_categoria, nome FROM categoria";
+        String sql = "SELECT id, nome FROM categorias";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Categoria categoria = new Categoria();
-                categoria.setId(resultSet.getInt("id_categoria"));
+                categoria.setId(resultSet.getInt("id"));
                 categoria.setNome(resultSet.getString("nome"));
                 categorias.add(categoria);
             }
@@ -46,20 +45,19 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
 
     public Categoria findById(Integer id) {
         Categoria categoria = new Categoria();
-        String sql =
-                "SELECT id_categoria, nome FROM categoria WHERE id_categoria " +
-                        "= ?";
+        String sql = "SELECT id, nome FROM categorias WHERE id " + "= ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+
             preparedStatement.setInt(1, id);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                categoria.setId(resultSet.getInt("id_categoria"));
-                categoria.setNome(resultSet.getString("nome"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    categoria.setId(resultSet.getInt("id"));
+                    categoria.setNome(resultSet.getString("nome"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,12 +67,12 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
     }
 
     public ResponseEntity<String> save(Categoria categoria) {
-        String sql = "INSERT INTO categoria (nome) VALUES (?)";
+        String sql = "INSERT INTO categorias (nome) VALUES (?)";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+
             preparedStatement.setString(1, categoria.getNome());
 
             preparedStatement.executeUpdate();
@@ -89,12 +87,12 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
     }
 
     public ResponseEntity<String> update(Integer id, Categoria categoria) {
-        String sql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?";
+        String sql = "UPDATE categorias SET nome = ? WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+
             preparedStatement.setString(1, categoria.getNome());
             preparedStatement.setInt(2, id);
 
@@ -110,12 +108,12 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM categoria WHERE id_categoria = ?";
+        String sql = "DELETE FROM categorias WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();

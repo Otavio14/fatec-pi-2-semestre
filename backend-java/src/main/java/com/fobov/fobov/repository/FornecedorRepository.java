@@ -23,8 +23,13 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
 
     public List<Fornecedor> findAll() {
         List<Fornecedor> fornecedorList = new ArrayList<>();
-        String sql = "SELECT id_fornecedores, nome, cep, endereco, " +
-                "complemento, telefone, status, id_cidade FROM fornecedores";
+        String sql =
+                "SELECT fornecedores.id, fornecedores.nome, fornecedores.cep," +
+                        " fornecedores.endereco, fornecedores.complemento, " +
+                        "fornecedores.telefone, fornecedores.status, " +
+                        "fornecedores.id_cidade, cidades.nome AS cidade, " +
+                        "estados.nome AS estado FROM fornecedores LEFT JOIN " +
+                        "cidades";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -33,7 +38,7 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
 
             while (resultSet.next()) {
                 Fornecedor fornecedor = new Fornecedor();
-                fornecedor.setId(resultSet.getInt("id_fornecedores"));
+                fornecedor.setId(resultSet.getInt("id"));
                 fornecedor.setNome(resultSet.getString("nome"));
                 fornecedor.setCep(resultSet.getString("cep"));
                 fornecedor.setEndereco(resultSet.getString("endereco"));
@@ -41,6 +46,8 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                 fornecedor.setTelefone(resultSet.getString("telefone"));
                 fornecedor.setStatus(resultSet.getString("status"));
                 fornecedor.setIdCidade(resultSet.getInt("id_cidade"));
+                fornecedor.setCidade(resultSet.getString("cidade"));
+                fornecedor.setEstado(resultSet.getString("estado"));
                 fornecedorList.add(fornecedor);
             }
         } catch (Exception e) {
@@ -52,9 +59,9 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
 
     public Fornecedor findById(Integer id) {
         Fornecedor fornecedor = null;
-        String sql = "SELECT id_fornecedores, nome, cep, endereco, " +
+        String sql = "SELECT id, nome, cep, endereco, " +
                 "complemento, telefone, status, id_cidade FROM fornecedores " +
-                "WHERE id_fornecedores = ?";
+                "WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -63,7 +70,7 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 fornecedor = new Fornecedor();
-                fornecedor.setId(resultSet.getInt("id_fornecedores"));
+                fornecedor.setId(resultSet.getInt("id"));
                 fornecedor.setNome(resultSet.getString("nome"));
                 fornecedor.setCep(resultSet.getString("cep"));
                 fornecedor.setEndereco(resultSet.getString("endereco"));
@@ -109,7 +116,7 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
     public ResponseEntity<String> update(Integer id, Fornecedor fornecedor) {
         String sql = "UPDATE fornecedores SET nome = ?, cep = ?, endereco = " +
                 "?, complemento = ?, telefone = ?, status = ?, id_cidade = ? " +
-                "WHERE id_fornecedores = ?";
+                "WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -135,7 +142,7 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM fornecedores WHERE id_fornecedores = ?";
+        String sql = "DELETE FROM fornecedores WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(

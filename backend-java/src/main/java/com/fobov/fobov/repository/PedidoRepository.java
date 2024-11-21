@@ -23,8 +23,11 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
 
     public List<Pedido> findAll() {
         List<Pedido> pedidoList = new ArrayList<>();
-        String sql = "SELECT id_pedidos, dt_pedido, endereco, status, total, " +
-                "id_clientes FROM pedidos";
+        String sql =
+                "SELECT pedidos.id, pedidos.dt_pedido, pedidos.endereco, " +
+                        "pedidos.status, pedidos.total, pedidos.id_cliente, " +
+                        "clientes.nome AS cliente FROM pedidos LEFT JOIN " +
+                        "clientes ON pedidos.id_cliente = clientes.id;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -33,13 +36,14 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
 
             while (resultSet.next()) {
                 Pedido pedido = new Pedido();
-                pedido.setId(resultSet.getInt("id_pedidos"));
+                pedido.setId(resultSet.getInt("id"));
                 pedido.setDtPedido(
                         resultSet.getTimestamp("dt_pedido").toLocalDateTime());
                 pedido.setEndereco(resultSet.getString("endereco"));
                 pedido.setStatus(resultSet.getString("status"));
                 pedido.setTotal(resultSet.getDouble("total"));
-                pedido.setIdCliente(resultSet.getInt("id_clientes"));
+                pedido.setIdCliente(resultSet.getInt("id_cliente"));
+                pedido.setCliente(resultSet.getString("cliente"));
                 pedidoList.add(pedido);
             }
         } catch (Exception e) {
@@ -51,8 +55,8 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
 
     public Pedido findById(Integer id) {
         Pedido pedido = null;
-        String sql = "SELECT id_pedidos, dt_pedido, endereco, status, total, " +
-                "id_clientes FROM pedidos WHERE id_pedidos = ?";
+        String sql = "SELECT id, dt_pedido, endereco, status, total, " +
+                "id_cliente FROM pedidos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -61,13 +65,13 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 pedido = new Pedido();
-                pedido.setId(resultSet.getInt("id_pedidos"));
+                pedido.setId(resultSet.getInt("id"));
                 pedido.setDtPedido(
                         resultSet.getTimestamp("dt_pedido").toLocalDateTime());
                 pedido.setEndereco(resultSet.getString("endereco"));
                 pedido.setStatus(resultSet.getString("status"));
                 pedido.setTotal(resultSet.getDouble("total"));
-                pedido.setIdCliente(resultSet.getInt("id_clientes"));
+                pedido.setIdCliente(resultSet.getInt("id_cliente"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +83,7 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
     public ResponseEntity<String> save(Pedido pedido) {
         String sql =
                 "INSERT INTO pedidos (dt_pedido, endereco, status, total, " +
-                        "id_clientes) VALUES (?, ?, ?, ?, ?)";
+                        "id_cliente) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -105,7 +109,7 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
     public ResponseEntity<String> update(Integer id, Pedido pedido) {
         String sql =
                 "UPDATE pedidos SET dt_pedido = ?, endereco = ?, status = ?, " +
-                        "total = ?, id_clientes = ? WHERE id_pedidos = ?";
+                        "total = ?, id_cliente = ? WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -130,7 +134,7 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM pedidos WHERE id_pedidos = ?";
+        String sql = "DELETE FROM pedidos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -150,26 +154,26 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
 
     public List<Pedido> findAllByClienteId(Integer id) {
         List<Pedido> pedidoList = new ArrayList<>();
-        String sql = "SELECT id_pedidos, dt_pedido, endereco, status, total, " +
-                "id_clientes FROM pedidos WHERE id_clientes = ?";
+        String sql = "SELECT id, dt_pedido, endereco, status, total, " +
+                "id_cliente FROM pedidos WHERE id_cliente = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                Pedido pedido = new Pedido();
-                pedido.setId(resultSet.getInt("id_pedidos"));
-                pedido.setDtPedido(
-                        resultSet.getTimestamp("dt_pedido").toLocalDateTime());
-                pedido.setEndereco(resultSet.getString("endereco"));
-                pedido.setStatus(resultSet.getString("status"));
-                pedido.setTotal(resultSet.getDouble("total"));
-                pedido.setIdCliente(resultSet.getInt("id_clientes"));
-                pedidoList.add(pedido);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Pedido pedido = new Pedido();
+                    pedido.setId(resultSet.getInt("id"));
+                    pedido.setDtPedido(resultSet.getTimestamp("dt_pedido")
+                            .toLocalDateTime());
+                    pedido.setEndereco(resultSet.getString("endereco"));
+                    pedido.setStatus(resultSet.getString("status"));
+                    pedido.setTotal(resultSet.getDouble("total"));
+                    pedido.setIdCliente(resultSet.getInt("id_cliente"));
+                    pedidoList.add(pedido);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

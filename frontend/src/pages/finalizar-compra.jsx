@@ -33,14 +33,14 @@ export const FinalizarCompraPage = () => {
       telefone: Telefone,
       cep: Cep,
       numero: Number(Numero),
-      id_cidades: Number(Cidade),
+      idCidade: Number(Cidade),
       endereco: Endereco,
       bairro: Bairro,
     };
 
     api.post("/clientes", cliente).then((response) => {
       const pedido = {
-        id_clientes: Number(response.data.id),
+        idCliente: Number(response.data.id),
         status: "Pendente",
         endereco: Endereco,
         dt_pedido: new Date().toISOString(),
@@ -48,8 +48,8 @@ export const FinalizarCompraPage = () => {
       };
       api.post("/pedidos", pedido).then((res) => {
         const pedidos_produtos = CarrinhoProdutos.map((produto) => ({
-          id_pedidos: res.data.id,
-          id_produtos: produto.id,
+          idPedido: res.data.id,
+          idProduto: produto.id,
           quantidade: produto.quantidade,
           preco: produto.preco,
         }));

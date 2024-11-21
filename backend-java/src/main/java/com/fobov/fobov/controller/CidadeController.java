@@ -42,4 +42,9 @@ public class CidadeController implements Crud<Cidade, Integer> {
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return CIDADE_REPOSITORY.delete(id);
     }
+
+    @GetMapping("/estado/{idEstado}")
+    public List<Cidade> findAllByEstado(@PathVariable Integer idEstado) {
+        return CIDADE_REPOSITORY.findAllByEstado(idEstado);
+    }
 }

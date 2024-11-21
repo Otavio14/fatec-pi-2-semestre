@@ -9,6 +9,7 @@ public class Pedido {
     private LocalDateTime dtPedido;
     private String endereco;
     private String status;
+    private String cliente;
 
     public int getId() {
         return id;
@@ -56,5 +57,13 @@ public class Pedido {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
     }
 }

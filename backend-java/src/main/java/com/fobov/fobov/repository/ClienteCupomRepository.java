@@ -24,7 +24,7 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
     public List<ClienteCupom> findAll() {
         List<ClienteCupom> clienteCupomList = new ArrayList<>();
         String sql =
-                "SELECT id, data_utilizacao, id_clientes, id_cupons FROM " +
+                "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
                         "clientes_cupons";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -38,8 +38,8 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 clienteCupom.setDataUtilizacao(
                         resultSet.getTimestamp("data_utilizacao")
                                 .toLocalDateTime());
-                clienteCupom.setIdCliente(resultSet.getInt("id_clientes"));
-                clienteCupom.setIdCupom(resultSet.getInt("id_cupons"));
+                clienteCupom.setIdCliente(resultSet.getInt("id_cliente"));
+                clienteCupom.setIdCupom(resultSet.getInt("id_cupom"));
                 clienteCupomList.add(clienteCupom);
             }
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
     public ClienteCupom findById(Integer id) {
         ClienteCupom clienteCupom = null;
         String sql =
-                "SELECT id, data_utilizacao, id_clientes, id_cupons FROM " +
+                "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
                         "clientes_cupons WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -66,8 +66,8 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 clienteCupom.setDataUtilizacao(
                         resultSet.getTimestamp("data_utilizacao")
                                 .toLocalDateTime());
-                clienteCupom.setIdCliente(resultSet.getInt("id_clientes"));
-                clienteCupom.setIdCupom(resultSet.getInt("id_cupons"));
+                clienteCupom.setIdCliente(resultSet.getInt("id_cliente"));
+                clienteCupom.setIdCupom(resultSet.getInt("id_cupom"));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -23,17 +23,16 @@ public class EstadoRepository implements Crud<Estado, Integer> {
 
     public List<Estado> findAll() {
         List<Estado> estados = new ArrayList<>();
-        String sql = "SELECT id_estado, nome, sigla FROM estados";
+        String sql = "SELECT id, nome, sigla FROM estados";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Estado estado = new Estado();
-                estado.setId(resultSet.getInt("id_estado"));
+                estado.setId(resultSet.getInt("id"));
                 estado.setNome(resultSet.getString("nome"));
                 estado.setSigla(resultSet.getString("sigla"));
                 estados.add(estado);
@@ -47,21 +46,19 @@ public class EstadoRepository implements Crud<Estado, Integer> {
 
     public Estado findById(Integer id) {
         Estado estado = new Estado();
-        String sql =
-                "SELECT id_estado, nome, sigla FROM estados WHERE id_estado =" +
-                        " ?";
+        String sql = "SELECT id, nome, sigla FROM estados WHERE id =" + " ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                estado.setId(resultSet.getInt("id_estado"));
-                estado.setNome(resultSet.getString("nome"));
-                estado.setSigla(resultSet.getString("sigla"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    estado.setId(resultSet.getInt("id"));
+                    estado.setNome(resultSet.getString("nome"));
+                    estado.setSigla(resultSet.getString("sigla"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,10 +70,9 @@ public class EstadoRepository implements Crud<Estado, Integer> {
     public ResponseEntity<String> save(Estado estado) {
         String sql = "INSERT INTO estados (nome, sigla) VALUES (?, ?)";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, estado.getNome());
             preparedStatement.setString(2, estado.getSigla());
 
@@ -92,13 +88,11 @@ public class EstadoRepository implements Crud<Estado, Integer> {
     }
 
     public ResponseEntity<String> update(Integer id, Estado estado) {
-        String sql =
-                "UPDATE estados SET nome = ?, sigla = ? WHERE id_estado = ?";
+        String sql = "UPDATE estados SET nome = ?, sigla = ? WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setString(1, estado.getNome());
             preparedStatement.setString(2, estado.getSigla());
             preparedStatement.setInt(3, id);
@@ -115,12 +109,11 @@ public class EstadoRepository implements Crud<Estado, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM estados WHERE id_estado = ?";
+        String sql = "DELETE FROM estados WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();

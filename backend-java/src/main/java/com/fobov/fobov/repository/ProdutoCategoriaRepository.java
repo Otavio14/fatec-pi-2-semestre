@@ -24,21 +24,26 @@ public class ProdutoCategoriaRepository
 
     public List<ProdutoCategoria> findAll() {
         List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
-        String sql =
-                "SELECT id, id_produto, id_categoria FROM produtos_categorias";
+        String sql = "SELECT produtos_categorias.id, produtos_categorias" +
+                ".id_produto, produtos_categorias.id_categoria, " +
+                "produtos.nome AS produto, categorias.nome AS " +
+                "categoria FROM produtos_categorias LEFT JOIN " +
+                "produtos ON produtos_categorias.id_produto = " +
+                "produtos.id LEFT JOIN categorias ON " +
+                "produtos_categorias.id_categoria = categorias.id;";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 ProdutoCategoria produtoCategoria = new ProdutoCategoria();
                 produtoCategoria.setId(resultSet.getInt("id"));
                 produtoCategoria.setIdProduto(resultSet.getInt("id_produto"));
                 produtoCategoria.setIdCategoria(
                         resultSet.getInt("id_categoria"));
+                produtoCategoria.setProduto(resultSet.getString("iproduto"));
+                produtoCategoria.setCategoria(resultSet.getString("categoria"));
                 produtoCategorias.add(produtoCategoria);
             }
         } catch (Exception e) {
@@ -54,18 +59,19 @@ public class ProdutoCategoriaRepository
                 "SELECT id, id_produto, id_categoria FROM produtos_categorias" +
                         " WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                produtoCategoria.setId(resultSet.getInt("id"));
-                produtoCategoria.setIdProduto(resultSet.getInt("id_produto"));
-                produtoCategoria.setIdCategoria(
-                        resultSet.getInt("id_categoria"));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    produtoCategoria.setId(resultSet.getInt("id"));
+                    produtoCategoria.setIdProduto(
+                            resultSet.getInt("id_produto"));
+                    produtoCategoria.setIdCategoria(
+                            resultSet.getInt("id_categoria"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,10 +85,9 @@ public class ProdutoCategoriaRepository
                 "INSERT INTO produtos_categorias (id_produto, id_categoria) " +
                         "VALUES (?, ?)";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, produtoCategoria.getIdProduto());
             preparedStatement.setInt(2, produtoCategoria.getIdCategoria());
 
@@ -103,10 +108,9 @@ public class ProdutoCategoriaRepository
                 "UPDATE produtos_categorias SET id_produto = ?, id_categoria " +
                         "= ? WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, produtoCategoria.getIdProduto());
             preparedStatement.setInt(2, produtoCategoria.getIdCategoria());
             preparedStatement.setInt(3, id);
@@ -125,10 +129,9 @@ public class ProdutoCategoriaRepository
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM produtos_categorias WHERE id = ?";
 
-        try {
-            Connection connection = DATA_SOURCE.getConnection();
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(sql);
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();

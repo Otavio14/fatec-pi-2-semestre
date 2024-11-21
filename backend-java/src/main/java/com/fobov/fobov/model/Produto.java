@@ -10,6 +10,7 @@ public class Produto {
     private String descricao;
     private LocalDate dtValidade;
     private String imagem;
+    private int ativo;
 
     public String getImagem() {
         return imagem;
@@ -65,5 +66,13 @@ public class Produto {
 
     public void setDtValidade(LocalDate dtValidade) {
         this.dtValidade = dtValidade;
+    }
+
+    public int getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(int ativo) {
+        this.ativo = ativo;
     }
 }

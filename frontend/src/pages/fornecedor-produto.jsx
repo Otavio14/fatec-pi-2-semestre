@@ -24,8 +24,8 @@ export const FornecedorProdutoPage = () => {
 
     const data = {
       preco: Number(Preco),
-      id_fornecedores: Number(Fornecedor),
-      id_produtos: Number(Produto),
+      idFornecedor: Number(Fornecedor),
+      idProduto: Number(Produto),
       quantidade: Number(Quantidade),
     };
 
@@ -57,8 +57,8 @@ export const FornecedorProdutoPage = () => {
       setShowModal(true);
       setPreco(response.data.preco);
       setQuantidade(response.data.quantidade);
-      setFornecedor(response.data.id_fornecedores);
-      setProduto(response.data.id_produtos);
+      setFornecedor(response.data.idFornecedor);
+      setProduto(response.data.idPproduto);
     });
   };
 

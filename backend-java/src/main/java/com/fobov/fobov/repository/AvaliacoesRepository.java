@@ -23,8 +23,13 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
 
     public List<Avaliacao> findAll() {
         List<Avaliacao> avaliacaoList = new ArrayList<>();
-        String sql = "SELECT id_avaliacoes, nota, comentario, dt_avaliacao, " +
-                "id_clientes, id_produtos FROM avaliacoes";
+        String sql = "SELECT avaliacoes.id, avaliacoes.nota, avaliacoes" +
+                ".comentario, avaliacoes.dt_avaliacao, avaliacoes" +
+                ".id_cliente, avaliacoes.id_produto, clientes.nome AS" +
+                " cliente, produtos.nome AS produto FROM avaliacoes " +
+                "LEFT JOIN clientes ON avaliacoes.id_cliente = " +
+                "clientes.id LEFT JOIN produtos ON avaliacoes" +
+                ".id_produto = produtos.id;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -33,13 +38,15 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
 
             while (resultSet.next()) {
                 Avaliacao avaliacao = new Avaliacao();
-                avaliacao.setId(resultSet.getInt("id_avaliacoes"));
+                avaliacao.setId(resultSet.getInt("id"));
                 avaliacao.setNota(resultSet.getInt("nota"));
                 avaliacao.setComentario(resultSet.getString("comentario"));
                 avaliacao.setDtAvaliacao(resultSet.getTimestamp("dt_avaliacao")
                         .toLocalDateTime());
-                avaliacao.setIdCliente(resultSet.getInt("id_clientes"));
-                avaliacao.setIdProduto(resultSet.getInt("id_produtos"));
+                avaliacao.setIdCliente(resultSet.getInt("id_cliente"));
+                avaliacao.setIdProduto(resultSet.getInt("id_produto"));
+                avaliacao.setProduto(resultSet.getString("produto"));
+                avaliacao.setCliente(resultSet.getString("cliente"));
                 avaliacaoList.add(avaliacao);
             }
         } catch (Exception e) {
@@ -51,9 +58,8 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
 
     public Avaliacao findById(Integer id) {
         Avaliacao avaliacao = null;
-        String sql = "SELECT id_avaliacoes, nota, comentario, dt_avaliacao, " +
-                "id_clientes, id_produtos FROM avaliacoes WHERE " +
-                "id_avaliacoes = ?";
+        String sql = "SELECT id, nota, comentario, dt_avaliacao, " +
+                "id_cliente, id_produto FROM avaliacoes WHERE " + "id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -62,13 +68,13 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 avaliacao = new Avaliacao();
-                avaliacao.setId(resultSet.getInt("id_avaliacoes"));
+                avaliacao.setId(resultSet.getInt("id"));
                 avaliacao.setNota(resultSet.getInt("nota"));
                 avaliacao.setComentario(resultSet.getString("comentario"));
                 avaliacao.setDtAvaliacao(resultSet.getTimestamp("dt_avaliacao")
                         .toLocalDateTime());
-                avaliacao.setIdCliente(resultSet.getInt("id_clientes"));
-                avaliacao.setIdProduto(resultSet.getInt("id_produtos"));
+                avaliacao.setIdCliente(resultSet.getInt("id_cliente"));
+                avaliacao.setIdProduto(resultSet.getInt("id_produto"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +110,7 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
     public ResponseEntity<String> update(Integer id, Avaliacao avaliacao) {
         String sql =
                 "UPDATE avaliacoes SET nota = ?, comentario = ?, dt_avaliacao" +
-                        " = ? WHERE id_avaliacoes = ?";
+                        " = ? WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -127,7 +133,7 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM avaliacoes WHERE id_avaliacoes = ?";
+        String sql = "DELETE FROM avaliacoes WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(

@@ -24,7 +24,7 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
     public List<ProdutoPedido> findAll() {
         List<ProdutoPedido> produtoPedidoList = new ArrayList<>();
         String sql =
-                "SELECT id, preco, quantidade, id_produtos, id_pedidos FROM " +
+                "SELECT id, preco, quantidade, id_produto, id_pedido FROM " +
                         "produtos_pedidos";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -37,8 +37,8 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
                 produtoPedido.setId(resultSet.getInt("id"));
                 produtoPedido.setPreco(resultSet.getDouble("preco"));
                 produtoPedido.setQuantidade(resultSet.getInt("quantidade"));
-                produtoPedido.setIdProduto(resultSet.getInt("id_produtos"));
-                produtoPedido.setIdPedido(resultSet.getInt("id_pedidos"));
+                produtoPedido.setIdProduto(resultSet.getInt("id_produto"));
+                produtoPedido.setIdPedido(resultSet.getInt("id_pedido"));
                 produtoPedidoList.add(produtoPedido);
             }
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
     public ProdutoPedido findById(Integer id) {
         ProdutoPedido produtoPedido = null;
         String sql =
-                "SELECT id, preco, quantidade, id_produtos, id_pedidos FROM " +
+                "SELECT id, preco, quantidade, id_produto, id_pedido FROM " +
                         "produtos_pedidos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
@@ -64,8 +64,8 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
                 produtoPedido.setId(resultSet.getInt("id"));
                 produtoPedido.setPreco(resultSet.getDouble("preco"));
                 produtoPedido.setQuantidade(resultSet.getInt("quantidade"));
-                produtoPedido.setIdProduto(resultSet.getInt("id_produtos"));
-                produtoPedido.setIdPedido(resultSet.getInt("id_pedidos"));
+                produtoPedido.setIdProduto(resultSet.getInt("id_produto"));
+                produtoPedido.setIdPedido(resultSet.getInt("id_pedido"));
             }
         } catch (Exception e) {
             e.printStackTrace();

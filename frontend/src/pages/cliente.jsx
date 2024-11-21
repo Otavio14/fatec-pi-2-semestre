@@ -30,7 +30,7 @@ export const ClientePage = () => {
 
     const data = {
       nome: Nome,
-      id_cidades: +Cidade,
+      idCidade: +Cidade,
       cep: Cep,
       email: Email,
       telefone: Telefone,
@@ -193,8 +193,8 @@ export const ClientePage = () => {
                 <td>{cliente?.nome}</td>
                 <td>{cliente?.email}</td>
                 <td>{cliente?.telefone}</td>
-                <td>{cliente?.cidade?.nome}</td>
-                <td>{cliente?.cidade?.estado?.sigla}</td>
+                <td>{cliente?.cidade}</td>
+                <td>{cliente?.estado}</td>
                 <td>
                   <button onClick={() => openModal(cliente?.id)}>
                     <Pencil size={20} />

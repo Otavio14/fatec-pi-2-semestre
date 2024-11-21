@@ -20,8 +20,8 @@ export const ProdutoCategoriaPage = () => {
     event.preventDefault();
 
     const data = {
-      id_categorias: Number(Categoria),
-      id_produtos: Number(Produto),
+      idCategoria: Number(Categoria),
+      idProduto: Number(Produto),
     };
 
     if (Id) {
@@ -50,8 +50,8 @@ export const ProdutoCategoriaPage = () => {
 
     api.get(`/produtos-categorias/${id}`).then((response) => {
       setShowModal(true);
-      setCategoria(response.data.id_categorias);
-      setProduto(response.data.id_produtos);
+      setCategoria(response.data.idCategoria);
+      setProduto(response.data.idProduto);
     });
   };
 

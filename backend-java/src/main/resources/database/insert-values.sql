@@ -5,7 +5,7 @@ VALUES
     "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe");
 
 INSERT INTO
-    categoria (id_categoria, nome)
+    categorias (id, nome)
 VALUES
     (1, "Suplemento"),
     (2, "Acessório"),
@@ -13,13 +13,14 @@ VALUES
 
 INSERT INTO
     produtos (
-        id_produtos,
+        id,
         nome,
         preco,
         estoque,
         descricao,
         dt_validade,
-        imagem
+        imagem,
+        ativo
     )
 VALUES
     (
@@ -29,7 +30,8 @@ VALUES
         "65",
         "O whey protein é um suplemento fabricado a partir do soro do leite (em inglês, “whey”), um subproduto resultante da fabricação de queijos por coagulação da caseína. Possui alto valor nutricional devido à presença de proteínas com elevado teor de aminoácidos essenciais. Essas  são obtidas por meio de processos industriais de pasteurização, filtração e microfiltração do soro. A quantidade de filtrações e o tamanho dos filtros utilizados estabelecem o tipo e a qualidade do produto obtido -- isolado, concentrado ou hidrolisado. A apresentação final do whey protein é a de um pó parecido com o leite em pó. Saiba mais sobre o que é whey protein, para que serve e benefícios",
         "2024-12-05",
-        "https://static.netshoes.com.br/produtos/nutri-whey-protein-900-g-pote-integralmedica/99/252-0951-799/252-0951-799_zoom1.jpg?ts=1695093963&ims=544x"
+        "https://static.netshoes.com.br/produtos/nutri-whey-protein-900-g-pote-integralmedica/99/252-0951-799/252-0951-799_zoom1.jpg?ts=1695093963&ims=544x",
+        1
     ),
     (
         2,
@@ -38,7 +40,8 @@ VALUES
         "120",
         "A creatina é um nutriente classificado como 'amina', ela é fabricada por nosso organismo e também é encontrada em alguns alimentos. 95% da creatina presente em nosso organismo encontra-se nos músculos, isto porque creatina é usada pela célula muscular na formação de energia, responsável pelas contrações. Ou seja, sem creatina não há contração e a suplementação de creatina pode aumentar a força muscular.",
         "2025-01-17",
-        "https://static.netshoes.com.br/produtos/creatina-monohidratada-hardcore-reload-300-gr-integralmedica/01/252-0831-001/252-0831-001_zoom1.jpg?ts=1695418005"
+        "https://static.netshoes.com.br/produtos/creatina-monohidratada-hardcore-reload-300-gr-integralmedica/01/252-0831-001/252-0831-001_zoom1.jpg?ts=1695418005",
+        1
     ),
     (
         3,
@@ -47,7 +50,8 @@ VALUES
         "18",
         "Sobre o Produto O que são os BCAAs? São 3 dos 9 aminoácidos chamados essenciais (que o corpo é incapaz de produzir), razão pela qual devem ser obtidos exclusivamente através da alimentação ou de suplementação específica. Dentre os aminoácidos essenciais, os chamados BCAAs são os “Aminoácidos de Cadeia Ramificada”, sendo eles: LEUCINA, ISOLEUCINA e VALINA. O grande diferencial do produto é que os aminoácidos presentes no BCAA 2400 da Max Titanium contam com o selo PURE AMINO ACID by Ajinomoto Co.®, que garante a altíssima qualidade e pureza destes aminoácidos.",
         "2024-11-09",
-        "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157363/bcaa-2400-max-titanium-60-capsulas-1.jpg?v=638343757987300000"
+        "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157363/bcaa-2400-max-titanium-60-capsulas-1.jpg?v=638343757987300000",
+        1
     ),
     (
         4,
@@ -56,7 +60,8 @@ VALUES
         "12",
         "A Optimum Nutrition fabrica produtos de nutrição esportiva da mais alta qualidade há mais de 30 anos e os vende em mais de 90 países. Gold Standard 100% Whey é a proteína de soro do leite mais vendida do mundo. Os produtos Optimum Nutrition são ideais para ajudá-lo a descobrir seu potencial e atingir seus objetivos de fitness e nutrição. Sabor: Chocolate",
         "2025-05-09",
-        "https://m.media-amazon.com/images/I/61GDn0-MvwL._AC_UF1000,1000_QL80_.jpg"
+        "https://m.media-amazon.com/images/I/61GDn0-MvwL._AC_UF1000,1000_QL80_.jpg",
+        1
     ),
     (
         5,
@@ -65,7 +70,8 @@ VALUES
         "14",
         "Em muitos momentos nos dedicamos o máximo, seguimos à risca a dieta, mantemos a constância no treino mas parece que algo nos prende naquele patamar. Neste momento precisamos de algo que promova uma mudança. Uma mudança no nível de energia e disposição para conseguirmos ir além. Com os nutrientes do HAZE você cria no seu corpo um ambiente metabólico favorável para suportar aquele treino com mais volume e intensidade",
         "2025-02-05",
-        "https://www.gsuplementos.com.br/upload/growth-layout-personalizado/produto/1500/haze-hardcore-pre-workout-growth-v2.png"
+        "https://www.gsuplementos.com.br/upload/growth-layout-personalizado/produto/1500/haze-hardcore-pre-workout-growth-v2.png",
+        1
     ),
     (
         6,
@@ -74,7 +80,8 @@ VALUES
         "20",
         "Óleo de Cártamo é extraído de uma planta de nome “Carthamus tinctorius” mas também é conhecida como açafrão-bastardo, açafroa, açafrol, cártamo, açafrão-agreste, açafrão-dos-tintureiros ou açafrão-bravo. É uma planta com flor de cor amarela e bastante chamativa, além disso, a ciência dos alimentos descobriu que o óleo extraído desta planta é fonte de nutrientes naturais e desde então tem sido usada na fabricação de suplementos alimentares. Na história moderna, o óleo de cártamo, que é extraído das sementes, é o elemento mais valioso da planta, e a maior parte da produção é usada para esse fim. Possui altos teores de ácido graxo poli-insaturado (ômega 6) e de ácido oleico monoinsaturado (ômega 9), que são essenciais para o organismo.",
         "2025-09-10",
-        "https://www.gsuplementos.com.br/upload/produto/layout/109/oleocartamococochiacromovite75caps-growth-supplements-v3.webp"
+        "https://www.gsuplementos.com.br/upload/produto/layout/109/oleocartamococochiacromovite75caps-growth-supplements-v3.webp",
+        1
     ),
     (
         7,
@@ -83,7 +90,8 @@ VALUES
         "16",
         "Destaques do Produto 100% Whey Alta concentração proteica, 20 a 21g de proteína por porção Até 4,8g de BCAA, + de 10g de Aminoácidos Essenciais, Não contém carboidrato adicionado à formulação, Fácil diluição, Excelente palatabilidade, Não contém Glúten,",
         "2025-04-19",
-        "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157335-800-800?v=638343733617100000&width=800&height=800&aspect=true"
+        "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157335-800-800?v=638343733617100000&width=800&height=800&aspect=true",
+        1
     ),
     (
         8,
@@ -92,7 +100,8 @@ VALUES
         "12",
         "NIGHT TRAIN é um pré-treino desenvolvido para pessoas com sensibilidade à cafeína e/ou que priorizam seus treinamentos no período da noite. A sua formulação é tecnológica e com ingredientes de altíssima qualidade para você treinar com muito mais intensidade.",
         "2026-12-04",
-        "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157632-800-800?v=638351478086870000&width=800&height=800&aspect=true"
+        "https://lojamaxtitanium.vtexassets.com/arquivos/ids/157632-800-800?v=638351478086870000&width=800&height=800&aspect=true",
+        1
     ),
     (
         9,
@@ -101,7 +110,8 @@ VALUES
         "8",
         "Glutamina Integralmédica é uma peça chave para quem procura melhorar seu sistema imunológico e digestivo. Com ação antioxidante, ajuda a diminuir o catabolismo muscular. Glutamine Isolates é um suplemento com formulação 100% pura, sem adição de aditivos artificiais, gorduras ou carboidratos. Zero glúten e sódio. A glutamina é o aminoácido livre mais abundante no organismo. Podemos utilizar mais de 50% dessa glutamina livre quando realizamos programas de treinamento intensos ou volumosos, sendo indispensável que essa glutamina seja reposta no organismo para que suas funções biológicas sejam completas no nosso organismo. Glutamine Isolates Integralmédica tem altíssima qualidade e pureza comprovada através do selo PURE AMINO ACID by AJINOMOTO Co.® e está disponível nas versões de pote com 150 g e 300 g.",
         "2025-12-25",
-        "https://integralmedica.vtexassets.com/arquivos/ids/165360-1600-auto?v=638203736165170000&width=1600&height=auto&aspect=true"
+        "https://integralmedica.vtexassets.com/arquivos/ids/165360-1600-auto?v=638203736165170000&width=1600&height=auto&aspect=true",
+        1
     ),
     (
         10,
@@ -110,7 +120,8 @@ VALUES
         "24",
         "MY WHEY PÓ contém apenas whey protein em sua composição proteica - uma proteína de altíssima qualidade, valor nutricional, e oferta 21 g de proteínas por dose. MY WHEY PÓ é rico em aminoácidos essenciais, incluindo os BCAAs, que são compostos importantes para a recuperação muscular, além de conter baixos teores de gordura e possuir uma rápida e fácil digestibilidade e absorção, o que torna o produto uma excelente opção para consumo tanto no período pós-treino quanto em qualquer momento do dia. MY WHEY PÓ está disponível em 4 deliciosos sabores: Shake de morango, shake de chocolate, shake de baunilha e shake de cookies.",
         "2025-09-30",
-        "https://integralmedica.vtexassets.com/arquivos/ids/165294-1600-auto?v=638203647214530000&width=1600&height=auto&aspect=true"
+        "https://integralmedica.vtexassets.com/arquivos/ids/165294-1600-auto?v=638203647214530000&width=1600&height=auto&aspect=true",
+        1
     ),
     (
         11,
@@ -119,7 +130,8 @@ VALUES
         "12",
         "A beta-alanine, ou β-alanina, é um aminoácido não essencial, sendo o único do tipo beta produzido naturalmente pelo nosso organismo. Ele pode ser ingerido por meio de alguns alimentos, especialmente os de origem animal, fontes de proteínas, como: carne bovina, frango e peru. O suplemento beta-alanine pode ser consumido por iniciantes, intermediários e avançados.",
         "2025-05-30",
-        "https://www.gsuplementos.com.br/upload/produto/layout/1205/beta-alanina-em-po-growth-supplements-v2.webp"
+        "https://www.gsuplementos.com.br/upload/produto/layout/1205/beta-alanina-em-po-growth-supplements-v2.webp",
+        1
     ),
     (
         12,
@@ -128,7 +140,8 @@ VALUES
         "80",
         "O Growth Whey da Growth Supplements é fabricado com os nutrientes do soro do leite, contendo aminoácidos essenciais — incluindo os de cadeias ramificadas — e enriquecido com vitaminas e minerais, que favorecem o metabolismo do organismo e a prática de atividades físicas. O Growth Whey é fabricado com auxílio de enzima lactase, permitindo assim que ele seja consumido por portadores de intolerância a lactose. É um suplemento 100% pronto, fácil de carregar em mochilas ou bolsas, facilitando o consumo em qualquer lugar e momento do dia, sobretudo para quem tem um compromisso atrás do outro, ou uma rotina intensa e turbulenta, e ainda cuida do corpo. O Whey Protein é uma suplementação com alto valor nutricional, que contribui na manutenção do tecido muscular e auxilia na regeneração das fibras de praticantes de exercícios físicos. Além disso, tem sabores deliciosos. Confira!",
         "2024-12-10",
-        "https://www.gsuplementos.com.br/upload/produto/layout/2200/growth-whey-pronto-growth-supplements-v2.webp"
+        "https://www.gsuplementos.com.br/upload/produto/layout/2200/growth-whey-pronto-growth-supplements-v2.webp",
+        1
     );
 
 INSERT INTO
@@ -148,7 +161,7 @@ VALUES
     (12, 12, 1);
 
 INSERT INTO
-    estados (id_estado, nome, sigla)
+    estados (id, nome, sigla)
 VALUES
     (1, "Rondônia", "RO"),
     (2, "Acre", "AC"),
@@ -179,7 +192,7 @@ VALUES
     (27, "Distrito Federal", "DF");
 
 INSERT INTO
-    cidades (id_cidade, nome, id_estado)
+    cidades (id, nome, id_estado)
 VALUES
     ("10671", "Alta Floresta D'Oeste", "1"),
     ("10672", "Ariquemes", "1"),
@@ -5755,7 +5768,7 @@ VALUES
 
 INSERT INTO
     clientes (
-        id_clientes,
+        id,
         nome,
         id_cidade,
         cep,

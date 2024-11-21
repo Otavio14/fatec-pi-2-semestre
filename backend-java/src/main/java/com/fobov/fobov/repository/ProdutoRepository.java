@@ -25,17 +25,16 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public List<Produto> findAll() {
         List<Produto> produtoList = new ArrayList<>();
-        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, " +
-                "descricao, imagem FROM produtos";
+        String sql = "SELECT id, nome, dt_validade, preco, estoque, " +
+                "descricao, imagem, ativo FROM produtos";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-
             while (resultSet.next()) {
                 Produto produto = new Produto();
-                produto.setId(resultSet.getInt("id_produtos"));
+                produto.setId(resultSet.getInt("id"));
                 produto.setNome(resultSet.getString("nome"));
                 produto.setDtValidade(
                         LocalDate.parse(resultSet.getString("dt_validade"),
@@ -44,6 +43,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
                 produto.setImagem(resultSet.getString("imagem"));
+                produto.setAtivo(resultSet.getInt("ativo"));
                 produtoList.add(produto);
             }
         } catch (Exception e) {
@@ -55,8 +55,8 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public Produto findById(Integer id) {
         Produto produto = null;
-        String sql = "SELECT id_produtos, nome, dt_validade, preco, estoque, " +
-                "descricao, imagem FROM produtos WHERE id_produtos = ?";
+        String sql = "SELECT id, nome, dt_validade, preco, estoque, " +
+                "descricao, imagem, ativo FROM produtos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -65,7 +65,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 produto = new Produto();
-                produto.setId(resultSet.getInt("id_produtos"));
+                produto.setId(resultSet.getInt("id"));
                 produto.setNome(resultSet.getString("nome"));
                 produto.setDtValidade(
                         LocalDate.parse(resultSet.getString("dt_validade"),
@@ -74,6 +74,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 produto.setEstoque(resultSet.getInt("estoque"));
                 produto.setDescricao(resultSet.getString("descricao"));
                 produto.setImagem(resultSet.getString("imagem"));
+                produto.setAtivo(resultSet.getInt("ativo"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +86,8 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
     public ResponseEntity<String> save(Produto produto) {
         String sql =
                 "INSERT INTO produtos (nome, dt_validade, preco, estoque, " +
-                        "descricao, imagem) VALUES (?, ?, ?, ?, ?, ?)";
+                        "descricao, imagem, ativo) VALUES (?, ?, ?, ?, ?, ?, " +
+                        "?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -97,6 +99,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
             preparedStatement.setString(6, produto.getImagem());
+            preparedStatement.setInt(6, produto.getAtivo());
 
 
             preparedStatement.executeUpdate();
@@ -113,8 +116,8 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
     public ResponseEntity<String> update(Integer id, Produto produto) {
         String sql =
                 "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, " +
-                        "estoque = ?, descricao = ?, imagem = ? WHERE " +
-                        "id_produtos = ?";
+                        "estoque = ?, descricao = ?, imagem = ?, ativo = ? " +
+                        "WHERE " + "id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -126,7 +129,8 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
             preparedStatement.setString(6, produto.getImagem());
-            preparedStatement.setInt(7, id);
+            preparedStatement.setInt(7, produto.getAtivo());
+            preparedStatement.setInt(8, id);
 
             preparedStatement.executeUpdate();
             return ResponseEntity.status(HttpStatus.OK)
@@ -140,7 +144,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
     }
 
     public ResponseEntity<String> delete(Integer id) {
-        String sql = "DELETE FROM produtos WHERE id_produtos = ?";
+        String sql = "DELETE FROM produtos WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(

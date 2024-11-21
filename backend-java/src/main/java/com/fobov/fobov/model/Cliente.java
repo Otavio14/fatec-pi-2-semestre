@@ -10,6 +10,8 @@ public class Cliente {
     private String nome;
     private String cep;
     private int idCidade;
+    private String cidade;
+    private String estado;
 
     public int getId() {
         return id;
@@ -81,5 +83,21 @@ public class Cliente {
 
     public void setIdCidade(int idCidade) {
         this.idCidade = idCidade;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

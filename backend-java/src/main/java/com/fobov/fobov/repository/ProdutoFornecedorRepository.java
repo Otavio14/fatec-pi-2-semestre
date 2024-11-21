@@ -24,8 +24,15 @@ public class ProdutoFornecedorRepository
 
     public List<ProdutoFornecedor> findAll() {
         List<ProdutoFornecedor> produtoFornecedorList = new ArrayList<>();
-        String sql = "SELECT id, preco, quantidade, data, id_produtos, " +
-                "id_fornecedores FROM produtos_fornecedores";
+        String sql = "SELECT produtos_fornecedores.id, produtos_fornecedores" +
+                ".preco, produtos_fornecedores.quantidade, " +
+                "produtos_fornecedores.data, produtos_fornecedores" +
+                ".id_produto, produtos_fornecedores.id_fornecedor, " +
+                "produtos.nome AS produto, fornecedores.nome AS " +
+                "fornecedor FROM produtos_fornecedores LEFT JOIN " +
+                "produtos ON produtos_fornecedores.id_produto = " +
+                "produtos.id LEFT JOIN fornecedores ON " +
+                "produtos_fornecedores.id_fornecedor = fornecedores" + ".id;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -39,9 +46,12 @@ public class ProdutoFornecedorRepository
                 produtoFornecedor.setQuantidade(resultSet.getInt("quantidade"));
                 produtoFornecedor.setData(
                         resultSet.getTimestamp("data").toLocalDateTime());
-                produtoFornecedor.setIdProduto(resultSet.getInt("id_produtos"));
+                produtoFornecedor.setIdProduto(resultSet.getInt("id_produto"));
                 produtoFornecedor.setIdFornecedor(
-                        resultSet.getInt("id_fornecedores"));
+                        resultSet.getInt("id_fornecedor"));
+                produtoFornecedor.setProduto(resultSet.getString("produto"));
+                produtoFornecedor.setFornecedor(
+                        resultSet.getString("fornecedor"));
                 produtoFornecedorList.add(produtoFornecedor);
             }
         } catch (Exception e) {
@@ -53,8 +63,8 @@ public class ProdutoFornecedorRepository
 
     public ProdutoFornecedor findById(Integer id) {
         ProdutoFornecedor produtoFornecedor = null;
-        String sql = "SELECT id, preco, quantidade, data, id_produtos, " +
-                "id_fornecedores FROM produtos_fornecedores WHERE id " + "= ?";
+        String sql = "SELECT id, preco, quantidade, data, id_produto, " +
+                "id_fornecedor FROM produtos_fornecedores WHERE id " + "= ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -68,9 +78,9 @@ public class ProdutoFornecedorRepository
                 produtoFornecedor.setQuantidade(resultSet.getInt("quantidade"));
                 produtoFornecedor.setData(
                         resultSet.getTimestamp("data").toLocalDateTime());
-                produtoFornecedor.setIdProduto(resultSet.getInt("id_produtos"));
+                produtoFornecedor.setIdProduto(resultSet.getInt("id_produto"));
                 produtoFornecedor.setIdFornecedor(
-                        resultSet.getInt("id_fornecedores"));
+                        resultSet.getInt("id_fornecedor"));
             }
         } catch (Exception e) {
             e.printStackTrace();
