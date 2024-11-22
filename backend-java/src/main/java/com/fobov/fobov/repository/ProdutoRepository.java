@@ -99,7 +99,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
             preparedStatement.setString(6, produto.getImagem());
-            preparedStatement.setInt(6, produto.getAtivo());
+            preparedStatement.setInt(7, produto.getAtivo());
 
 
             preparedStatement.executeUpdate();

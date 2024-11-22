@@ -85,9 +85,10 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
                         "SELECT id FROM clientes WHERE email = ?";
 
-        String sqlInsert =
+        String sqlInsert = usuario.getSenha() != null ?
                 "INSERT INTO usuarios (nome, email, senha) VALUES " + "(?, ?," +
-                        " ?)";
+                        " ?)" :
+                "INSERT INTO usuarios (nome, email) VALUES " + "(?, ?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatementConsultar =
@@ -109,7 +110,12 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                     sqlInsert)) {
                 preparedStatementInsert.setString(1, usuario.getNome());
                 preparedStatementInsert.setString(2, usuario.getEmail());
-                preparedStatementInsert.setString(3, usuario.getSenha());
+
+                if (usuario.getSenha() != null) {
+                    usuario.setSenha(
+                            passwordEncoder.encode(usuario.getSenha()));
+                    preparedStatementInsert.setString(3, usuario.getSenha());
+                }
 
                 preparedStatementInsert.executeUpdate();
                 return ResponseEntity.status(HttpStatus.OK)
@@ -128,16 +134,17 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 "SELECT id FROM usuarios WHERE email = ? AND id != ?" +
                         " UNION " + "SELECT id FROM clientes WHERE email = ?";
 
-        String sqlUpdate =
-                "UPDATE usuarios SET nome = ?, email = ?, senha = ? " +
-                        "WHERE id = ?";
+        String sqlUpdate = usuario.getSenha() != null ?
+                "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id " +
+                        "= ?" :
+                "UPDATE usuarios SET nome = ?, email = ? WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatementConsultar =
                      connection.prepareStatement(
                      sqlConsultar)) {
             preparedStatementConsultar.setString(1, usuario.getEmail());
-            preparedStatementConsultar.setInt(2, usuario.getId());
+            preparedStatementConsultar.setInt(2, id);
             preparedStatementConsultar.setString(3, usuario.getEmail());
 
             try (ResultSet resultSet =
@@ -153,8 +160,15 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                     sqlUpdate)) {
                 preparedStatementUpdate.setString(1, usuario.getNome());
                 preparedStatementUpdate.setString(2, usuario.getEmail());
-                preparedStatementUpdate.setString(3, usuario.getSenha());
-                preparedStatementUpdate.setInt(4, id);
+
+                if (usuario.getSenha() != null) {
+                    usuario.setSenha(
+                            passwordEncoder.encode(usuario.getSenha()));
+                    preparedStatementUpdate.setString(3, usuario.getSenha());
+                    preparedStatementUpdate.setInt(4, id);
+                } else {
+                    preparedStatementUpdate.setInt(3, id);
+                }
 
                 preparedStatementUpdate.executeUpdate();
 
@@ -200,8 +214,7 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
             preparedStatement.setString(1, usuario.getEmail());
             preparedStatement.setString(2, usuario.getEmail());
 
-            try (
-            ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next() &&
                         passwordEncoder.matches(usuario.getSenha(),
                                 resultSet.getString("senha"))) {

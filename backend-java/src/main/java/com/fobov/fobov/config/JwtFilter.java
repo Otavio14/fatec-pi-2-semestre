@@ -17,11 +17,11 @@ import javax.crypto.SecretKey;
 import java.io.IOException;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtFilter {
+//public class JwtFilter extends OncePerRequestFilter {
     @Value("${jwt_secret}")
     private String JWT_SECRET;
 
-    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)

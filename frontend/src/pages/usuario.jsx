@@ -26,7 +26,7 @@ export const UsuarioPage = () => {
     const data = {
       nome: Nome,
       email: Email,
-      senha: Senha,
+      senha: Senha ? Senha : null,
     };
 
     if (Id) {
@@ -127,11 +127,9 @@ export const UsuarioPage = () => {
                 <td>{usuario?.nome}</td>
                 <td>{usuario?.email}</td>
                 <td>
-                  {CurrentUserId === usuario?.id ? null : (
-                    <button onClick={() => openModal(usuario?.id)}>
-                      <Pencil size={20} />
-                    </button>
-                  )}
+                  <button onClick={() => openModal(usuario?.id)}>
+                    <Pencil size={20} />
+                  </button>
                 </td>
                 <td>
                   {CurrentUserId === usuario?.id ? null : (
@@ -185,7 +183,7 @@ export const UsuarioPage = () => {
             Label={"Senha"}
             onChange={(e) => setSenha(e.target.value)}
             value={Senha}
-            required
+            required={!Id}
           />
           <Input
             type="password"
@@ -193,7 +191,7 @@ export const UsuarioPage = () => {
             Label={"Confirmação de Senha"}
             onChange={(e) => setConfirmacaoSenha(e.target.value)}
             value={ConfirmacaoSenha}
-            required
+            required={Senha.length > 0}
           />
           <div className="flex gap-4">
             <button

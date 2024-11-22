@@ -24,9 +24,14 @@ export const ClientePage = () => {
   const [Endereco, setEndereco] = useState("");
   const [Bairro, setBairro] = useState("");
   const [NomeCidade, setNomeCidade] = useState("");
+  const [Senha, setSenha] = useState("");
+  const [ConfirmacaoSenha, setConfirmacaoSenha] = useState("");
 
   const salvar = (event) => {
     event.preventDefault();
+
+    if (Senha !== ConfirmacaoSenha)
+      return Swal({ title: "As senhas não coincidem", icon: "info" });
 
     const data = {
       nome: Nome,
@@ -37,6 +42,7 @@ export const ClientePage = () => {
       bairro: Bairro,
       numero: +Numero,
       endereco: Endereco,
+      senha: Senha ? Senha : null,
     };
 
     if (Id) {
@@ -120,6 +126,8 @@ export const ClientePage = () => {
     setEndereco("");
     setBairro("");
     setNomeCidade("");
+    setSenha("");
+    setConfirmacaoSenha("");
   };
 
   useEffect(() => {
@@ -326,6 +334,22 @@ export const ClientePage = () => {
               value={Bairro}
               onChange={(e) => setBairro(e.target.value)}
               required
+            />
+            <Input
+              type="password"
+              placeholder="Senha"
+              Label={"Senha"}
+              onChange={(e) => setSenha(e.target.value)}
+              value={Senha}
+              required={!Id}
+            />
+            <Input
+              type="password"
+              placeholder="Confirmação de Senha"
+              Label={"Confirmação de Senha"}
+              onChange={(e) => setConfirmacaoSenha(e.target.value)}
+              value={ConfirmacaoSenha}
+              required={Senha.length > 0}
             />
           </div>
           <div className="flex gap-4">

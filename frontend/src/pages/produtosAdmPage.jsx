@@ -30,7 +30,7 @@ export const ProdutosPage = () => {
       descricao: DescricaoProduto,
       dtValidade: ValidadeProduto,
       imagem: ImagemProduto,
-      ativo: Ativo,
+      ativo: Number(Ativo),
     };
 
     if (Id) {

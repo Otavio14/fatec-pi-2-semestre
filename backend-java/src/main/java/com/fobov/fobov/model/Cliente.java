@@ -12,6 +12,7 @@ public class Cliente {
     private int idCidade;
     private String cidade;
     private String estado;
+    private String senha;
 
     public int getId() {
         return id;
@@ -99,5 +100,13 @@ public class Cliente {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

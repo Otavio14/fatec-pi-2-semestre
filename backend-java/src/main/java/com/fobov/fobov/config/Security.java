@@ -17,11 +17,11 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 public class Security {
-    private final JwtFilter jwtFilter;
-
-    public Security(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
-    }
+//    private final JwtFilter jwtFilter;
+//
+//    public Security(JwtFilter jwtFilter) {
+//        this.jwtFilter = jwtFilter;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,8 +37,8 @@ public class Security {
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtFilter,
-                UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtFilter,
+//                UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

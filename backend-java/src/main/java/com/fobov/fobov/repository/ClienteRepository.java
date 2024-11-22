@@ -4,6 +4,8 @@ import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Cliente;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -16,6 +18,7 @@ import java.util.List;
 @Repository
 public class ClienteRepository implements Crud<Cliente, Integer> {
     private final DataSource DATA_SOURCE;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public ClienteRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
@@ -94,16 +97,18 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
                         "SELECT id FROM clientes WHERE email = ?";
 
-        String sqlInsert =
+        String sqlInsert = cliente.getSenha() != null ?
                 "INSERT INTO clientes (nome, cep, endereco, email, " +
-                        "telefone, bairro, numero) VALUES (?, ?, ?, ?, ?, ?, " +
-                        "?)";
+                        "telefone, bairro, numero, id_cidade, senha) VALUES" +
+                        " " + "(?, ?, ?, ?," + " ?, ?, ?, ?, ?)" :
+                "INSERT INTO clientes (nome, cep, endereco, email, " +
+                        "telefone, bairro, numero, id_cidade) VALUES" +
+                        " (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatementConsultar =
                      connection.prepareStatement(
                      sqlConsultar)) {
-
             preparedStatementConsultar.setString(1, cliente.getEmail());
             preparedStatementConsultar.setString(2, cliente.getEmail());
 
@@ -118,6 +123,7 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
             try (PreparedStatement preparedStatementInsert =
                          connection.prepareStatement(
                     sqlInsert)) {
+
                 preparedStatementInsert.setString(1, cliente.getNome());
                 preparedStatementInsert.setString(2, cliente.getCep());
                 preparedStatementInsert.setString(3, cliente.getEndereco());
@@ -125,6 +131,13 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 preparedStatementInsert.setString(5, cliente.getTelefone());
                 preparedStatementInsert.setString(6, cliente.getBairro());
                 preparedStatementInsert.setString(7, cliente.getNumero());
+                preparedStatementInsert.setInt(8, cliente.getIdCidade());
+
+                if (cliente.getSenha() != null) {
+                    cliente.setSenha(
+                            passwordEncoder.encode(cliente.getSenha()));
+                    preparedStatementInsert.setString(9, cliente.getSenha());
+                }
 
                 preparedStatementInsert.executeUpdate();
                 return ResponseEntity.status(HttpStatus.OK)
@@ -144,10 +157,13 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                         "SELECT id FROM clientes WHERE email = ? AND" +
                         " id != ?";
 
-        String sqlUpdate =
+        String sqlUpdate = cliente.getSenha() != null ?
                 "UPDATE clientes SET nome = ?, cep = ?, endereco = ?, " +
-                        "email = ?, telefone = ?, bairro = ?, numero = ? " +
-                        "WHERE " + "id = ?";
+                        "email = ?, telefone = ?, bairro = ?, numero = ?, " +
+                        "id_cidade = ?, senha = ?" + " " + "WHERE " + "id = ?" :
+                "UPDATE clientes SET nome = ?, cep = ?, endereco = ?, " +
+                        "email = ?, telefone = ?, bairro = ?, numero = ?, " +
+                        "id_cidade = ? WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatementConsultar =
@@ -155,7 +171,7 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                      sqlConsultar)) {
             preparedStatementConsultar.setString(1, cliente.getEmail());
             preparedStatementConsultar.setString(2, cliente.getEmail());
-            preparedStatementConsultar.setInt(3, cliente.getId());
+            preparedStatementConsultar.setInt(3, id);
 
             try (ResultSet resultSet =
                          preparedStatementConsultar.executeQuery()) {
@@ -176,7 +192,16 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 preparedStatementUpdate.setString(5, cliente.getTelefone());
                 preparedStatementUpdate.setString(6, cliente.getBairro());
                 preparedStatementUpdate.setString(7, cliente.getNumero());
-                preparedStatementUpdate.setInt(8, id);
+                preparedStatementUpdate.setInt(8, cliente.getIdCidade());
+
+                if (cliente.getSenha() != null) {
+                    cliente.setSenha(
+                            passwordEncoder.encode(cliente.getSenha()));
+                    preparedStatementUpdate.setString(9, cliente.getSenha());
+                    preparedStatementUpdate.setInt(10, id);
+                } else {
+                    preparedStatementUpdate.setInt(9, id);
+                }
 
                 preparedStatementUpdate.executeUpdate();
                 return ResponseEntity.status(HttpStatus.OK)
