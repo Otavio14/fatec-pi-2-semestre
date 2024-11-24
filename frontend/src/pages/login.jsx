@@ -50,10 +50,21 @@ export const LoginPage = () => {
     <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-gradient-to-r from-[#0c2d57] via-[#0c2d57b3] to-[#1a3a65] p-4">
       <NavLink
         to="/"
-        className="absolute left-4 top-4 text-[#8f9eb2] hover:text-[#0c2d57] transition-colors rounded-xl bg-white shadow-lg sm:px-10"
+        className="absolute left-4 top-4 flex items-center justify-center rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:bg-[#dd3842] hover:text-white hover:-translate-x-1"
       >
-        Voltar para a Home
+        <span className="font-medium">Voltar</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          className="h-6 w-6"
+        >
+          <path
+            d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"
+          />
+        </svg>
       </NavLink>
+
       <form
         onSubmit={login}
         className="relative flex w-full max-w-[400px] flex-col justify-center rounded-xl bg-white px-6 py-8 shadow-lg sm:px-10"
