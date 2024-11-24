@@ -167,8 +167,8 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
             preparedStatement.setTimestamp(1,
                     Timestamp.valueOf(pedido.getDtPedido()));
             preparedStatement.setString(2, pedido.getEndereco());
-            preparedStatement.setDouble(3, pedido.getTotal());
-            preparedStatement.setString(4, pedido.getStatus());
+            preparedStatement.setString(3, pedido.getStatus());
+            preparedStatement.setDouble(4, pedido.getTotal());
             preparedStatement.setInt(5, pedido.getIdCliente());
             preparedStatement.setInt(6, id);
 

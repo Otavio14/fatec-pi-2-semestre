@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Star from "../assets/star.png";
 import { api } from "../shared/api";
@@ -100,14 +100,35 @@ export const ProdutoPage = () => {
           </div>
         </div>
       </div>
-      <div className="h-20 w-full bg-black">
+      <div className="flex w-full max-w-3xl flex-col gap-8">
         <textarea></textarea>
-        {Avaliacoes.map((avaliacao) => (
-          <div key={avaliacao.id} className="flex gap-4">
-            <div>{avaliacao.nota}</div>
-            <div>{avaliacao.comentario}</div>
-          </div>
-        ))}
+        <div className="grid h-full grid-cols-[auto,1fr] gap-y-8">
+          {Avaliacoes.map((avaliacao) => (
+            <Fragment key={avaliacao.id}>
+              {/* flex h-full w-full max-w-[500px] items-center justify-center rounded border border-[#e7eaee] bg-white py-4 sm:h-[500px] sm:py-0 */}
+              <div className="flex flex-col items-center justify-center rounded-l border-b border-l border-t border-[#e7eaee] bg-white p-6">
+                <span>{avaliacao?.cliente?.nome}</span>
+                <span className="text-xs">
+                  {new Date(avaliacao?.dtAvaliacao).toLocaleDateString("pt-BR")}
+                </span>
+              </div>
+              <div className="flex flex-col gap-4 rounded-r border-b border-r border-t border-[#e7eaee] bg-white p-6">
+                <div className="mb-1 flex items-center gap-1">
+                  {Array(avaliacao.nota || 0)
+                    ?.fill(null)
+                    ?.map((_, index) => (
+                      <img
+                        key={index}
+                        src={Star}
+                        className="h-[18px] w-[18px]"
+                      />
+                    ))}
+                </div>
+                <div>{avaliacao?.comentario}</div>
+              </div>
+            </Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );
