@@ -5,6 +5,7 @@ import { api } from "../shared/api.js";
 import axios from "axios";
 import { Swal } from "../shared/swal.js";
 import { useNavigate } from "react-router-dom";
+import { getAuthId, isAuthenticated } from "../shared/auth.jsx";
 
 export const FinalizarCompraPage = () => {
   const Navigate = useNavigate();
@@ -26,56 +27,43 @@ export const FinalizarCompraPage = () => {
 
   const finalizarCompra = (e) => {
     e.preventDefault();
-
-    const cliente = {
-      nome: Nome,
-      email: Email,
-      telefone: Telefone,
-      cep: Cep,
-      numero: Number(Numero),
-      idCidade: Number(Cidade),
+    const idCliente = getAuthId() 
+    const pedido = {
+      idCliente: idCliente,
+      status: "Pendente",
       endereco: Endereco,
-      bairro: Bairro,
+      dtPedido: new Date().toISOString(),
+      total: Number(CarrinhoTotal),
     };
+    api.post("/pedidos", pedido).then((res) => {
+      const pedidos_produtos = CarrinhoProdutos.map((produto) => ({
+        idPedido: res.data,
+        idProduto: produto.id,
+        quantidade: produto.quantidade,
+        preco: produto.preco,
+      }));
+      api.post("/produtos-pedidos/multiple", pedidos_produtos).then(() => {
+        setCarrinhoProdutos([]);
+        setCarrinhoTotal(0);
+        setConfirmacao(false);
+        const storageEvent = new StorageEvent("storage", {
+          key: "carrinho-clear",
+          oldValue: localStorage.getItem("carrinho"),
+          newValue: { produtos: [], total: 0, quantidade: 0 },
+          url: window.location.href,
+          storageArea: localStorage,
+        });
+        localStorage.setItem(
+          "carrinho",
+          JSON.stringify({ produtos: [], total: 0, quantidade: 0 }),
+        );
 
-    api.post("/clientes", cliente).then((response) => {
-      const pedido = {
-        idCliente: Number(response.data.id),
-        status: "Pendente",
-        endereco: Endereco,
-        dt_pedido: new Date().toISOString(),
-        total: Number(CarrinhoTotal),
-      };
-      api.post("/pedidos", pedido).then((res) => {
-        const pedidos_produtos = CarrinhoProdutos.map((produto) => ({
-          idPedido: res.data.id,
-          idProduto: produto.id,
-          quantidade: produto.quantidade,
-          preco: produto.preco,
-        }));
-        api.post("/produtos-pedidos/multiple", pedidos_produtos).then(() => {
-          setCarrinhoProdutos([]);
-          setCarrinhoTotal(0);
-          setConfirmacao(false);
-          const storageEvent = new StorageEvent("storage", {
-            key: "carrinho-clear",
-            oldValue: localStorage.getItem("carrinho"),
-            newValue: { produtos: [], total: 0, quantidade: 0 },
-            url: window.location.href,
-            storageArea: localStorage,
-          });
-          localStorage.setItem(
-            "carrinho",
-            JSON.stringify({ produtos: [], total: 0, quantidade: 0 }),
-          );
-
-          window.dispatchEvent(storageEvent);
-          Swal.fire({
-            title: "Compra finalizada com sucesso!",
-            icon: "success",
-          }).then(() => {
-            Navigate("/");
-          });
+        window.dispatchEvent(storageEvent);
+        Swal.fire({
+          title: "Compra finalizada com sucesso!",
+          icon: "success",
+        }).then(() => {
+          Navigate("/");
         });
       });
     });
@@ -123,7 +111,6 @@ export const FinalizarCompraPage = () => {
       <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
         Finalizar Compra
       </h1>
-      {/* Lista de Produtos */}
       <div
         className={`flex w-full flex-col items-center ${Confirmacao ? "hidden" : "flex"}`}
       >
@@ -165,7 +152,7 @@ export const FinalizarCompraPage = () => {
             currency: "BRL",
           })}
         </h2>
-        {localStorage.getItem("tokenTeste") == "1234" ? <button
+        {isAuthenticated() ? <button
           onClick={() => setConfirmacao(true)}
           className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
         >
@@ -180,7 +167,6 @@ export const FinalizarCompraPage = () => {
           Continuar
         </button>}
       </div>
-      {/* Formulário sobre o cliente */}
       <form
         className={`w-full flex-col ${Confirmacao ? "flex" : "hidden"}`}
         onSubmit={finalizarCompra}

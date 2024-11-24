@@ -20,6 +20,7 @@ import { FornecedorProdutoPage } from "./pages/fornecedor-produto.jsx";
 import { ProdutoCategoriaPage } from "./pages/produto-categoria.jsx";
 import { CadastroPage } from "./pages/cadastro.jsx";
 import { ProfilePage } from "./pages/profile.jsx";
+import { MeuPedido } from "./pages/meu-pedido.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -77,6 +78,15 @@ export const routes = createBrowserRouter(
         <>
           <HeaderComponent />
           <ProfilePage />
+        </>
+      )
+    },
+    {
+      path: "/meu-pedido",
+      element: (
+        <>
+          <HeaderComponent />
+          <MeuPedido />
         </>
       )
     },
