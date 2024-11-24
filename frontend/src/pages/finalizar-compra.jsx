@@ -111,9 +111,7 @@ export const FinalizarCompraPage = () => {
       <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
         Finalizar Compra
       </h1>
-      <div
-        className={`flex w-full flex-col items-center ${Confirmacao ? "hidden" : "flex"}`}
-      >
+      <div className={`flex w-full flex-col items-center ${Confirmacao ? "hidden" : "flex"}`}>
         <div className="w-full bg-white">
           {CarrinhoProdutos.map((produto, index) => (
             <div
@@ -145,27 +143,47 @@ export const FinalizarCompraPage = () => {
             </div>
           ))}
         </div>
-        <h2 className="mt-[20px] self-end text-[24px] font-semibold leading-[140%]">
-          Total:{" "}
-          {CarrinhoTotal.toLocaleString("pt-br", {
-            style: "currency",
-            currency: "BRL",
-          })}
-        </h2>
-        {isAuthenticated() ? <button
-          onClick={() => setConfirmacao(true)}
-          className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
-        >
-          Continuar
-        </button> : <button
-          onClick={() => {
-            localStorage.setItem("ConfirmarCarrinho", true)
-            Navigate("/login")
-          }}
-          className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
-        >
-          Continuar
-        </button>}
+        <div className="mt-[20px] w-full flex flex-col sm:flex-row justify-between items-center">
+          {/* Input de cupom */}
+          <div className="flex items-center w-full sm:w-auto">
+            <input
+              type="text"
+              placeholder="Digite seu cupom"
+              className="h-[40px] w-full sm:w-[220px] sm:w-[300px] px-4 rounded-l-xl border border-[#8f9eb2] focus:outline-none focus:ring-2 focus:ring-[#dd3842]"
+            />
+            <button
+              className="w-full sm:w-[120px] h-[40px] mt-2 sm:mt-0 rounded-r-xl bg-[#dd3842] text-white font-semibold hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e]"
+            >
+              Aplicar
+            </button>
+          </div>
+          <h2 className="mt-4 sm:mt-0 text-[24px] font-semibold leading-[140%]">
+            Total:{" "}
+            {CarrinhoTotal.toLocaleString("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            })}
+          </h2>
+        </div>
+  
+        {isAuthenticated() ? (
+          <button
+            onClick={() => setConfirmacao(true)}
+            className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
+          >
+            Continuar
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              localStorage.setItem("ConfirmarCarrinho", true);
+              Navigate("/login");
+            }}
+            className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
+          >
+            Continuar
+          </button>
+        )}
       </div>
       <form
         className={`w-full flex-col ${Confirmacao ? "flex" : "hidden"}`}
@@ -275,4 +293,6 @@ export const FinalizarCompraPage = () => {
       </form>
     </div>
   );
+  
+  
 };

@@ -1,19 +1,18 @@
 cliente:
     -Páginas:
-        login --Completo
-        cadastro -- Completo
-        Página p/ perfil (alterar endereço, email, senha) -- começado
-        página meus pedidos -- começado
-        página p/ cada pedido
+        login --Finalizado
+        cadastro -- Finalizado
+        Página p/ perfil (alterar endereço, email, senha) -- Finalizado
+        página meus pedidos -- Finalizado
+        página p/ cada pedido -- Finalizado
     
     -features:
-        autenticação de login para conclusão de compra -- começado
+        autenticação de login para conclusão de compra -- Finalizado
         terminar contato
         avaliar produto
         Filtro produtos por categoria
         na hora da compra, adicionar cupom
 
 adm:
-    accounts management
-    editar estado do pedido do cliente (esperando pagamento, saiu para entrega...)
+    editar estado do pedido do cliente (esperando pagamento, saiu para entrega...) --Finalizado
 
