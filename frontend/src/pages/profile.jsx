@@ -32,12 +32,20 @@ export const ProfilePage = ({ }) => {
 
     const [usuario, setUsuario] = useState(userData)
     const [pedidos, setPedidos] = useState([])
+    const [hasChanged, sethasChanged] = useState(false)
+
+    function AlteraUsuario(name, value) {
+        setUsuario((prev) => {
+            return { ...prev, [name]: value }
+        })
+        console.log({usuarioAlterado: usuario})
+        sethasChanged(true)
+    }
 
     const id = getAuthId()
 
     useEffect(() => {
         api.get(`/clientes/${id}`).then((res) => {
-            console.log({ resProfile: res.data })
             setUsuario((prev) => {
                 return { ...prev, ...res.data }
             })
@@ -45,7 +53,6 @@ export const ProfilePage = ({ }) => {
             console.log({ erroProfile: err })
         })
         api.get(`/pedidos/cliente/${id}`).then((res) => {
-            console.log({ pedidos: res })
             setPedidos(res.data)
         }).catch((err) => {
             console.log({ erroPedidos: err })
@@ -96,7 +103,7 @@ export const ProfilePage = ({ }) => {
 
                 {/* Main Content */}
                 <div className="flex flex-col w-3/4 p-8 rounded-r-xl">
-                    <ProfileInfo show={showProfile} setShow={setShowProfile} userData={usuario} />
+                    <ProfileInfo show={showProfile} setShow={setShowProfile} userData={usuario} handleSalvar={AlteraUsuario} hasChanged={hasChanged}/>
                     <ProfilePedidos show={showPedidos} setShow={setShowPedidos} pedidos={pedidos} />
                 </div>
             </div>

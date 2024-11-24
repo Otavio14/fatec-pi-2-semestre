@@ -28,7 +28,10 @@ export const Step1 = ({ data, updateFieldData }) => {
                 Label={"Telefone"}
                 value={data.telefone || ""}
                 placeholder={"Digite seu telefone"}
-                onChange={(e) => updateFieldData("telefone", e.target.value)}
+                onChange={(e) => updateFieldData("telefone", e.target.value.replace(/\D/g, "")
+                    .replace(/(\d{2})(\d)/, "($1) $2")
+                    .replace(/(\d{5})(\d)/, "$1-$2")
+                    .slice(0, 14),)}
                 required
                 type="text"
                 autoComplete="text"

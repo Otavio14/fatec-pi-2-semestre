@@ -2,19 +2,34 @@ import { useState } from "react"
 import { EnderecoModal } from "../endereco-modal"
 import { Input } from "../input"
 
-export const ProfileInfo = ({ show, setShow, userData }) => {
+export const ProfileInfo = ({ show, setShow, userData, handleSalvar, hasChanged }) => {
     const [showEndereco, setShowEndereco] = useState(false)
 
     return (
         <div className={`${!!show ? "flex justify-center" : "hidden"}`}>
             <div className="flex flex-col w-full">
                 <div className="shadow-md bg-gray-100 p-6 rounded-lg">
-                    <Input Label={"nome"} value={userData.nome} />
-                    <Input Label={"email"} value={userData.email} />
-                    <Input Label={"celular"} value={userData.telefone ? userData.telefone : ""} />
+                    <Input Label={"nome"} value={userData.nome} onChange={(e) => handleSalvar("nome", e.target.value)}/>
+                    <Input Label={"email"} value={userData.email} onChange={(e) => handleSalvar("email", e.target.value)}/>
+                    <Input Label={"celular"} value={userData.telefone ? userData.telefone : ""} onChange={(e) => handleSalvar("telefone", e.target.value)} />
                 </div>
-                <button className="mt-6 px-6 py-2 bg-blue-500 text-white font-semibold rounded-xl shadow-lg hover:bg-blue-600 transition-all duration-200"
-                    onClick={() => setShowEndereco(!showEndereco)}>Endereço</button>
+                <div className="flex items-center gap-x-4 mt-6">
+                    <button
+                        className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-xl shadow-lg hover:bg-blue-600 transition-all duration-200"
+                        onClick={() => setShowEndereco(!showEndereco)}
+                    >
+                        Endereço
+                    </button>
+                    <button
+                        className={`px-6 py-2 font-semibold rounded-xl shadow-lg transition-all duration-200
+            ${hasChanged ? "bg-green-500 hover:bg-green-600 text-white" : "bg-gray-400 text-gray-200 cursor-not-allowed"}`}
+                        disabled={!hasChanged}
+                        // onClick={handleSalvar}
+                    >
+                        Salvar
+                    </button>
+                </div>
+
             </div>
             <EnderecoModal
                 show={showEndereco}

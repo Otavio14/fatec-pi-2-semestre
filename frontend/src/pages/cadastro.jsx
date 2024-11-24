@@ -5,6 +5,8 @@ import { api } from "../shared/api"
 import { Step1 } from "../components/cadastro-steps/cadastro-step1"
 import { Step2 } from "../components/cadastro-steps/cadastro-step2"
 import { useForm } from "../hooks/useForm"
+import { isAdmin, isAuthenticated } from "../shared/auth"
+import Swal from "sweetalert2"
 
 export const CadastroPage = () => {
 
@@ -16,8 +18,7 @@ export const CadastroPage = () => {
         telefone: "",
         senha: "",
         cep: "",
-        estado: "",
-        cidade: "",
+        idCidade: "",
         bairro: "",
         endereco: "",
         numero: "",
@@ -29,15 +30,21 @@ export const CadastroPage = () => {
         setData((prev) => {
             return { ...prev, [key]: value }
         })
+        console.log({ newUser: data })
     }
 
     const cadastro = (e) => {
         e.preventDefault()
-        api.post("/clientes/", { ...data }).then((res) => {
-            console.log({ resposta: res })
-            alert(" Conta criada! ")
-            localStorage.setItem("tokenTeste", data.email)
-            Navigate("/")
+        api.post("/clientes", { ...data }).then((res) => {
+            Swal.fire({
+                icon: "success",
+                title: "Sucesso!",
+                text: "Conta criada!",
+              })
+            api.post(`/usuarios/login`, {email: data.email, senha: data.senha}).then((res) => {
+                localStorage.setItem("token", res.data)
+                isAuthenticated() ? isAdmin() ? Navigate("/adm") : Navigate("/") : null
+            }).catch((err) => console.log("Segundo catch: ", err))
         }).catch((err) => {
             console.log({ erro: err })
         })
