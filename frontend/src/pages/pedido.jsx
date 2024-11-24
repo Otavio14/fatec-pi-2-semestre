@@ -285,13 +285,16 @@ export const PedidoPage = () => {
               </option>
             ))}
           </Select>
-          <Input
-            placeholder="Status"
+          <Select
             Label={"Status"}
             onChange={(e) => setStatus(e.target.value)}
             value={Status}
-            required
-          />
+            required>
+              <option key={1} value={"Pendente"}>Pendente</option>
+              <option key={1} value={"Enviado"}>Enviado</option>
+              <option key={1} value={"Entregue"}>Entregue</option>
+              <option key={1} value={"Cancelado"}>Cancelado</option>
+          </Select>
           <Input
             placeholder="Endereço"
             Label={"Endereço"}
