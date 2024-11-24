@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
     }
 
     public Pedido findById(Integer id) {
-        Pedido pedido = null;
+        Pedido pedido = new Pedido();
         String sql = "SELECT id, dt_pedido, endereco, status, total, " +
                 "id_cliente FROM pedidos WHERE id = ?";
 
@@ -64,7 +65,6 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                pedido = new Pedido();
                 pedido.setId(resultSet.getInt("id"));
                 pedido.setDtPedido(
                         resultSet.getTimestamp("dt_pedido").toLocalDateTime());
@@ -87,17 +87,28 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     sql)) {
-            preparedStatement.setDate(1,
-                    java.sql.Date.valueOf(pedido.getDtPedido().toLocalDate()));
+                     sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setTimestamp(1,
+                    Timestamp.valueOf(pedido.getDtPedido()));
             preparedStatement.setString(2, pedido.getEndereco());
             preparedStatement.setString(3, pedido.getStatus());
             preparedStatement.setDouble(4, pedido.getTotal());
             preparedStatement.setInt(5, pedido.getIdCliente());
 
             preparedStatement.executeUpdate();
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Pedido cadastrado com sucesso!");
+
+            try (ResultSet generatedKeys =
+                         preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    long id = generatedKeys.getLong(1);
+                    return ResponseEntity.status(HttpStatus.OK)
+                            .body(String.valueOf(id));
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("Não foi possível obter o ID do pedido " +
+                                    "cadastrado!");
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

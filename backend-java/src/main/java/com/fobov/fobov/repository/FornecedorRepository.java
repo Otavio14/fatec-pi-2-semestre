@@ -29,7 +29,8 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                         "fornecedores.telefone, fornecedores.status, " +
                         "fornecedores.id_cidade, cidades.nome AS cidade, " +
                         "estados.nome AS estado FROM fornecedores LEFT JOIN " +
-                        "cidades";
+                        "cidades ON cidades.id = fornecedores.id_cidade LEFT " +
+                        "JOIN estados ON estados.id = cidades.id_estado;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(

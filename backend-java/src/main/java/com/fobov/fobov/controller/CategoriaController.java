@@ -1,5 +1,6 @@
 package com.fobov.fobov.controller;
 
+import com.fobov.fobov.config.RouteLevel;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Categoria;
 import com.fobov.fobov.repository.CategoriaRepository;
@@ -18,6 +19,7 @@ public class CategoriaController implements Crud<Categoria, Integer> {
     }
 
     @GetMapping
+    @RouteLevel(1)
     public List<Categoria> findAll() {
         return CATEGORIA_REPOSITORY.findAll();
     }

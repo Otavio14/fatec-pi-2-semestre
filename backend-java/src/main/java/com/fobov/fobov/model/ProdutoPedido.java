@@ -1,14 +1,12 @@
 package com.fobov.fobov.model;
 
-import java.time.LocalDateTime;
-
 public class ProdutoPedido {
     private int id;
-    private LocalDateTime data;
     private int idProduto;
     private int idPedido;
     private double preco;
     private int quantidade;
+    private String produto;
 
     public int getId() {
         return id;
@@ -16,14 +14,6 @@ public class ProdutoPedido {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
     }
 
     public int getIdProduto() {
@@ -56,5 +46,13 @@ public class ProdutoPedido {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getProduto() {
+        return produto;
+    }
+
+    public void setProduto(String produto) {
+        this.produto = produto;
     }
 }

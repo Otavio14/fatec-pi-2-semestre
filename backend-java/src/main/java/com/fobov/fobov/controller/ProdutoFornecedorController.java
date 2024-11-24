@@ -1,5 +1,6 @@
 package com.fobov.fobov.controller;
 
+import com.fobov.fobov.config.RouteLevel;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.ProdutoFornecedor;
 import com.fobov.fobov.repository.ProdutoFornecedorRepository;
@@ -20,28 +21,33 @@ public class ProdutoFornecedorController
     }
 
     @GetMapping
+    @RouteLevel(2)
     public List<ProdutoFornecedor> findAll() {
         return PRODUTO_FORNECEDOR_REPOSITORY.findAll();
     }
 
     @GetMapping("/{id}")
+    @RouteLevel(2)
     public ProdutoFornecedor findById(@PathVariable Integer id) {
         return PRODUTO_FORNECEDOR_REPOSITORY.findById(id);
     }
 
     @PostMapping
+    @RouteLevel(2)
     public ResponseEntity<String> save(
             @RequestBody ProdutoFornecedor produtoFornecedor) {
         return PRODUTO_FORNECEDOR_REPOSITORY.save(produtoFornecedor);
     }
 
     @PutMapping("/{id}")
+    @RouteLevel(2)
     public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody
     ProdutoFornecedor produtoFornecedor) {
         return PRODUTO_FORNECEDOR_REPOSITORY.update(id, produtoFornecedor);
     }
 
     @DeleteMapping("/{id}")
+    @RouteLevel(2)
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PRODUTO_FORNECEDOR_REPOSITORY.delete(id);
     }

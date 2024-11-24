@@ -5802,3 +5802,75 @@ VALUES (
     "joao@gmail.com",
     "$2a$10$3qWe8IWiuS6ojb7HvrJh3O5OiAATi0DiHRO2PArTZMiMG2RqXpbbe"
 );
+
+INSERT INTO
+    fornecedores (
+        id,
+        nome,
+        id_cidade,
+        cep,
+        endereco,
+        complemento,
+        telefone,
+        status
+    )
+VALUES (
+    1,
+    "Casa dos suplementos",
+    14173,
+    "13334-100",
+    "R. Dom Pedro I",
+    "Sala 2",
+    "(19) 3885-1923",
+    "Ativo"
+), (
+    2,
+    "Fornecedor de testes",
+    14173,
+    "13334-100",
+    "R. Dom Pedro I",
+    "Sala 2",
+    "(19) 3885-1923",
+    "Ativo"
+);
+
+INSERT INTO
+    cupons (
+        id,
+        nome,
+        porcentagem
+    )
+VALUES (
+    1,
+    "FATEC10",
+    10
+), (
+    2,
+    "FOBOV15",
+    15
+);
+
+INSERT INTO
+    avaliacoes (
+        id,
+        id_cliente,
+        id_produto,
+        nota,
+        comentario,
+        dt_avaliacao
+    )
+VALUES (
+    1,
+    1,
+    2,
+    5,
+    "Produto muito bom, recomendo a todos",
+    DATETIME()
+), (
+    2,
+    2,
+    2,
+    4,
+    "Muito bom porém poderia ser mais barato",
+    DATETIME()
+);

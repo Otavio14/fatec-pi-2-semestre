@@ -1,5 +1,6 @@
 package com.fobov.fobov.controller;
 
+import com.fobov.fobov.config.RouteLevel;
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Fornecedor;
 import com.fobov.fobov.repository.FornecedorRepository;
@@ -18,27 +19,32 @@ public class FornecedorController implements Crud<Fornecedor, Integer> {
     }
 
     @GetMapping
+    @RouteLevel(2)
     public List<Fornecedor> findAll() {
         return FORNECEDORES_REPOSITORY.findAll();
     }
 
     @GetMapping("/{id}")
+    @RouteLevel(2)
     public Fornecedor findById(@PathVariable Integer id) {
         return FORNECEDORES_REPOSITORY.findById(id);
     }
 
     @PostMapping
+    @RouteLevel(2)
     public ResponseEntity<String> save(@RequestBody Fornecedor fornecedor) {
         return FORNECEDORES_REPOSITORY.save(fornecedor);
     }
 
     @PutMapping("/{id}")
+    @RouteLevel(2)
     public ResponseEntity<String> update(@PathVariable Integer id,
                                          @RequestBody Fornecedor fornecedor) {
         return FORNECEDORES_REPOSITORY.update(id, fornecedor);
     }
 
     @DeleteMapping("/{id}")
+    @RouteLevel(2)
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return FORNECEDORES_REPOSITORY.delete(id);
     }

@@ -81,7 +81,7 @@ export const AvaliacaoPage = () => {
                 <td>{avaliacao?.produto}</td>
                 <td>{avaliacao?.cliente}</td>
                 <td>{avaliacao?.nota}</td>
-                <td>{avaliacao?.dt_avaliacao}</td>
+                <td>{avaliacao?.dtAvaliacao}</td>
                 <td>
                   <button
                     onClick={() => {

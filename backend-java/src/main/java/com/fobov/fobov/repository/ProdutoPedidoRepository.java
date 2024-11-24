@@ -24,8 +24,12 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
     public List<ProdutoPedido> findAll() {
         List<ProdutoPedido> produtoPedidoList = new ArrayList<>();
         String sql =
-                "SELECT id, preco, quantidade, id_produto, id_pedido FROM " +
-                        "produtos_pedidos";
+                "SELECT produtos_pedidos.id, produtos_pedidos.preco, " +
+                        "produtos_pedidos.quantidade, produtos_pedidos" +
+                        ".id_produto, produtos_pedidos.id_pedido, produtos" +
+                        ".nome AS produto FROM produtos_pedidos LEFT JOIN " +
+                        "produtos ON produtos.id = produtos_pedidos" +
+                        ".id_produto;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -39,6 +43,7 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
                 produtoPedido.setQuantidade(resultSet.getInt("quantidade"));
                 produtoPedido.setIdProduto(resultSet.getInt("id_produto"));
                 produtoPedido.setIdPedido(resultSet.getInt("id_pedido"));
+                produtoPedido.setProduto(resultSet.getString("produto"));
                 produtoPedidoList.add(produtoPedido);
             }
         } catch (Exception e) {
@@ -137,5 +142,90 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível realizar a exclusão!");
+    }
+
+    public ResponseEntity<String> saveMany(List<ProdutoPedido> produtosPedido) {
+        if (produtosPedido.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("A lista de produtos pedidos está vazia!");
+        }
+
+        String deleteSql = "DELETE FROM produtos_pedidos WHERE id_pedido = ?;";
+        StringBuilder insertSql = new StringBuilder(
+                "INSERT INTO produtos_pedidos (id_produto, id_pedido, preco, " +
+                        "quantidade) VALUES ");
+
+        for (int i = 0; i < produtosPedido.size(); i++) {
+            insertSql.append("(?, ?, ?, ?)");
+            if (i < produtosPedido.size() - 1) {
+                insertSql.append(", ");
+            }
+        }
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement deleteStatement = connection.prepareStatement(
+                     deleteSql);
+             PreparedStatement insertStatement = connection.prepareStatement(
+                     insertSql.toString())) {
+
+            // Set the id_pedido for the DELETE statement
+            deleteStatement.setInt(1, produtosPedido.get(0).getIdPedido());
+            deleteStatement.executeUpdate();
+
+            // Set the values for the INSERT statement
+            int parameterIndex = 1;
+            for (ProdutoPedido produtoPedido : produtosPedido) {
+                insertStatement.setInt(parameterIndex++,
+                        produtoPedido.getIdProduto());
+                insertStatement.setInt(parameterIndex++,
+                        produtoPedido.getIdPedido());
+                insertStatement.setDouble(parameterIndex++,
+                        produtoPedido.getPreco());
+                insertStatement.setInt(parameterIndex++,
+                        produtoPedido.getQuantidade());
+            }
+
+            insertStatement.executeUpdate();
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Produto pedido cadastrado com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Não foi possível realizar o cadastro!");
+        }
+    }
+
+    public List<ProdutoPedido> findAllByPedidoId(Integer id) {
+        List<ProdutoPedido> produtoPedidoList = new ArrayList<>();
+        String sql = "SELECT produtos_pedidos.id, produtos_pedidos.preco, " +
+                "produtos_pedidos.quantidade, produtos_pedidos" +
+                ".id_produto, produtos_pedidos.id_pedido, produtos" +
+                ".nome AS produto FROM produtos_pedidos LEFT JOIN " +
+                "produtos ON produtos.id = produtos_pedidos" +
+                ".id_produto WHERE id_pedido = ?;";
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ProdutoPedido produtoPedido = new ProdutoPedido();
+                    produtoPedido.setId(resultSet.getInt("id"));
+                    produtoPedido.setPreco(resultSet.getDouble("preco"));
+                    produtoPedido.setQuantidade(resultSet.getInt("quantidade"));
+                    produtoPedido.setIdProduto(resultSet.getInt("id_produto"));
+                    produtoPedido.setIdPedido(resultSet.getInt("id_pedido"));
+                    produtoPedido.setProduto(resultSet.getString("produto"));
+                    produtoPedidoList.add(produtoPedido);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return produtoPedidoList;
     }
 }

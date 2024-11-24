@@ -1,6 +1,7 @@
 package com.fobov.fobov.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Pedido {
     private int id;
@@ -10,6 +11,7 @@ public class Pedido {
     private String endereco;
     private String status;
     private String cliente;
+    private List<ProdutoPedido> produtoPedidos;
 
     public int getId() {
         return id;
@@ -65,5 +67,13 @@ public class Pedido {
 
     public void setCliente(String cliente) {
         this.cliente = cliente;
+    }
+
+    public List<ProdutoPedido> getProdutoPedidos() {
+        return produtoPedidos;
+    }
+
+    public void setProdutoPedidos(List<ProdutoPedido> produtoPedidos) {
+        this.produtoPedidos = produtoPedidos;
     }
 }

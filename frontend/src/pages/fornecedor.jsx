@@ -176,8 +176,8 @@ export const FornecedorPage = () => {
             {Fornecedores?.map((fornecedor) => (
               <tr key={fornecedor?.id}>
                 <td>{fornecedor?.nome}</td>
-                <td>{fornecedor?.cidade?.nome}</td>
-                <td>{fornecedor?.cidade?.estado?.sigla}</td>
+                <td>{fornecedor?.nome}</td>
+                <td>{fornecedor?.estado}</td>
                 <td>{fornecedor?.telefone}</td>
                 <td>
                   <button onClick={() => openModal(fornecedor?.id)}>

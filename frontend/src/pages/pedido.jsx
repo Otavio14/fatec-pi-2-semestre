@@ -36,7 +36,7 @@ export const PedidoPage = () => {
       idCliente: Number(Cliente),
       status: Status,
       endereco: Endereco,
-      dt_pedido: DtPedido,
+      dtPedido: DtPedido,
       total: Number(Total),
     };
 
@@ -61,7 +61,7 @@ export const PedidoPage = () => {
     } else {
       api.post("/pedidos", data).then((res) => {
         const pedidos_produtos = ProdutosPedidos?.map((produto) => ({
-          idPedido: Number(res.data.id),
+          idPedido: Number(res.data),
           idProduto: Number(produto?.idProduto),
           quantidade: Number(produto?.quantidade),
           preco: Number(produto?.preco),
@@ -88,10 +88,13 @@ export const PedidoPage = () => {
       setCliente(response.data.idCliente);
       setEndereco(response.data.endereco);
       setDtPedido(
-        new Date(response.data.dt_pedido).toISOString().substring(0, 16),
+        new Date(response.data.dtPedido).toISOString().substring(0, 16),
       );
-      setProdutosPedidos(response.data.ProdutoPedido);
       setTotal(response.data.total);
+
+      api.get(`/produtos-pedidos/pedido/${id}`).then((res_produtos) => {
+        setProdutosPedidos(res_produtos.data);
+      });
     });
   };
 
@@ -224,9 +227,9 @@ export const PedidoPage = () => {
           <tbody>
             {Pedidos?.map((pedido) => (
               <tr key={pedido?.id}>
-                <td>{pedido?.cliente?.nome}</td>
+                <td>{pedido?.cliente}</td>
                 <td>
-                  {new Date(pedido?.dt_pedido).toLocaleDateString("pt-BR", {
+                  {new Date(pedido?.dtPedido).toLocaleDateString("pt-BR", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
@@ -359,7 +362,7 @@ export const PedidoPage = () => {
               <tbody>
                 {ProdutosPedidos?.map((produto, index) => (
                   <tr key={index}>
-                    <td>{produto?.produto?.nome}</td>
+                    <td>{produto?.produto}</td>
                     <td>{produto?.quantidade}</td>
                     <td>R$ {produto?.preco?.toFixed(2)}</td>
                     <td>
