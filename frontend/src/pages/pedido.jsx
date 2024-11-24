@@ -204,46 +204,52 @@ export const PedidoPage = () => {
   }, [ProdutosPedidos]);
 
   return (
-    <div className="flex max-h-screen w-full flex-col p-2 sm:p-8">
-      <div className="mb-[33px] flex w-full flex-wrap justify-center gap-2 border-b border-[#d9d9d9] pb-[12px] sm:justify-between">
-        <h1 className="text-[38px] font-semibold leading-[140%]">Pedidos</h1>
+    <div className="flex min-h-screen w-full flex-col bg-gray-100 p-4 sm:p-8">
+      <div className="mb-8 flex w-full flex-wrap items-center justify-between gap-4 border-b border-gray-300 pb-4">
+        <h1 className="text-3xl font-bold text-gray-800">Pedidos</h1>
         <button
-          className="w-fit rounded bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white"
+          className="rounded bg-red-600 px-6 py-3 text-lg font-semibold text-white shadow hover:bg-red-500"
           onClick={() => setShowModal(true)}
         >
-          Cadastrar
+          + Cadastrar Pedido
         </button>
       </div>
-      <div className="w-full overflow-auto">
-        <table className="w-full border-collapse border bg-white">
-          <thead>
+
+      <div className="w-full overflow-x-auto rounded-lg bg-white shadow-lg">
+        <table className="w-full border-collapse text-left text-gray-700">
+          <thead className="bg-gray-200">
             <tr>
-              <th>Cliente</th>
-              <th>Data</th>
-              <th></th>
-              <th></th>
+              <th className="px-6 py-4">Cliente</th>
+              <th className="px-6 py-4">Data</th>
+              <th className="px-6 py-4 text-center">Editar</th>
+              <th className="px-6 py-4 text-center">Deletar</th>
             </tr>
           </thead>
           <tbody>
             {Pedidos?.map((pedido) => (
-              <tr key={pedido?.id}>
-                <td>{pedido?.cliente}</td>
-                <td>
+              <tr
+                key={pedido?.id}
+                className="border-t hover:bg-gray-50 transition"
+              >
+                <td className="px-6 py-4">{pedido?.cliente?.nome}</td>
+                <td className="px-6 py-4">
                   {new Date(pedido?.dtPedido).toLocaleDateString("pt-BR", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
                 </td>
-                <td>
-                  <button onClick={() => openModal(pedido?.id)}>
+                <td className="px-6 py-4 text-center">
+                  <button
+                    onClick={() => openModal(pedido?.id)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
                     <Pencil size={20} />
                   </button>
                 </td>
-                <td>
+                <td className="px-6 py-4 text-center">
                   <button
-                    onClick={() => {
-                      deletar(pedido?.id);
-                    }}
+                    onClick={() => deletar(pedido?.id)}
+                    className="text-red-600 hover:text-red-800"
                   >
                     <Trash size={20} />
                   </button>
@@ -253,18 +259,18 @@ export const PedidoPage = () => {
           </tbody>
         </table>
       </div>
+
       <dialog
         ref={DialogRef}
         onCancel={closeModal}
-        className={`fixed left-0 top-0 z-[13] h-screen w-screen flex-col items-center overflow-y-auto border-none bg-transparent p-4 backdrop:bg-black/50 ${
-          ShowModal ? "flex" : ""
-        }`}
+        className={`fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur ${ShowModal ? "flex" : "hidden"
+          }`}
       >
         <form
           onSubmit={salvar}
-          className="w-fir z-[15] mx-0 my-auto flex h-fit flex-col items-center rounded-lg bg-[#f8f9ff] p-2 sm:p-12"
+          className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-lg bg-white p-6 shadow-xl sm:p-12"
         >
-          <h1 className="text-center text-[38px] font-semibold leading-[140%]">
+          <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
             {Id ? "Editar" : "Cadastrar"} Pedido
           </h1>
           <Select
@@ -272,7 +278,7 @@ export const PedidoPage = () => {
             onChange={(e) => setCliente(e.target.value)}
             value={Cliente}
           >
-            <option>Selecione o estado</option>
+            <option>Selecione o cliente</option>
             {Clientes.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.nome}
@@ -309,66 +315,28 @@ export const PedidoPage = () => {
             required
             readOnly
           />
-          <h3 className="text-[28px] font-semibold leading-[140%]">Produtos</h3>
-          <div className="my-4 grid grid-cols-1 gap-2 overflow-x-auto lg:grid-cols-2">
-            <table className="h-fit border-collapse border bg-white">
-              <thead>
+          <h3 className="mt-8 text-xl font-semibold text-gray-800">Produtos</h3>
+          <div className="my-4 flex justify-center">
+            <table className="w-full max-w-4xl border-collapse rounded-lg bg-white shadow-lg text-gray-700">
+              <thead className="bg-gray-200">
                 <tr>
-                  <th colSpan="5" className="text-center">
-                    Disponíveis
-                  </th>
-                </tr>
-                <tr>
-                  <th>Produto</th>
-                  <th>Preço</th>
-                  <th>Estoque</th>
-                  <th>Validade</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {Produtos?.map((produto, index) => (
-                  <tr key={index}>
-                    <td>{produto?.nome}</td>
-                    <td>R$ {produto?.preco?.toFixed(2)}</td>
-                    <td>{produto?.estoque}</td>
-                    <td>{produto?.dtValidade}</td>
-                    <td>
-                      <button
-                        onClick={() => adicionarProduto(produto)}
-                        type="button"
-                      >
-                        <Plus size={20} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <table className="h-fit border-collapse border bg-white">
-              <thead>
-                <tr>
-                  <th colSpan="4" className="text-center">
-                    Selecionados
-                  </th>
-                </tr>
-                <tr>
-                  <th>Produto</th>
-                  <th>Quantidade</th>
-                  <th>Preço</th>
-                  <th></th>
+                  <th className="px-6 py-4">Produto</th>
+                  <th className="px-6 py-4">Quantidade</th>
+                  <th className="px-6 py-4">Preço</th>
+                  <th className="px-6 py-4 text-center">Remover</th>
                 </tr>
               </thead>
               <tbody>
                 {ProdutosPedidos?.map((produto, index) => (
-                  <tr key={index}>
-                    <td>{produto?.produto?.nome}</td>
-                    <td>{produto?.quantidade}</td>
-                    <td>R$ {produto?.preco?.toFixed(2)}</td>
-                    <td>
+                  <tr key={index} className="border-t hover:bg-gray-50 transition">
+                    <td className="px-6 py-4">{produto?.produto?.nome}</td>
+                    <td className="px-6 py-4">{produto?.quantidade}</td>
+                    <td className="px-6 py-4">R$ {produto?.preco?.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-center">
                       <button
                         onClick={() => removerProduto(produto)}
                         type="button"
+                        className="text-red-600 hover:text-red-800"
                       >
                         <Trash size={20} />
                       </button>
@@ -378,16 +346,17 @@ export const PedidoPage = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex gap-4">
+
+          <div className="mt-6 flex justify-end gap-4">
             <button
-              className="w-fit rounded border bg-[#2B38D1] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
+              className="rounded bg-blue-600 px-6 py-3 text-white shadow hover:bg-blue-500"
               type="submit"
             >
               Salvar
             </button>
             <button
               type="button"
-              className="w-fit rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[20px] text-white hover:bg-white hover:text-[#0c2d57]"
+              className="rounded bg-gray-400 px-6 py-3 text-white shadow hover:bg-gray-300"
               onClick={closeModal}
             >
               Cancelar
@@ -397,4 +366,5 @@ export const PedidoPage = () => {
       </dialog>
     </div>
   );
+
 };
