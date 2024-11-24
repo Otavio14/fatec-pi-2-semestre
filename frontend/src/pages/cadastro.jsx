@@ -54,54 +54,54 @@ export const CadastroPage = () => {
     const { currentStep, currentComponent, changeStep, isLastStep, isFirstStep } = useForm(formComponents)
 
     return (
-        <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3] p-1">
-            <NavLink
-                to="/"
-                className="right-[20px] top-[15px] text-[#8f9eb2]"
+        <div className="flex h-full min-h-screen w-full flex-col items-center justify-center bg-gradient-to-r from-[#0c2d57] via-[#0c2d57b3] to-[#1a3a65] p-4">
+        <NavLink
+          to="/"
+          className="absolute left-4 top-4 text-[#8f9eb2] hover:text-[#0c2d57] transition-colors rounded-xl bg-white shadow-lg sm:px-10"
+        >
+          Voltar para a Home
+        </NavLink>
+        <h2 className="mb-6 text-center text-[28px] font-bold text-white sm:text-[32px]">
+          Cadastro
+        </h2>
+        <form
+          onSubmit={isLastStep ? (e) => cadastro(e) : (e) => changeStep(currentStep + 1, e)}
+          className="relative flex w-full max-w-[400px] flex-col rounded-xl bg-white p-6 shadow-lg sm:px-10"
+        >
+          <div className="mb-6">
+            {currentComponent}
+          </div>
+          <div className="flex justify-between">
+            {!isFirstStep && (
+              <button
+                style={{ transition: "all 0.3s ease-in-out" }}
+                className="rounded-lg bg-[#8f9eb2] px-6 py-3 text-white shadow-md hover:bg-[#7a8aa3] transition-all"
+                type="button"
+                onClick={() => changeStep(currentStep - 1)}
+              >
+                Voltar
+              </button>
+            )}
+            <button
+              style={{ transition: "all 0.3s ease-in-out" }}
+              className={`rounded-lg px-6 py-3 font-semibold text-white shadow-md transition-all ${
+                isLastStep
+                  ? "bg-[#32a852] hover:bg-[#2b9045]"
+                  : "bg-[#dd3842] hover:bg-[#c32f39]"
+              }`}
+              type="submit"
             >
-                Voltar para a Home
-            </NavLink>
-            <h2 className="mb-[20px] text-[30px] font-semibold leading-[140%] text-[#0c2d57]">
-                Cadastro
-            </h2>
-            <form onSubmit={isLastStep ? (e) => cadastro(e) : (e) => changeStep(currentStep + 1, e)}
-                className="relative flex w-full max-w-[500px] flex-col justify-center rounded-[10px] bg-white px-4 pb-[40px] pt-[33px] sm:px-[65px]"
-            >
-                <div>
-                    {currentComponent}
-                </div>
-                {!isFirstStep && (
-                    <button
-                        style={{ transition: "color .3s, background-color .5s" }}
-                        className="mt-[14px] rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[22px] text-white hover:bg-white hover:text-[#0c2d57]"
-                        type="button"
-                        onClick={() => changeStep(currentStep - 1)}
-                    >
-                        Voltar
-                    </button>
-                )}
-                {!isLastStep ? (
-                    <button style={{ transition: "color .3s, background-color .5s" }}
-                        className="mt-[14px] rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[22px] text-white hover:bg-white hover:text-[#0c2d57]"
-                        type="submit"
-                    >
-                        <span>Avançar</span>
-                    </button>
-                ) : (
-                    <button style={{ transition: "color .3s, background-color .5s" }}
-                        className="mt-[14px] rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[22px] text-white hover:bg-white hover:text-[#0c2d57]"
-                        type="submit"
-                    >
-                        Enviar
-                    </button>
-                )}
-            </form>
-            <NavLink
-                to="/login"
-                className="absolute right-[20px] top-[15px] text-[#8f9eb2]"
-            >
-                Fazer Log in
-            </NavLink>
-        </div>
+              {isLastStep ? "Enviar" : "Avançar"}
+            </button>
+          </div>
+        </form>
+        <NavLink
+          to="/login"
+          className="absolute right-4 top-4 text-[#8f9eb2] hover:text-[#0c2d57] transition-colors rounded-xl bg-white shadow-lg sm:px-10"
+        >
+          Fazer Log in
+        </NavLink>
+      </div>
+      
     )
 }

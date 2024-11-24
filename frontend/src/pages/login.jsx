@@ -47,19 +47,19 @@ export const LoginPage = () => {
   }, [Navigate]);
 
   return (
-    <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-[#0c2d57b3] p-1">
+    <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-gradient-to-r from-[#0c2d57] via-[#0c2d57b3] to-[#1a3a65] p-4">
+      <NavLink
+        to="/"
+        className="absolute left-4 top-4 text-[#8f9eb2] hover:text-[#0c2d57] transition-colors rounded-xl bg-white shadow-lg sm:px-10"
+      >
+        Voltar para a Home
+      </NavLink>
       <form
         onSubmit={login}
-        className="relative flex w-full max-w-[500px] flex-col justify-center rounded-[10px] bg-white px-4 pb-[40px] pt-[33px] sm:px-[65px]"
+        className="relative flex w-full max-w-[400px] flex-col justify-center rounded-xl bg-white px-6 py-8 shadow-lg sm:px-10"
       >
-        <NavLink
-          to="/"
-          className="absolute right-[20px] top-[15px] text-[#8f9eb2]"
-        >
-          Voltar para a Home
-        </NavLink>
-        <h2 className="mb-[20px] text-[30px] font-semibold leading-[140%] text-[#0c2d57]">
-          Log in
+        <h2 className="mb-6 text-center text-[28px] font-bold leading-[140%] text-[#0c2d57] sm:text-[32px]">
+          Bem-vindo!
         </h2>
         <Input
           Label={"Email"}
@@ -69,6 +69,7 @@ export const LoginPage = () => {
           required
           type="email"
           autoComplete="email"
+          className="mb-4"
         />
         <Input
           Label={"Senha"}
@@ -78,20 +79,25 @@ export const LoginPage = () => {
           required
           type="password"
           autoComplete="password"
+          className="mb-6"
         />
         <button
-          style={{ transition: "color .3s, background-color .5s" }}
-          className="mt-[14px] rounded border bg-[#dd3842] px-[34px] py-[15px] font-semibold leading-[22px] text-white hover:bg-white hover:text-[#0c2d57]"
+          style={{ transition: "all 0.3s ease-in-out" }}
+          className="w-full rounded-lg bg-[#dd3842] px-6 py-3 text-lg font-semibold text-white shadow-md hover:bg-[#c32f39] hover:shadow-lg"
         >
           Entrar
         </button>
+        <div className="mt-4 text-center text-sm text-[#8f9eb2]">
+          Ainda não tem uma conta?{" "}
+          <NavLink
+            to="/cadastro"
+            className="text-[#dd3842] hover:underline hover:text-[#c32f39] transition-colors"
+          >
+            Cadastre-se
+          </NavLink>
+        </div>
       </form>
-      <NavLink
-        to="/cadastro"
-        className="absolute right-[20px] top-[15px] text-[#8f9eb2]"
-      >
-        Cadastrar-se
-      </NavLink>
     </div>
+
   );
 };
