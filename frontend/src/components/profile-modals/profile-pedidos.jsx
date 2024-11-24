@@ -14,7 +14,7 @@ export const ProfilePedidos = ({ show, setShow, pedidos }) => {
                 <div
                     className="bg-white p-4 rounded-md shadow-sm border mb-4 hover:cursor-pointer hover:scale-105 hover:transition-all"
                     onClick={() => {
-                        Navigate('/meu-pedido', { state: { idPedido: pedido.id } })
+                        Navigate('/meu-pedido', { state: { idPedido: pedido.id, dtPedido: pedido.dtPedido, statusPedido: pedido.status } })
                     }}
                 >
                     <p>Código: {pedido.id}</p>

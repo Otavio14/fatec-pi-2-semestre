@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export const MeuPedido = () => {
     const location = useLocation();
-    const { idPedido } = location.state || {};
+    const { idPedido, dtPedido, statusPedido } = location.state || {};
 
     const [produtos, setProdutos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +16,7 @@ export const MeuPedido = () => {
                 .get(`produtos-pedidos/pedido/${idPedido}`)
                 .then((res) => {
                     setProdutos(res.data);
+                    console.log({ Bigas: produtos })
                     setIsLoading(false);
                 })
                 .catch((err) => {
@@ -49,6 +50,11 @@ export const MeuPedido = () => {
         <div className="flex flex-col items-center px-4 py-10 sm:px-20">
             <div className="mb-[33px] flex w-full items-center justify-between border-b border-[#d9d9d9] pb-[12px]">
                 <h1 className="text-[38px] font-semibold leading-[140%]">Detalhes do Pedido</h1>
+                <p className="text-[18px]"><span className="font-semibold">Realizado: </span>{(() => {
+                    const [year, month, day] = dtPedido.split("T")[0].split("-");
+                    return `${day}/${month}/${year}`;
+                })()}</p>
+                <p className="text-[18px]"><span className="font-semibold">Status: </span>{statusPedido}</p>
                 <NavLink
                     to="/perfil"
                     className="flex items-center justify-center rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:bg-[#dd3842] hover:text-white hover:-translate-x-1"
@@ -72,13 +78,13 @@ export const MeuPedido = () => {
                     >
                         <div className="flex h-[75px] md:h-[100px] w-[50px] md:w-[100px] items-center justify-center rounded border p-[10px]">
                             <img
-                                src={produto.imagem || "https://imgs.search.brave.com/cGHXECvvjKMbdnOSP6cjgNCny8YO5tnC0JjxnHJInZQ/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly90bXNz/bC5ha2FtYWl6ZWQu/bmV0Ly9pbWFnZXMv/d2FwcGVuL2hlYWRl/clJ1bmQvMTAyMy5w/bmc_bG09MTQxMTIw/NDk4Mw"} // Insira um placeholder padrão caso a imagem não exista
-                                alt={produto.produto}
+                                src={produto.produto.imagem || "https://imgs.search.brave.com/cGHXECvvjKMbdnOSP6cjgNCny8YO5tnC0JjxnHJInZQ/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly90bXNz/bC5ha2FtYWl6ZWQu/bmV0Ly9pbWFnZXMv/d2FwcGVuL2hlYWRl/clJ1bmQvMTAyMy5w/bmc_bG09MTQxMTIw/NDk4Mw"} // Insira um placeholder padrão caso a imagem não exista
+                                alt={produto.produto.nome}
                                 className="h-full w-full max-w-[70px] object-contain"
                             />
                         </div>
                         <h2 className="text-[18px] font-semibold leading-[140%]">
-                            {produto.produto}
+                            {produto.produto.nome}
                         </h2>
                         <input
                             readOnly
