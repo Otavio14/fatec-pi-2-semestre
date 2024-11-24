@@ -98,11 +98,9 @@ export const ProdutoCategoriaPage = () => {
 
   useEffect(() => {
     if (IdProduto)
-      api
-        .get(`/produtos-categorias/categorias-por-produto/${IdProduto}`)
-        .then((response) => {
-          setProdutoCategorias(response.data);
-        });
+      api.get(`/produtos-categorias/produto/${IdProduto}`).then((response) => {
+        setProdutoCategorias(response.data);
+      });
   }, [IdProduto, Reload]);
 
   return (
@@ -142,7 +140,7 @@ export const ProdutoCategoriaPage = () => {
           <tbody>
             {ProdutoCategorias?.map((m) => (
               <tr key={m?.id}>
-                <td>{m?.categoria?.nome}</td>
+                <td>{m?.categoria}</td>
                 <td>
                   <button onClick={() => openModal(m?.id)}>
                     <Pencil size={20} />

@@ -18,6 +18,7 @@ export const FornecedorProdutoPage = () => {
   const [IdFornecedor, setIdFornecedor] = useState(0);
   const [Fornecedores, setFornecedores] = useState([]);
   const [Produtos, setProdutos] = useState([]);
+  const [Data, setData] = useState("");
 
   const salvar = (event) => {
     event.preventDefault();
@@ -27,6 +28,7 @@ export const FornecedorProdutoPage = () => {
       idFornecedor: Number(Fornecedor),
       idProduto: Number(Produto),
       quantidade: Number(Quantidade),
+      data: Data,
     };
 
     if (Id) {
@@ -58,7 +60,8 @@ export const FornecedorProdutoPage = () => {
       setPreco(response.data.preco);
       setQuantidade(response.data.quantidade);
       setFornecedor(response.data.idFornecedor);
-      setProduto(response.data.idPproduto);
+      setProduto(response.data.idProduto);
+      setData(response.data.data);
     });
   };
 
@@ -88,6 +91,7 @@ export const FornecedorProdutoPage = () => {
     setQuantidade(0);
     setFornecedor(0);
     setProduto(0);
+    setData("");
   };
 
   useEffect(() => {
@@ -108,7 +112,7 @@ export const FornecedorProdutoPage = () => {
   useEffect(() => {
     if (IdFornecedor)
       api
-        .get(`/fornecedores_produtos/produtos_por_fornecedor/${IdFornecedor}`)
+        .get(`/fornecedores_produtos/fornecedor/${IdFornecedor}`)
         .then((response) => {
           setFornecedorProdutos(response.data);
         });
@@ -153,7 +157,7 @@ export const FornecedorProdutoPage = () => {
           <tbody>
             {FornecedorProdutos?.map((m) => (
               <tr key={m?.id}>
-                <td>{m?.produto?.nome}</td>
+                <td>{m?.produto}</td>
                 <td>{m?.preco}</td>
                 <td>{m?.quantidade}</td>
                 <td>
@@ -227,6 +231,13 @@ export const FornecedorProdutoPage = () => {
             Label={"Quantidade"}
             onChange={(e) => setQuantidade(Number(e.target.value))}
             value={Quantidade}
+            required
+          />
+          <Input
+            type="datetime-local"
+            Label={"Data"}
+            onChange={(e) => setData(e.target.value)}
+            value={Data}
             required
           />
           <div className="flex gap-4">

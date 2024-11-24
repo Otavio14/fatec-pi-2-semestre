@@ -10,14 +10,15 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
+public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
     private final DataSource DATA_SOURCE;
 
-    public AvaliacoesRepository(DataSource dataSource) {
+    public AvaliacaoRepository(DataSource dataSource) {
         this.DATA_SOURCE = dataSource;
     }
 
@@ -93,8 +94,8 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
                      sql)) {
             preparedStatement.setInt(1, avaliacao.getNota());
             preparedStatement.setString(2, avaliacao.getComentario());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(
-                    avaliacao.getDtAvaliacao().toLocalDate()));
+            preparedStatement.setTimestamp(3,
+                    Timestamp.valueOf(avaliacao.getDtAvaliacao()));
 
             preparedStatement.executeUpdate();
             return ResponseEntity.status(HttpStatus.OK)
@@ -117,8 +118,8 @@ public class AvaliacoesRepository implements Crud<Avaliacao, Integer> {
                      sql)) {
             preparedStatement.setInt(1, avaliacao.getNota());
             preparedStatement.setString(2, avaliacao.getComentario());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(
-                    avaliacao.getDtAvaliacao().toLocalDate()));
+            preparedStatement.setTimestamp(3,
+                    Timestamp.valueOf(avaliacao.getDtAvaliacao()));
             preparedStatement.setInt(4, id);
 
             preparedStatement.executeUpdate();

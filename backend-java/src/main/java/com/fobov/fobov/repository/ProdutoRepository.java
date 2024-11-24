@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
@@ -93,8 +94,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setString(2, produto.getDtValidade()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            preparedStatement.setDate(2, Date.valueOf(produto.getDtValidade()));
             preparedStatement.setDouble(3, produto.getPreco());
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
@@ -123,8 +123,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
             preparedStatement.setString(1, produto.getNome());
-            preparedStatement.setString(2, produto.getDtValidade()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            preparedStatement.setDate(2, Date.valueOf(produto.getDtValidade()));
             preparedStatement.setDouble(3, produto.getPreco());
             preparedStatement.setInt(4, produto.getEstoque());
             preparedStatement.setString(5, produto.getDescricao());
