@@ -51,4 +51,11 @@ public class ProdutoFornecedorController
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PRODUTO_FORNECEDOR_REPOSITORY.delete(id);
     }
+
+    @GetMapping("/fornecedor/{id}")
+    @RouteLevel(2)
+    public List<ProdutoFornecedor> findAllByFornecedorId(
+            @PathVariable Integer id) {
+        return PRODUTO_FORNECEDOR_REPOSITORY.findAllByFornecedorId(id);
+    }
 }

@@ -51,4 +51,10 @@ public class ProdutoCategoriaController
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PRODUTO_CATEGORIA_REPOSITORY.delete(id);
     }
+
+    @GetMapping("/produto/{id}")
+    @RouteLevel(1)
+    public List<ProdutoCategoria> findAllByProdutoId(@PathVariable Integer id) {
+        return PRODUTO_CATEGORIA_REPOSITORY.findAllByProdutoId(id);
+    }
 }

@@ -116,7 +116,7 @@ CREATE TABLE
   produtos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
-    dt_validade DATETIME,
+    dt_validade DATE,
     preco DECIMAL(10, 2) NOT NULL,
     estoque INTEGER NOT NULL,
     descricao TEXT,

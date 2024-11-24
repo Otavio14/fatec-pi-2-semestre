@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,16 +92,18 @@ public class ProdutoFornecedorRepository
 
     public ResponseEntity<String> save(ProdutoFornecedor produtoFornecedor) {
         String sql =
-                "INSERT INTO produtos_fornecedores (preco, quantidade, data) " +
-                        "VALUES (?, ?, ?)";
+                "INSERT INTO produtos_fornecedores (preco, quantidade, data, " +
+                        "id_produto, id_fornecedor) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
             preparedStatement.setDouble(1, produtoFornecedor.getPreco());
             preparedStatement.setInt(2, produtoFornecedor.getQuantidade());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(
-                    produtoFornecedor.getData().toLocalDate()));
+            preparedStatement.setTimestamp(3,
+                    Timestamp.valueOf(produtoFornecedor.getData()));
+            preparedStatement.setInt(4, produtoFornecedor.getIdProduto());
+            preparedStatement.setInt(5, produtoFornecedor.getIdFornecedor());
 
             preparedStatement.executeUpdate();
             return ResponseEntity.status(HttpStatus.OK)
@@ -117,16 +120,19 @@ public class ProdutoFornecedorRepository
                                          ProdutoFornecedor produtoFornecedor) {
         String sql =
                 "UPDATE produtos_fornecedores SET preco = ?, quantidade = ?, " +
-                        "data = ? WHERE id = ?";
+                        "data = ?, id_produto = ?, id_fornecedor = ? WHERE id" +
+                        " = ?;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
             preparedStatement.setDouble(1, produtoFornecedor.getPreco());
             preparedStatement.setInt(2, produtoFornecedor.getQuantidade());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(
-                    produtoFornecedor.getData().toLocalDate()));
-            preparedStatement.setInt(4, id);
+            preparedStatement.setTimestamp(3,
+                    Timestamp.valueOf(produtoFornecedor.getData()));
+            preparedStatement.setInt(4, produtoFornecedor.getIdProduto());
+            preparedStatement.setInt(5, produtoFornecedor.getIdFornecedor());
+            preparedStatement.setInt(6, id);
 
             preparedStatement.executeUpdate();
             return ResponseEntity.status(HttpStatus.OK)
@@ -156,5 +162,51 @@ public class ProdutoFornecedorRepository
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível realizar a exclusão!");
+    }
+
+    public List<ProdutoFornecedor> findAllByFornecedorId(Integer id) {
+        List<ProdutoFornecedor> produtoFornecedorList = new ArrayList<>();
+        String sql = "SELECT produtos_fornecedores.id, produtos_fornecedores" +
+                ".preco, produtos_fornecedores.quantidade, " +
+                "produtos_fornecedores.data, produtos_fornecedores" +
+                ".id_produto, produtos_fornecedores.id_fornecedor, " +
+                "produtos.nome AS produto, fornecedores.nome AS " +
+                "fornecedor FROM produtos_fornecedores LEFT JOIN " +
+                "produtos ON produtos_fornecedores.id_produto = " +
+                "produtos.id LEFT JOIN fornecedores ON " +
+                "produtos_fornecedores.id_fornecedor = fornecedores.id " +
+                "WHERE produtos_fornecedores.id_fornecedor = ?;";
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ProdutoFornecedor produtoFornecedor =
+                            new ProdutoFornecedor();
+                    produtoFornecedor.setId(resultSet.getInt("id"));
+                    produtoFornecedor.setPreco(resultSet.getDouble("preco"));
+                    produtoFornecedor.setQuantidade(
+                            resultSet.getInt("quantidade"));
+                    produtoFornecedor.setData(
+                            resultSet.getTimestamp("data").toLocalDateTime());
+                    produtoFornecedor.setIdProduto(
+                            resultSet.getInt("id_produto"));
+                    produtoFornecedor.setIdFornecedor(
+                            resultSet.getInt("id_fornecedor"));
+                    produtoFornecedor.setProduto(
+                            resultSet.getString("produto"));
+                    produtoFornecedor.setFornecedor(
+                            resultSet.getString("fornecedor"));
+                    produtoFornecedorList.add(produtoFornecedor);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return produtoFornecedorList;
     }
 }

@@ -144,4 +144,42 @@ public class ProdutoCategoriaRepository
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível realizar a exclusão!");
     }
+
+    public List<ProdutoCategoria> findAllByProdutoId(Integer id) {
+        List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
+        String sql = "SELECT produtos_categorias.id, produtos_categorias" +
+                ".id_produto, produtos_categorias.id_categoria, " +
+                "produtos.nome AS produto, categorias.nome AS " +
+                "categoria FROM produtos_categorias LEFT JOIN " +
+                "produtos ON produtos_categorias.id_produto = " +
+                "produtos.id LEFT JOIN categorias ON " +
+                "produtos_categorias.id_categoria = categorias.id WHERE " +
+                "produtos_categorias.id_produto = ?;";
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ProdutoCategoria produtoCategoria = new ProdutoCategoria();
+                    produtoCategoria.setId(resultSet.getInt("id"));
+                    produtoCategoria.setIdProduto(
+                            resultSet.getInt("id_produto"));
+                    produtoCategoria.setIdCategoria(
+                            resultSet.getInt("id_categoria"));
+                    produtoCategoria.setProduto(
+                            resultSet.getString("id_produto"));
+                    produtoCategoria.setCategoria(
+                            resultSet.getString("categoria"));
+                    produtoCategorias.add(produtoCategoria);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return produtoCategorias;
+    }
 }

@@ -125,8 +125,8 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
-            preparedStatement.setDate(1,
-                    java.sql.Date.valueOf(pedido.getDtPedido().toLocalDate()));
+            preparedStatement.setTimestamp(1,
+                    Timestamp.valueOf(pedido.getDtPedido()));
             preparedStatement.setString(2, pedido.getEndereco());
             preparedStatement.setDouble(3, pedido.getTotal());
             preparedStatement.setString(4, pedido.getStatus());

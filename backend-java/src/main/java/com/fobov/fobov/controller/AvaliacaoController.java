@@ -2,7 +2,7 @@ package com.fobov.fobov.controller;
 
 import com.fobov.fobov.interfaces.Crud;
 import com.fobov.fobov.model.Avaliacao;
-import com.fobov.fobov.repository.AvaliacoesRepository;
+import com.fobov.fobov.repository.AvaliacaoRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/avaliacoes")
 public class AvaliacaoController implements Crud<Avaliacao, Integer> {
-    private final AvaliacoesRepository AVALIACAO_REPOSITORY;
+    private final AvaliacaoRepository AVALIACAO_REPOSITORY;
 
-    public AvaliacaoController(AvaliacoesRepository AVALIACAO_REPOSITORY) {
+    public AvaliacaoController(AvaliacaoRepository AVALIACAO_REPOSITORY) {
         this.AVALIACAO_REPOSITORY = AVALIACAO_REPOSITORY;
     }
 
