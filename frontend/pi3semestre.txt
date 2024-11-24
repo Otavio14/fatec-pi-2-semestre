@@ -1,9 +1,9 @@
 cliente:
     -Páginas:
-        login --começado
-        cadastro -- começado
+        login --Completo
+        cadastro -- Completo
         Página p/ perfil (alterar endereço, email, senha) -- começado
-        página meus pedidos
+        página meus pedidos -- começado
         página p/ cada pedido
     
     -features:

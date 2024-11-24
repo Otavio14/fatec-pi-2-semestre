@@ -42,6 +42,17 @@ export const ProfilePage = ({ }) => {
         sethasChanged(true)
     }
 
+    function confirmChange(){
+        api.put(`/clientes/${id}`, {...usuario}).then((res) => {
+            return true
+        }).catch((err) => {
+            console.log(err)
+            return false
+        })
+    }
+
+
+
     const id = getAuthId()
 
     useEffect(() => {
@@ -101,9 +112,8 @@ export const ProfilePage = ({ }) => {
                     </button>
                 </div>
 
-                {/* Main Content */}
                 <div className="flex flex-col w-3/4 p-8 rounded-r-xl">
-                    <ProfileInfo show={showProfile} setShow={setShowProfile} userData={usuario} handleSalvar={AlteraUsuario} hasChanged={hasChanged}/>
+                    <ProfileInfo show={showProfile} setShow={setShowProfile} userData={usuario} handleSalvar={AlteraUsuario} setHasChanged={sethasChanged} hasChanged={hasChanged} confirmChange={confirmChange}/>
                     <ProfilePedidos show={showPedidos} setShow={setShowPedidos} pedidos={pedidos} />
                 </div>
             </div>
