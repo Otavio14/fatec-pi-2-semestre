@@ -12,20 +12,24 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Optional;
 
 @Configuration
 public class DatabaseInitializer implements CommandLineRunner {
     @Autowired
     Environment env;
     @Autowired
-    private DataSource dataSource; // Autowire the DataSource
+    private DataSource dataSource;
 
     @Override
     public void run(String... args) throws Exception {
-        String dbFilePath = "src/main/resources/database/" + env.getProperty("banco") + ".db";
+        String url = Optional.ofNullable(env.getProperty("url")).orElse("");
+        String dbFilePath = !url.isEmpty() ? url :
+                "src/main/resources/database/database.db";
         File dbFile = new File(dbFilePath);
 
-        if (dbFile.exists()) dbFile.delete();
+        if (dbFile.exists())
+            dbFile.delete();
 
         try (Connection connection = dataSource.getConnection()) {
             executeSqlFile(connection, "/database/create-tables.sql");
@@ -35,7 +39,8 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private void executeSqlFile(Connection connection, String filePath) {
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream(filePath), StandardCharsets.UTF_8))) {
+                new InputStreamReader(getClass().getResourceAsStream(filePath),
+                        StandardCharsets.UTF_8))) {
             StringBuilder sql = new StringBuilder();
             String line;
             boolean inMultiLineComment = false;

@@ -1,6 +1,8 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Categoria;
+import com.fobov.fobov.model.Produto;
 import com.fobov.fobov.model.ProdutoCategoria;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +30,14 @@ public class ProdutoCategoriaRepository
         List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
         String sql = "SELECT produtos_categorias.id, produtos_categorias" +
                 ".id_produto, produtos_categorias.id_categoria, " +
-                "produtos.nome AS produto, categorias.nome AS " +
-                "categoria FROM produtos_categorias LEFT JOIN " +
+                "categorias.id AS categoria_id, categorias.nome AS " +
+                "categoria_nome, produtos.id AS produto_id, produtos" +
+                ".nome AS produto_nome, produtos.dt_validade AS " +
+                "produto_dt_validade, produtos.preco AS " +
+                "produto_preco, produtos.estoque AS produto_estoque, " +
+                "produtos.descricao AS produto_descricao, produtos" +
+                ".imagem AS produto_imagem, produtos.ativo AS " +
+                "produto_ativo FROM produtos_categorias LEFT JOIN " +
                 "produtos ON produtos_categorias.id_produto = " +
                 "produtos.id LEFT JOIN categorias ON " +
                 "produtos_categorias.id_categoria = categorias.id;";
@@ -42,8 +52,25 @@ public class ProdutoCategoriaRepository
                 produtoCategoria.setIdProduto(resultSet.getInt("id_produto"));
                 produtoCategoria.setIdCategoria(
                         resultSet.getInt("id_categoria"));
-                produtoCategoria.setProduto(resultSet.getString("iproduto"));
-                produtoCategoria.setCategoria(resultSet.getString("categoria"));
+
+                Produto produto = new Produto();
+                produto.setId(resultSet.getInt("produto_id"));
+                produto.setNome(resultSet.getString("produto_nome"));
+                produto.setDtValidade(LocalDate.parse(
+                        resultSet.getString("produto_dt_validade"),
+                        DateTimeFormatter.ofPattern("yyyy-MM" + "-dd")));
+                produto.setPreco(resultSet.getDouble("produto_preco"));
+                produto.setEstoque(resultSet.getInt("produto_estoque"));
+                produto.setDescricao(resultSet.getString("produto_descricao"));
+                produto.setImagem(resultSet.getString("produto_imagem"));
+                produto.setAtivo(resultSet.getInt("produto_ativo"));
+
+                Categoria categoria = new Categoria();
+                categoria.setId(resultSet.getInt("categoria_id"));
+                categoria.setNome(resultSet.getString("categoria_nome"));
+
+                produtoCategoria.setProduto(produto);
+                produtoCategoria.setCategoria(categoria);
                 produtoCategorias.add(produtoCategoria);
             }
         } catch (Exception e) {
@@ -149,12 +176,18 @@ public class ProdutoCategoriaRepository
         List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
         String sql = "SELECT produtos_categorias.id, produtos_categorias" +
                 ".id_produto, produtos_categorias.id_categoria, " +
-                "produtos.nome AS produto, categorias.nome AS " +
-                "categoria FROM produtos_categorias LEFT JOIN " +
+                "categorias.id AS categoria_id, categorias.nome AS " +
+                "categoria_nome, produtos.id AS produto_id, produtos" +
+                ".nome AS produto_nome, produtos.dt_validade AS " +
+                "produto_dt_validade, produtos.preco AS " +
+                "produto_preco, produtos.estoque AS produto_estoque, " +
+                "produtos.descricao AS produto_descricao, produtos" +
+                ".imagem AS produto_imagem, produtos.ativo AS " +
+                "produto_ativo FROM produtos_categorias LEFT JOIN " +
                 "produtos ON produtos_categorias.id_produto = " +
                 "produtos.id LEFT JOIN categorias ON " +
-                "produtos_categorias.id_categoria = categorias.id WHERE " +
-                "produtos_categorias.id_produto = ?;";
+                "produtos_categorias.id_categoria = categorias.id " +
+                "WHERE produtos_categorias.id_produto = ?;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -169,10 +202,26 @@ public class ProdutoCategoriaRepository
                             resultSet.getInt("id_produto"));
                     produtoCategoria.setIdCategoria(
                             resultSet.getInt("id_categoria"));
-                    produtoCategoria.setProduto(
-                            resultSet.getString("id_produto"));
-                    produtoCategoria.setCategoria(
-                            resultSet.getString("categoria"));
+
+                    Produto produto = new Produto();
+                    produto.setId(resultSet.getInt("produto_id"));
+                    produto.setNome(resultSet.getString("produto_nome"));
+                    produto.setDtValidade(LocalDate.parse(
+                            resultSet.getString("produto_dt_validade"),
+                            DateTimeFormatter.ofPattern("yyyy-MM" + "-dd")));
+                    produto.setPreco(resultSet.getDouble("produto_preco"));
+                    produto.setEstoque(resultSet.getInt("produto_estoque"));
+                    produto.setDescricao(
+                            resultSet.getString("produto_descricao"));
+                    produto.setImagem(resultSet.getString("produto_imagem"));
+                    produto.setAtivo(resultSet.getInt("produto_ativo"));
+
+                    Categoria categoria = new Categoria();
+                    categoria.setId(resultSet.getInt("categoria_id"));
+                    categoria.setNome(resultSet.getString("categoria_nome"));
+
+                    produtoCategoria.setProduto(produto);
+                    produtoCategoria.setCategoria(categoria);
                     produtoCategorias.add(produtoCategoria);
                 }
             }

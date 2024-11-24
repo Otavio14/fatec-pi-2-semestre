@@ -4,8 +4,8 @@ public class ProdutoCategoria {
     private int id;
     private int idProduto;
     private int idCategoria;
-    private String categoria;
-    private String produto;
+    private Produto produto;
+    private Categoria categoria;
 
     public int getId() {
         return id;
@@ -31,19 +31,19 @@ public class ProdutoCategoria {
         this.idCategoria = idCategoria;
     }
 
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public String getProduto() {
+    public Produto getProduto() {
         return produto;
     }
 
-    public void setProduto(String produto) {
+    public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }

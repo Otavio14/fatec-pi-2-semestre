@@ -1,6 +1,7 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Produto;
 import com.fobov.fobov.model.ProdutoPedido;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +26,17 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
 
     public List<ProdutoPedido> findAll() {
         List<ProdutoPedido> produtoPedidoList = new ArrayList<>();
-        String sql =
-                "SELECT produtos_pedidos.id, produtos_pedidos.preco, " +
-                        "produtos_pedidos.quantidade, produtos_pedidos" +
-                        ".id_produto, produtos_pedidos.id_pedido, produtos" +
-                        ".nome AS produto FROM produtos_pedidos LEFT JOIN " +
-                        "produtos ON produtos.id = produtos_pedidos" +
-                        ".id_produto;";
+        String sql = "SELECT produtos_pedidos.id, produtos_pedidos.preco, " +
+                "produtos_pedidos.quantidade, produtos_pedidos" +
+                ".id_produto, produtos_pedidos.id_pedido, produtos.id" +
+                " AS produto_id, produtos.nome AS produto_nome, " +
+                "produtos.dt_validade AS produto_dt_validade, " +
+                "produtos.preco AS produto_preco, produtos.estoque AS" +
+                " produto_estoque, produtos.descricao AS " +
+                "produto_descricao, produtos.imagem AS " +
+                "produto_imagem, produtos.ativo AS produto_ativo " +
+                "FROM produtos_pedidos LEFT JOIN produtos ON produtos" +
+                ".id = produtos_pedidos.id_produto;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -43,7 +50,19 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
                 produtoPedido.setQuantidade(resultSet.getInt("quantidade"));
                 produtoPedido.setIdProduto(resultSet.getInt("id_produto"));
                 produtoPedido.setIdPedido(resultSet.getInt("id_pedido"));
-                produtoPedido.setProduto(resultSet.getString("produto"));
+
+                Produto produto = new Produto();
+                produto.setId(resultSet.getInt("produto_id"));
+                produto.setNome(resultSet.getString("produto_nome"));
+                produto.setDtValidade(LocalDate.parse(
+                        resultSet.getString("produto_dt_validade"),
+                        DateTimeFormatter.ofPattern("yyyy" + "-MM" + "-dd")));
+                produto.setPreco(resultSet.getDouble("produto_preco"));
+                produto.setEstoque(resultSet.getInt("produto_estoque"));
+                produto.setDescricao(resultSet.getString("produto_descricao"));
+                produto.setImagem(resultSet.getString("produto_imagem"));
+                produto.setAtivo(resultSet.getInt("produto_ativo"));
+                produtoPedido.setProduto(produto);
                 produtoPedidoList.add(produtoPedido);
             }
         } catch (Exception e) {
@@ -200,10 +219,16 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
         List<ProdutoPedido> produtoPedidoList = new ArrayList<>();
         String sql = "SELECT produtos_pedidos.id, produtos_pedidos.preco, " +
                 "produtos_pedidos.quantidade, produtos_pedidos" +
-                ".id_produto, produtos_pedidos.id_pedido, produtos" +
-                ".nome AS produto FROM produtos_pedidos LEFT JOIN " +
-                "produtos ON produtos.id = produtos_pedidos" +
-                ".id_produto WHERE id_pedido = ?;";
+                ".id_produto, produtos_pedidos.id_pedido, produtos.id" +
+                " AS produto_id, produtos.nome AS produto_nome, " +
+                "produtos.dt_validade AS produto_dt_validade, " +
+                "produtos.preco AS produto_preco, produtos.estoque AS" +
+                " produto_estoque, produtos.descricao AS " +
+                "produto_descricao, produtos.imagem AS " +
+                "produto_imagem, produtos.ativo AS produto_ativo " +
+                "FROM produtos_pedidos LEFT JOIN produtos ON produtos" +
+                ".id = produtos_pedidos.id_produto WHERE " +
+                "produtos_pedidos.id_pedido = ?;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -218,7 +243,21 @@ public class ProdutoPedidoRepository implements Crud<ProdutoPedido, Integer> {
                     produtoPedido.setQuantidade(resultSet.getInt("quantidade"));
                     produtoPedido.setIdProduto(resultSet.getInt("id_produto"));
                     produtoPedido.setIdPedido(resultSet.getInt("id_pedido"));
-                    produtoPedido.setProduto(resultSet.getString("produto"));
+
+                    Produto produto = new Produto();
+                    produto.setId(resultSet.getInt("produto_id"));
+                    produto.setNome(resultSet.getString("produto_nome"));
+                    produto.setDtValidade(LocalDate.parse(
+                            resultSet.getString("produto_dt_validade"),
+                            DateTimeFormatter.ofPattern(
+                                    "yyyy" + "-MM" + "-dd")));
+                    produto.setPreco(resultSet.getDouble("produto_preco"));
+                    produto.setEstoque(resultSet.getInt("produto_estoque"));
+                    produto.setDescricao(
+                            resultSet.getString("produto_descricao"));
+                    produto.setImagem(resultSet.getString("produto_imagem"));
+                    produto.setAtivo(resultSet.getInt("produto_ativo"));
+                    produtoPedido.setProduto(produto);
                     produtoPedidoList.add(produtoPedido);
                 }
             }

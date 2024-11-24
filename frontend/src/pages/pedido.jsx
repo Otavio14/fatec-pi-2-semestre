@@ -362,7 +362,7 @@ export const PedidoPage = () => {
               <tbody>
                 {ProdutosPedidos?.map((produto, index) => (
                   <tr key={index}>
-                    <td>{produto?.produto}</td>
+                    <td>{produto?.produto?.nome}</td>
                     <td>{produto?.quantidade}</td>
                     <td>R$ {produto?.preco?.toFixed(2)}</td>
                     <td>

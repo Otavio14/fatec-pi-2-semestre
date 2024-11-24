@@ -1,6 +1,9 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Cidade;
+import com.fobov.fobov.model.Cliente;
+import com.fobov.fobov.model.Estado;
 import com.fobov.fobov.model.Pedido;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +30,20 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
         String sql =
                 "SELECT pedidos.id, pedidos.dt_pedido, pedidos.endereco, " +
                         "pedidos.status, pedidos.total, pedidos.id_cliente, " +
-                        "clientes.nome AS cliente FROM pedidos LEFT JOIN " +
-                        "clientes ON pedidos.id_cliente = clientes.id;";
+                        "clientes.id AS cliente_id, clientes.nome AS " +
+                        "cliente_nome, clientes.id_cidade AS " +
+                        "cliente_id_cidade, clientes.cep AS cliente_cep, " +
+                        "clientes.endereco AS cliente_endereco, clientes" +
+                        ".telefone AS cliente_telefone, clientes.bairro AS " +
+                        "cliente_bairro, clientes.numero AS cliente_numero, " +
+                        "clientes.email AS cliente_email, cidades.id AS " +
+                        "cidade_id, cidades.nome AS cidade_nome, cidades" +
+                        ".id_estado AS cidade_id_estado, estados.id AS " +
+                        "estado_id, estados.nome AS estado_nome, estados" +
+                        ".sigla AS estado_sigla FROM pedidos LEFT JOIN " +
+                        "clientes ON clientes.id = pedidos.id_cliente LEFT " +
+                        "JOIN cidades ON cidades.id = clientes.id_cidade LEFT" +
+                        " JOIN estados ON estados.id = cidades.id_estado;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -44,7 +59,31 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
                 pedido.setStatus(resultSet.getString("status"));
                 pedido.setTotal(resultSet.getDouble("total"));
                 pedido.setIdCliente(resultSet.getInt("id_cliente"));
-                pedido.setCliente(resultSet.getString("cliente"));
+
+                Cliente cliente = new Cliente();
+                cliente.setId(resultSet.getInt("cliente_id"));
+                cliente.setNome(resultSet.getString("cliente_nome"));
+                cliente.setCep(resultSet.getString("cliente_cep"));
+                cliente.setEndereco(resultSet.getString("cliente_endereco"));
+                cliente.setEmail(resultSet.getString("cliente_email"));
+                cliente.setTelefone(resultSet.getString("cliente_telefone"));
+                cliente.setBairro(resultSet.getString("cliente_bairro"));
+                cliente.setNumero(resultSet.getString("cliente_numero"));
+                cliente.setIdCidade(resultSet.getInt("cliente_id_cidade"));
+
+                Cidade cidade = new Cidade();
+                cidade.setId(resultSet.getInt("cidade_id"));
+                cidade.setNome(resultSet.getString("cidade_nome"));
+                cidade.setIdEstado(resultSet.getInt("cidade_id_estado"));
+                cliente.setCidade(cidade);
+
+                Estado estado = new Estado();
+                estado.setId(resultSet.getInt("estado_id"));
+                estado.setNome(resultSet.getString("estado_nome"));
+                estado.setSigla(resultSet.getString("estado_sigla"));
+                cliente.setEstado(estado);
+
+                pedido.setCliente(cliente);
                 pedidoList.add(pedido);
             }
         } catch (Exception e) {

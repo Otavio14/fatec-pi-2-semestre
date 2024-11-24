@@ -10,10 +10,9 @@ export const isAuthenticated = () => {
     const { exp } = decodeJwt(token);
     return exp * 1000 >= Date.now();
   } catch (error) {
-    console.error("Erro ao decodificar o token:", error);
     localStorage.removeItem("token");
     return false;
-  };
+  }
 };
 
 export const isAdmin = () => {
@@ -34,10 +33,10 @@ export const getAuthId = () => {
   const { id } = decodeJwt(token);
 
   return id;
-}
+};
 
 export const AdminRoute = ({ children }) => {
-  if (!isAuthenticated()) {
+  if (!isAuthenticated() || !isAdmin()) {
     localStorage.removeItem("token");
     return <Navigate to="/login" />;
   }

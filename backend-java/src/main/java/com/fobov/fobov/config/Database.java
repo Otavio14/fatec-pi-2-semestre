@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.sqlite.SQLiteDataSource;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 @Configuration
 public class Database {
@@ -16,7 +17,10 @@ public class Database {
     @Bean
     public DataSource dataSource() {
         SQLiteDataSource dataSource = new SQLiteDataSource();
-        dataSource.setUrl(env.getProperty("url"));
+        String url = Optional.ofNullable(env.getProperty("url")).orElse("");
+        String dataSourceUrl = !url.isEmpty() ? ("jdbc:sqlite:" + url) :
+                "jdbc:sqlite:src/main/resources/database/database.db";
+        dataSource.setUrl(dataSourceUrl);
         return dataSource;
     }
 }

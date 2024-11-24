@@ -9,8 +9,8 @@ public class ProdutoFornecedor {
     private int idFornecedor;
     private int quantidade;
     private LocalDateTime data;
-    private String produto;
-    private String fornecedor;
+    private Produto produto;
+    private Fornecedor fornecedor;
 
     public int getId() {
         return id;
@@ -60,19 +60,19 @@ public class ProdutoFornecedor {
         this.data = data;
     }
 
-    public String getFornecedor() {
+    public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
-    public void setFornecedor(String fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
 
-    public String getProduto() {
+    public Produto getProduto() {
         return produto;
     }
 
-    public void setProduto(String produto) {
+    public void setProduto(Produto produto) {
         this.produto = produto;
     }
 }

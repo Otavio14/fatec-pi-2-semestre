@@ -10,8 +10,8 @@ public class Pedido {
     private LocalDateTime dtPedido;
     private String endereco;
     private String status;
-    private String cliente;
     private List<ProdutoPedido> produtoPedidos;
+    private Cliente cliente;
 
     public int getId() {
         return id;
@@ -61,19 +61,19 @@ public class Pedido {
         this.status = status;
     }
 
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
-
     public List<ProdutoPedido> getProdutoPedidos() {
         return produtoPedidos;
     }
 
     public void setProdutoPedidos(List<ProdutoPedido> produtoPedidos) {
         this.produtoPedidos = produtoPedidos;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }

@@ -9,8 +9,8 @@ public class Fornecedor {
     private String status;
     private int idCidade;
     private String telefone;
-    private String cidade;
-    private String estado;
+    private Estado estado;
+    private Cidade cidade;
 
     public int getId() {
         return id;
@@ -76,19 +76,19 @@ public class Fornecedor {
         this.telefone = telefone;
     }
 
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
+    }
+
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
     }
 }

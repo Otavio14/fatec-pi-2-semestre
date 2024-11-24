@@ -140,7 +140,7 @@ export const ProdutoCategoriaPage = () => {
           <tbody>
             {ProdutoCategorias?.map((m) => (
               <tr key={m?.id}>
-                <td>{m?.categoria}</td>
+                <td>{m?.categoria?.nome}</td>
                 <td>
                   <button onClick={() => openModal(m?.id)}>
                     <Pencil size={20} />

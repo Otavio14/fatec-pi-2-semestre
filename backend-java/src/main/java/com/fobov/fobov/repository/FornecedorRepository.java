@@ -1,6 +1,8 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Cidade;
+import com.fobov.fobov.model.Estado;
 import com.fobov.fobov.model.Fornecedor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,13 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                 "SELECT fornecedores.id, fornecedores.nome, fornecedores.cep," +
                         " fornecedores.endereco, fornecedores.complemento, " +
                         "fornecedores.telefone, fornecedores.status, " +
-                        "fornecedores.id_cidade, cidades.nome AS cidade, " +
-                        "estados.nome AS estado FROM fornecedores LEFT JOIN " +
-                        "cidades ON cidades.id = fornecedores.id_cidade LEFT " +
-                        "JOIN estados ON estados.id = cidades.id_estado;";
+                        "fornecedores.id_cidade, estados.id AS estado_id, " +
+                        "estados.nome AS estado_nome, estados.sigla AS " +
+                        "estado_sigla, cidades.id AS cidade_id, cidades.nome " +
+                        "AS cidade_nome, cidades.id_estado AS " +
+                        "cidade_id_estado FROM fornecedores LEFT JOIN cidades" +
+                        " ON cidades.id = fornecedores.id_cidade LEFT JOIN " +
+                        "estados ON estados.id = cidades.id_estado;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -47,8 +52,19 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                 fornecedor.setTelefone(resultSet.getString("telefone"));
                 fornecedor.setStatus(resultSet.getString("status"));
                 fornecedor.setIdCidade(resultSet.getInt("id_cidade"));
-                fornecedor.setCidade(resultSet.getString("cidade"));
-                fornecedor.setEstado(resultSet.getString("estado"));
+
+                Cidade cidade = new Cidade();
+                cidade.setId(resultSet.getInt("cidade_id"));
+                cidade.setNome(resultSet.getString("cidade_nome"));
+                cidade.setIdEstado(resultSet.getInt("cidade_id_estado"));
+
+                Estado estado = new Estado();
+                estado.setId(resultSet.getInt("estado_id"));
+                estado.setNome(resultSet.getString("estado_nome"));
+                estado.setSigla(resultSet.getString("estado_sigla"));
+
+                fornecedor.setCidade(cidade);
+                fornecedor.setEstado(estado);
                 fornecedorList.add(fornecedor);
             }
         } catch (Exception e) {

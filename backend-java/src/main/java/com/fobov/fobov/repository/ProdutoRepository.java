@@ -55,7 +55,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
     }
 
     public Produto findById(Integer id) {
-        Produto produto = null;
+        Produto produto = new Produto();
         String sql = "SELECT id, nome, dt_validade, preco, estoque, " +
                 "descricao, imagem, ativo FROM produtos WHERE id = ?";
 
@@ -65,7 +65,6 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                produto = new Produto();
                 produto.setId(resultSet.getInt("id"));
                 produto.setNome(resultSet.getString("nome"));
                 produto.setDtValidade(

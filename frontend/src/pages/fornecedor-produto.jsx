@@ -157,7 +157,7 @@ export const FornecedorProdutoPage = () => {
           <tbody>
             {FornecedorProdutos?.map((m) => (
               <tr key={m?.id}>
-                <td>{m?.produto}</td>
+                <td>{m?.produto?.nome}</td>
                 <td>{m?.preco}</td>
                 <td>{m?.quantidade}</td>
                 <td>

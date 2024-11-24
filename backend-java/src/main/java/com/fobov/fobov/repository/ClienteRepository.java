@@ -1,7 +1,9 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Cidade;
 import com.fobov.fobov.model.Cliente;
+import com.fobov.fobov.model.Estado;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,10 +32,13 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 "SELECT clientes.id, clientes.nome, clientes.cep, clientes" +
                         ".endereco, clientes.email, clientes.telefone, " +
                         "clientes.bairro, clientes.numero, clientes" +
-                        ".id_cidade, estados.nome AS estado, cidades.nome AS " +
-                        "cidade FROM clientes LEFT JOIN cidades ON cidades.id" +
-                        " = clientes.id_cidade LEFT JOIN estados ON estados" +
-                        ".id = cidades.id_estado;";
+                        ".id_cidade, cidades.id AS cidade_id, cidades.nome AS" +
+                        " cidade_nome, cidades.id_estado AS cidade_id_estado," +
+                        " estados.id AS estado_id, estados.nome AS " +
+                        "estado_nome, estados.sigla AS estado_sigla FROM " +
+                        "clientes LEFT JOIN cidades ON cidades.id = clientes" +
+                        ".id_cidade LEFT JOIN estados ON estados.id = cidades" +
+                        ".id_estado;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -51,8 +56,19 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 cliente.setBairro(resultSet.getString("bairro"));
                 cliente.setNumero(resultSet.getString("numero"));
                 cliente.setIdCidade(resultSet.getInt("id_cidade"));
-                cliente.setCidade(resultSet.getString("cidade"));
-                cliente.setEstado(resultSet.getString("estado"));
+
+                Cidade cidade = new Cidade();
+                cidade.setId(resultSet.getInt("cidade_id"));
+                cidade.setNome(resultSet.getString("cidade_nome"));
+                cidade.setIdEstado(resultSet.getInt("cidade_id_estado"));
+
+                Estado estado = new Estado();
+                estado.setId(resultSet.getInt("estado_id"));
+                estado.setNome(resultSet.getString("estado_nome"));
+                estado.setSigla(resultSet.getString("estado_sigla"));
+
+                cliente.setCidade(cidade);
+                cliente.setEstado(estado);
                 clienteList.add(cliente);
             }
         } catch (Exception e) {

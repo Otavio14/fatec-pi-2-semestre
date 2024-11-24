@@ -1,6 +1,8 @@
 package com.fobov.fobov.repository;
 
 import com.fobov.fobov.interfaces.Crud;
+import com.fobov.fobov.model.Fornecedor;
+import com.fobov.fobov.model.Produto;
 import com.fobov.fobov.model.ProdutoFornecedor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +33,21 @@ public class ProdutoFornecedorRepository
                 ".preco, produtos_fornecedores.quantidade, " +
                 "produtos_fornecedores.data, produtos_fornecedores" +
                 ".id_produto, produtos_fornecedores.id_fornecedor, " +
-                "produtos.nome AS produto, fornecedores.nome AS " +
-                "fornecedor FROM produtos_fornecedores LEFT JOIN " +
-                "produtos ON produtos_fornecedores.id_produto = " +
+                "produtos.id AS produto_id, produtos.nome AS " +
+                "produto_nome, produtos.dt_validade AS " +
+                "produto_dt_validade, produtos.preco AS " +
+                "produto_preco, produtos.estoque AS produto_estoque, " +
+                "produtos.descricao AS produto_descricao, produtos" +
+                ".imagem AS produto_imagem, produtos.ativo AS " +
+                "produto_ativo, fornecedores.id AS fornecedor_id, " +
+                "fornecedores.nome AS fornecedor_nome, fornecedores" +
+                ".id_cidade AS fornecedor_id_cidade, fornecedores.cep" +
+                " AS fornecedor_cep, fornecedores.endereco AS " +
+                "fornecedor_endereco, fornecedores.complemento AS " +
+                "fornecedor_complemento, fornecedores.telefone AS " +
+                "fornecedor_telefone, fornecedores.status AS " +
+                "fornecedor_status FROM produtos_fornecedores LEFT " +
+                "JOIN produtos ON produtos_fornecedores.id_produto = " +
                 "produtos.id LEFT JOIN fornecedores ON " +
                 "produtos_fornecedores.id_fornecedor = fornecedores" + ".id;";
 
@@ -50,9 +66,37 @@ public class ProdutoFornecedorRepository
                 produtoFornecedor.setIdProduto(resultSet.getInt("id_produto"));
                 produtoFornecedor.setIdFornecedor(
                         resultSet.getInt("id_fornecedor"));
-                produtoFornecedor.setProduto(resultSet.getString("produto"));
-                produtoFornecedor.setFornecedor(
-                        resultSet.getString("fornecedor"));
+
+
+                Produto produto = new Produto();
+                produto.setId(resultSet.getInt("produto_id"));
+                produto.setNome(resultSet.getString("produto_nome"));
+                produto.setDtValidade(LocalDate.parse(
+                        resultSet.getString("produto_dt_validade"),
+                        DateTimeFormatter.ofPattern("yyyy-MM" + "-dd")));
+                produto.setPreco(resultSet.getDouble("produto_preco"));
+                produto.setEstoque(resultSet.getInt("produto_estoque"));
+                produto.setDescricao(resultSet.getString("produto_descricao"));
+                produto.setImagem(resultSet.getString("produto_imagem"));
+                produto.setAtivo(resultSet.getInt("produto_ativo"));
+
+
+                Fornecedor fornecedor = new Fornecedor();
+                fornecedor.setId(resultSet.getInt("fornecedor_id"));
+                fornecedor.setNome(resultSet.getString("fornecedor_nome"));
+                fornecedor.setCep(resultSet.getString("fornecedor_cep"));
+                fornecedor.setEndereco(
+                        resultSet.getString("fornecedor_endereco"));
+                fornecedor.setComplemento(
+                        resultSet.getString("fornecedor_complemento"));
+                fornecedor.setTelefone(
+                        resultSet.getString("fornecedor_telefone"));
+                fornecedor.setStatus(resultSet.getString("fornecedor_status"));
+                fornecedor.setIdCidade(
+                        resultSet.getInt("fornecedor_id_cidade"));
+
+                produtoFornecedor.setProduto(produto);
+                produtoFornecedor.setFornecedor(fornecedor);
                 produtoFornecedorList.add(produtoFornecedor);
             }
         } catch (Exception e) {
@@ -170,12 +214,24 @@ public class ProdutoFornecedorRepository
                 ".preco, produtos_fornecedores.quantidade, " +
                 "produtos_fornecedores.data, produtos_fornecedores" +
                 ".id_produto, produtos_fornecedores.id_fornecedor, " +
-                "produtos.nome AS produto, fornecedores.nome AS " +
-                "fornecedor FROM produtos_fornecedores LEFT JOIN " +
-                "produtos ON produtos_fornecedores.id_produto = " +
+                "produtos.id AS produto_id, produtos.nome AS " +
+                "produto_nome, produtos.dt_validade AS " +
+                "produto_dt_validade, produtos.preco AS " +
+                "produto_preco, produtos.estoque AS produto_estoque, " +
+                "produtos.descricao AS produto_descricao, produtos" +
+                ".imagem AS produto_imagem, produtos.ativo AS " +
+                "produto_ativo, fornecedores.id AS fornecedor_id, " +
+                "fornecedores.nome AS fornecedor_nome, fornecedores" +
+                ".id_cidade AS fornecedor_id_cidade, fornecedores.cep" +
+                " AS fornecedor_cep, fornecedores.endereco AS " +
+                "fornecedor_endereco, fornecedores.complemento AS " +
+                "fornecedor_complemento, fornecedores.telefone AS " +
+                "fornecedor_telefone, fornecedores.status AS " +
+                "fornecedor_status FROM produtos_fornecedores LEFT " +
+                "JOIN produtos ON produtos_fornecedores.id_produto = " +
                 "produtos.id LEFT JOIN fornecedores ON " +
-                "produtos_fornecedores.id_fornecedor = fornecedores.id " +
-                "WHERE produtos_fornecedores.id_fornecedor = ?;";
+                "produtos_fornecedores.id_fornecedor = fornecedores" +
+                ".id WHERE produtos_fornecedores.id_fornecedor = ?;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -196,10 +252,39 @@ public class ProdutoFornecedorRepository
                             resultSet.getInt("id_produto"));
                     produtoFornecedor.setIdFornecedor(
                             resultSet.getInt("id_fornecedor"));
-                    produtoFornecedor.setProduto(
-                            resultSet.getString("produto"));
-                    produtoFornecedor.setFornecedor(
-                            resultSet.getString("fornecedor"));
+
+
+                    Produto produto = new Produto();
+                    produto.setId(resultSet.getInt("produto_id"));
+                    produto.setNome(resultSet.getString("produto_nome"));
+                    produto.setDtValidade(LocalDate.parse(
+                            resultSet.getString("produto_dt_validade"),
+                            DateTimeFormatter.ofPattern("yyyy-MM" + "-dd")));
+                    produto.setPreco(resultSet.getDouble("produto_preco"));
+                    produto.setEstoque(resultSet.getInt("produto_estoque"));
+                    produto.setDescricao(
+                            resultSet.getString("produto_descricao"));
+                    produto.setImagem(resultSet.getString("produto_imagem"));
+                    produto.setAtivo(resultSet.getInt("produto_ativo"));
+
+
+                    Fornecedor fornecedor = new Fornecedor();
+                    fornecedor.setId(resultSet.getInt("fornecedor_id"));
+                    fornecedor.setNome(resultSet.getString("fornecedor_nome"));
+                    fornecedor.setCep(resultSet.getString("fornecedor_cep"));
+                    fornecedor.setEndereco(
+                            resultSet.getString("fornecedor_endereco"));
+                    fornecedor.setComplemento(
+                            resultSet.getString("fornecedor_complemento"));
+                    fornecedor.setTelefone(
+                            resultSet.getString("fornecedor_telefone"));
+                    fornecedor.setStatus(
+                            resultSet.getString("fornecedor_status"));
+                    fornecedor.setIdCidade(
+                            resultSet.getInt("fornecedor_id_cidade"));
+
+                    produtoFornecedor.setProduto(produto);
+                    produtoFornecedor.setFornecedor(fornecedor);
                     produtoFornecedorList.add(produtoFornecedor);
                 }
             }
