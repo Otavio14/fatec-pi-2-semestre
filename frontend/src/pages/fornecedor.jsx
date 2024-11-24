@@ -177,7 +177,7 @@ export const FornecedorPage = () => {
               <tr key={fornecedor?.id}>
                 <td>{fornecedor?.nome}</td>
                 <td>{fornecedor?.nome}</td>
-                <td>{fornecedor?.estado}</td>
+                <td>{fornecedor?.estado?.sigla}</td>
                 <td>{fornecedor?.telefone}</td>
                 <td>
                   <button onClick={() => openModal(fornecedor?.id)}>

@@ -1,26 +1,26 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { HomePage } from "./pages/home.jsx";
-import { LoginPage } from "./pages/login.jsx";
-import { HeaderComponent } from "./components/header.jsx";
-import { ContatoPage } from "./pages/contato.jsx";
-import { ProdutoPage } from "./pages/produto.jsx";
-import { AdminHomePage } from "./pages/admin-home.jsx";
 import { AdminHeader } from "./components/admin-header.jsx";
-import { UsuarioPage } from "./pages/usuario.jsx";
-import { ProdutosPage } from "./pages/produtosAdmPage.jsx";
-import { AdminRoute } from "./shared/auth.jsx";
-import { FinalizarCompraPage } from "./pages/finalizar-compra.jsx";
+import { HeaderComponent } from "./components/header.jsx";
+import { AdminHomePage } from "./pages/admin-home.jsx";
 import { AvaliacaoPage } from "./pages/avaliacao.jsx";
-import { FornecedorPage } from "./pages/fornecedor.jsx";
-import { PedidoPage } from "./pages/pedido.jsx";
-import { CupomPage } from "./pages/cupom.jsx";
+import { CadastroPage } from "./pages/cadastro.jsx";
 import { CategoriaPage } from "./pages/categoria.jsx";
 import { ClientePage } from "./pages/cliente.jsx";
+import { ContatoPage } from "./pages/contato.jsx";
+import { CupomPage } from "./pages/cupom.jsx";
+import { FinalizarCompraPage } from "./pages/finalizar-compra.jsx";
 import { FornecedorProdutoPage } from "./pages/fornecedor-produto.jsx";
-import { ProdutoCategoriaPage } from "./pages/produto-categoria.jsx";
-import { CadastroPage } from "./pages/cadastro.jsx";
-import { ProfilePage } from "./pages/profile.jsx";
+import { FornecedorPage } from "./pages/fornecedor.jsx";
+import { HomePage } from "./pages/home.jsx";
+import { LoginPage } from "./pages/login.jsx";
 import { MeuPedido } from "./pages/meu-pedido.jsx";
+import { PedidoPage } from "./pages/pedido.jsx";
+import { ProdutoCategoriaPage } from "./pages/produto-categoria.jsx";
+import { ProdutoPage } from "./pages/produto.jsx";
+import { ProdutosPage } from "./pages/produtosAdmPage.jsx";
+import { ProfilePage } from "./pages/profile.jsx";
+import { UsuarioPage } from "./pages/usuario.jsx";
+import { AdminRoute, ClienteRoute } from "./shared/auth-routes.jsx";
 
 export const routes = createBrowserRouter(
   [
@@ -43,7 +43,7 @@ export const routes = createBrowserRouter(
     },
     {
       path: "/cadastro",
-      element: <CadastroPage />
+      element: <CadastroPage />,
     },
     {
       path: "/contato",
@@ -75,11 +75,11 @@ export const routes = createBrowserRouter(
     {
       path: "/perfil",
       element: (
-        <>
+        <ClienteRoute>
           <HeaderComponent />
           <ProfilePage />
-        </>
-      )
+        </ClienteRoute>
+      ),
     },
     {
       path: "/meu-pedido",
@@ -88,7 +88,7 @@ export const routes = createBrowserRouter(
           <HeaderComponent />
           <MeuPedido />
         </>
-      )
+      ),
     },
     {
       path: "/admin",

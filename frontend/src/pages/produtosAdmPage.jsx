@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { api } from "../shared/api.js";
-import { Input } from "../components/input.jsx";
-import Swal from "sweetalert2";
 import { Pencil, Trash } from "@phosphor-icons/react";
-import { Toast } from "../shared/swal.js";
+import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
+import { Input } from "../components/input.jsx";
 import { Select } from "../components/select";
+import { api } from "../shared/api.js";
+import { Toast } from "../shared/swal.js";
 
 export const ProdutosPage = () => {
   const DialogRef = useRef();
@@ -57,7 +57,7 @@ export const ProdutosPage = () => {
   const openModal = (id) => {
     setId(id ? id : 0);
 
-    api.get(`/produtos/${id}`).then((response) => {
+    api.get(`/produtos/admin/${id}`).then((response) => {
       setShowModal(true);
       setNomeProduto(response.data.nome);
       setPrecoProduto(response.data.preco);

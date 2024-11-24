@@ -1,7 +1,7 @@
+import { Eye, Trash } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../components/input";
 import { api } from "../shared/api";
-import { Trash, Eye } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
 
 export const AvaliacaoPage = () => {
@@ -78,10 +78,21 @@ export const AvaliacaoPage = () => {
           <tbody>
             {Avaliacoes?.map((avaliacao, index) => (
               <tr key={index}>
-                <td>{avaliacao?.produto}</td>
-                <td>{avaliacao?.cliente}</td>
+                <td>{avaliacao?.produto?.nome}</td>
+                <td>{avaliacao?.cliente?.nome}</td>
                 <td>{avaliacao?.nota}</td>
-                <td>{avaliacao?.dtAvaliacao}</td>
+                <td>
+                  {new Date(avaliacao?.dtAvaliacao).toLocaleDateString(
+                    "pt-BR",
+                    {
+                      minute: "numeric",
+                      hour: "numeric",
+                      day: "numeric",
+                      month: "numeric",
+                      year: "numeric",
+                    },
+                  )}
+                </td>
                 <td>
                   <button
                     onClick={() => {

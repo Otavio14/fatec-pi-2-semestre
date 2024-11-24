@@ -11,6 +11,7 @@ public class Produto {
     private LocalDate dtValidade;
     private String imagem;
     private int ativo;
+    private int nota;
 
     public String getImagem() {
         return imagem;
@@ -74,5 +75,13 @@ public class Produto {
 
     public void setAtivo(int ativo) {
         this.ativo = ativo;
+    }
+
+    public int getNota() {
+        return nota;
+    }
+
+    public void setNota(int nota) {
+        this.nota = nota;
     }
 }

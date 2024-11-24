@@ -1,7 +1,7 @@
 import { useState } from "react"
+import Swal from "sweetalert2"
 import { EnderecoModal } from "../endereco-modal"
 import { Input } from "../input"
-import Swal from "sweetalert2"
 
 export const ProfileInfo = ({ show, setShow, userData, handleSalvar, setHasChanged, hasChanged, confirmChange }) => {
     const [showEndereco, setShowEndereco] = useState(false)

@@ -56,8 +56,13 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
     public Produto findById(Integer id) {
         Produto produto = new Produto();
-        String sql = "SELECT id, nome, dt_validade, preco, estoque, " +
-                "descricao, imagem, ativo FROM produtos WHERE id = ?";
+        String sql =
+                "SELECT produtos.id, produtos.nome, produtos.dt_validade, " +
+                        "produtos.preco, produtos.estoque, produtos" +
+                        ".descricao, produtos.imagem, produtos.ativo, (SELECT" +
+                        " ROUND(AVG(nota)) FROM avaliacoes WHERE avaliacoes" +
+                        ".id_produto = produtos.id ) AS nota FROM produtos " +
+                        "WHERE id = ?;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -75,6 +80,7 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 produto.setDescricao(resultSet.getString("descricao"));
                 produto.setImagem(resultSet.getString("imagem"));
                 produto.setAtivo(resultSet.getInt("ativo"));
+                produto.setNota(resultSet.getInt("nota"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,5 +164,41 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível realizar a exclusão!");
+    }
+
+    public List<Produto> findAllAtivo() {
+        List<Produto> produtoList = new ArrayList<>();
+        String sql =
+                "SELECT produtos.id, produtos.nome, produtos.dt_validade, " +
+                        "produtos.preco, produtos.estoque, produtos" +
+                        ".descricao, produtos.imagem, produtos.ativo, (SELECT" +
+                        " ROUND(AVG(nota)) FROM avaliacoes WHERE avaliacoes" +
+                        ".id_produto = produtos.id ) AS nota FROM produtos " +
+                        "WHERE produtos.ativo = 1;";
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                Produto produto = new Produto();
+                produto.setId(resultSet.getInt("id"));
+                produto.setNome(resultSet.getString("nome"));
+                produto.setDtValidade(
+                        LocalDate.parse(resultSet.getString("dt_validade"),
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                produto.setPreco(resultSet.getDouble("preco"));
+                produto.setEstoque(resultSet.getInt("estoque"));
+                produto.setDescricao(resultSet.getString("descricao"));
+                produto.setImagem(resultSet.getString("imagem"));
+                produto.setAtivo(resultSet.getInt("ativo"));
+                produto.setNota(resultSet.getInt("nota"));
+                produtoList.add(produto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return produtoList;
     }
 }

@@ -1,10 +1,10 @@
+import { Pencil, Trash } from "@phosphor-icons/react";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../components/input";
 import { Select } from "../components/select";
 import { api } from "../shared/api";
-import { Trash, Pencil } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
-import axios from "axios";
 
 export const ClientePage = () => {
   const DialogRef = useRef();
@@ -23,7 +23,6 @@ export const ClientePage = () => {
   const [Cidade, setCidade] = useState(0);
   const [Endereco, setEndereco] = useState("");
   const [Bairro, setBairro] = useState("");
-  const [NomeCidade, setNomeCidade] = useState("");
   const [Senha, setSenha] = useState("");
   const [ConfirmacaoSenha, setConfirmacaoSenha] = useState("");
 
@@ -76,11 +75,9 @@ export const ClientePage = () => {
       setTelefone(response.data.telefone);
       setCep(response.data.cep);
       setNumero(response.data.numero);
-      setEstado(response.data.cidade.estado.id);
-      setNomeCidade(response.data.cidade.nome);
       setEndereco(response.data.endereco);
       setBairro(response.data.bairro);
-      setCidade(response.data.cidade.id);
+      setCidade(response.data.idCidade);
     });
   };
 
@@ -125,7 +122,6 @@ export const ClientePage = () => {
     setCidade(0);
     setEndereco("");
     setBairro("");
-    setNomeCidade("");
     setSenha("");
     setConfirmacaoSenha("");
   };
@@ -153,9 +149,8 @@ export const ClientePage = () => {
 
     api.get(`/cidades/estado/${Estado}`).then((response) => {
       setCidades(response.data);
-      setCidade(response.data.find((cidade) => cidade.nome === NomeCidade).id);
     });
-  }, [Estado, NomeCidade]);
+  }, [Estado]);
 
   useEffect(() => {
     if (Cep.length !== 9) return;
@@ -163,13 +158,13 @@ export const ClientePage = () => {
     axios.get(`https://viacep.com.br/ws/${Cep}/json/`).then((response) => {
       if (response.data.erro) return;
 
-      const { logradouro, bairro, localidade, uf } = response.data;
+      const { logradouro, bairro, uf, localidade } = response.data;
       setEndereco(logradouro);
       setBairro(bairro);
-      setEstado(Estados.find((estado) => estado.sigla === uf).id);
-      setNomeCidade(localidade);
+      setEstado(Estados.find((e) => e.sigla === uf).id);
+      setCidade(Cidades.find((c) => c.nome === localidade).id);
     });
-  }, [Cep, Estados]);
+  }, [Cep, Estados, Cidades]);
 
   return (
     <div className="flex max-h-screen w-full flex-col p-2 sm:p-8">
@@ -201,8 +196,8 @@ export const ClientePage = () => {
                 <td>{cliente?.nome}</td>
                 <td>{cliente?.email}</td>
                 <td>{cliente?.telefone}</td>
-                <td>{cliente?.cidade}</td>
-                <td>{cliente?.estado}</td>
+                <td>{cliente?.cidade?.nome}</td>
+                <td>{cliente?.estado?.sigla}</td>
                 <td>
                   <button onClick={() => openModal(cliente?.id)}>
                     <Pencil size={20} />

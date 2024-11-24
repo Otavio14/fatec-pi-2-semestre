@@ -1,5 +1,4 @@
 import { decodeJwt } from "jose";
-import { Navigate } from "react-router-dom";
 
 export const isAuthenticated = () => {
   const token = localStorage.getItem("token");
@@ -33,12 +32,4 @@ export const getAuthId = () => {
   const { id } = decodeJwt(token);
 
   return id;
-};
-
-export const AdminRoute = ({ children }) => {
-  if (!isAuthenticated() || !isAdmin()) {
-    localStorage.removeItem("token");
-    return <Navigate to="/login" />;
-  }
-  return children;
 };

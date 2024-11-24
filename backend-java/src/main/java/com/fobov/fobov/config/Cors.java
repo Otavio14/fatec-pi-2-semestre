@@ -12,10 +12,10 @@ public class Cors {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
+                registry.addMapping("/**").allowedOrigins("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                        .allowedHeaders("Content-Type", "Authorization", "Origin", "X-Requested-With", "Accept");
+                        .allowedHeaders("Content-Type", "Authorization",
+                                "Origin", "X-Requested-With", "Accept");
             }
         };
     }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Input } from "./input";
-import { api } from "../shared/api";
-import { Select } from "./select";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { api } from "../shared/api";
+import { Input } from "./input";
+import { Select } from "./select";
 
 export const EnderecoModal = ({ show, setShow, hasChanged, setHasChanged, cep, bairro, rua, numero, estado, idCidade, updateFieldData, confirmChange }) => {
     const [Estados, setEstados] = useState([]);

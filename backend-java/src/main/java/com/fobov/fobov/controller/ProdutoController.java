@@ -18,8 +18,8 @@ public class ProdutoController implements Crud<Produto, Integer> {
         this.PRODUTO_REPOSITORY = PRODUTO_REPOSITORY;
     }
 
-    @GetMapping
-    @RouteLevel(0)
+    @GetMapping("/admin")
+    @RouteLevel(2)
     public List<Produto> findAll() {
         return PRODUTO_REPOSITORY.findAll();
     }
@@ -47,5 +47,11 @@ public class ProdutoController implements Crud<Produto, Integer> {
     @RouteLevel(2)
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return PRODUTO_REPOSITORY.delete(id);
+    }
+
+    @GetMapping
+    @RouteLevel(0)
+    public List<Produto> findAllAtivo() {
+        return PRODUTO_REPOSITORY.findAllAtivo();
     }
 }

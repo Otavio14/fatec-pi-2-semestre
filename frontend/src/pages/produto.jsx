@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Star from "../assets/star.png";
 import { api } from "../shared/api";
-import { useParams } from "react-router-dom";
 
 export const ProdutoPage = () => {
   const { id } = useParams();
@@ -9,6 +9,7 @@ export const ProdutoPage = () => {
 
   const [Produto, setProduto] = useState({});
   const [Quantidade, setQuantidade] = useState(1);
+  const [Avaliacoes, setAvaliacoes] = useState([]);
 
   const adicionarAoCarrinho = () => {
     const carrinho = JSON.parse(localStorage.getItem("carrinho") || "{}");
@@ -49,6 +50,9 @@ export const ProdutoPage = () => {
   useEffect(() => {
     api.get(`/produtos/${Number(ProdutoId)}`).then((response) => {
       setProduto(response.data);
+    });
+    api.get(`/avaliacoes/produto/${Number(ProdutoId)}`).then((response) => {
+      setAvaliacoes(response.data);
     });
   }, [ProdutoId]);
 
@@ -95,6 +99,15 @@ export const ProdutoPage = () => {
             </button>
           </div>
         </div>
+      </div>
+      <div className="h-20 w-full bg-black">
+        <textarea></textarea>
+        {Avaliacoes.map((avaliacao) => (
+          <div key={avaliacao.id} className="flex gap-4">
+            <div>{avaliacao.nota}</div>
+            <div>{avaliacao.comentario}</div>
+          </div>
+        ))}
       </div>
     </div>
   );

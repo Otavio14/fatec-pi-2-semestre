@@ -9,8 +9,8 @@ public class Avaliacao {
     private LocalDateTime dtAvaliacao;
     private int idCliente;
     private int idProduto;
-    private String cliente;
-    private String produto;
+    private Produto produto;
+    private Cliente cliente;
 
     public int getId() {
         return id;
@@ -60,19 +60,19 @@ public class Avaliacao {
         this.idProduto = idProduto;
     }
 
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getProduto() {
+    public Produto getProduto() {
         return produto;
     }
 
-    public void setProduto(String produto) {
+    public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }
