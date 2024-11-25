@@ -7,6 +7,8 @@ public class ClienteCupom {
     private LocalDateTime dataUtilizacao;
     private int idCliente;
     private int idCupom;
+    private Cupom cupom;
+    private Cliente cliente;
 
     public int getId() {
         return id;
@@ -38,5 +40,21 @@ public class ClienteCupom {
 
     public void setIdCupom(int idCupom) {
         this.idCupom = idCupom;
+    }
+
+    public Cupom getCupom() {
+        return cupom;
+    }
+
+    public void setCupom(Cupom cupom) {
+        this.cupom = cupom;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }

@@ -23,9 +23,8 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
 
     public List<ClienteCupom> findAll() {
         List<ClienteCupom> clienteCupomList = new ArrayList<>();
-        String sql =
-                "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
-                        "clientes_cupons";
+        String sql = "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
+                "clientes_cupons";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -51,9 +50,8 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
 
     public ClienteCupom findById(Integer id) {
         ClienteCupom clienteCupom = null;
-        String sql =
-                "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
-                        "clientes_cupons WHERE id = ?";
+        String sql = "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
+                "clientes_cupons WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -136,5 +134,61 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível realizar a exclusão!");
+    }
+
+    public ResponseEntity<String> saveByClienteId(ClienteCupom clienteCupom,
+                                                  Integer id) {
+        String sqlConsultar =
+                "SELECT (CASE WHEN (SELECT cupons.id FROM cupons WHERE cupons" +
+                        ".nome = ?) IS NULL THEN 'Cupom inexistente!' WHEN " +
+                        "(SELECT clientes_cupons.id FROM clientes_cupons LEFT" +
+                        " JOIN cupons ON clientes_cupons.id_cupom = cupons.id" +
+                        " WHERE clientes_cupons.id_cupom = cupons.id AND " +
+                        "clientes_cupons.id_cliente = ? AND cupons.nome = ?) " +
+                        "IS NOT NULL THEN 'Cupom já utilizado!' ELSE '' " +
+                        "END) AS mensagem;";
+
+        String sqlInsert =
+                "INSERT INTO clientes_cupons (id_cliente, data_utilizacao, " +
+                        "id_cupom) VALUES (?, DATETIME('now', 'localtime'), " +
+                        "(SELECT id FROM cupons WHERE nome = ? LIMIT 1));";
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatementConsultar =
+                     connection.prepareStatement(
+                     sqlConsultar)) {
+            preparedStatementConsultar.setString(1,
+                    clienteCupom.getCupom().getNome());
+            preparedStatementConsultar.setInt(2, id);
+            preparedStatementConsultar.setString(3,
+                    clienteCupom.getCupom().getNome());
+
+            try (ResultSet resultSet =
+                         preparedStatementConsultar.executeQuery()) {
+                if (resultSet.next()) {
+                    String mensagem = resultSet.getString("mensagem");
+                    if (!mensagem.isEmpty())
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(mensagem);
+                }
+            }
+
+            try (PreparedStatement preparedStatementInsert =
+                         connection.prepareStatement(
+                    sqlInsert)) {
+                preparedStatementInsert.setInt(1, id);
+                preparedStatementInsert.setString(2,
+                        clienteCupom.getCupom().getNome());
+
+                preparedStatementInsert.executeUpdate();
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("Cupom utilizado com sucesso!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível usar o cupom!");
     }
 }

@@ -2,6 +2,8 @@ import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Star from "../assets/star.png";
 import { api } from "../shared/api";
+import { getAuthId, isAuthenticated } from "../shared/auth";
+import { Toast } from "../shared/swal";
 
 export const ProdutoPage = () => {
   const { id } = useParams();
@@ -10,6 +12,10 @@ export const ProdutoPage = () => {
   const [Produto, setProduto] = useState({});
   const [Quantidade, setQuantidade] = useState(1);
   const [Avaliacoes, setAvaliacoes] = useState([]);
+  const [Comentario, setComentario] = useState("");
+  const [Nota, setNota] = useState(0);
+  const [Reload, setReload] = useState(false);
+  const idCliente = getAuthId();
 
   const adicionarAoCarrinho = () => {
     const carrinho = JSON.parse(localStorage.getItem("carrinho") || "{}");
@@ -52,12 +58,55 @@ export const ProdutoPage = () => {
       setProduto(response.data);
     });
     api.get(`/avaliacoes/produto/${Number(ProdutoId)}`).then((response) => {
-      setAvaliacoes(response.data);
+      setAvaliacoes(
+        response.data?.filter(
+          (f) => Number(f?.idCliente) !== Number(idCliente),
+        ),
+      );
+      const found = response.data?.find(
+        (f) => Number(f?.idCliente) === Number(idCliente),
+      );
+      if (found) {
+        setComentario(found?.comentario);
+        setNota(found?.nota);
+      }
     });
-  }, [ProdutoId]);
+  }, [ProdutoId, idCliente, Reload]);
+
+  const avaliar = (event) => {
+    event.preventDefault();
+
+    const data = {
+      comentario: Comentario,
+      nota: Nota,
+      idProduto: ProdutoId,
+      idCliente: idCliente,
+    };
+    const found = Avaliacoes?.find(
+      (f) => Number(f?.idCliente) === Number(idCliente),
+    );
+
+    if (found && found?.id) {
+      api.put(`/avaliacoes/${found?.id}`, data).then(() => {
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Avaliação alterada com sucesso!",
+          icon: "success",
+        });
+      });
+    } else {
+      api.post("/avaliacoes", data).then(() => {
+        setReload((r) => !r);
+        Toast.fire({
+          title: "Avaliação cadastrada com sucesso!",
+          icon: "success",
+        });
+      });
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center bg-[#f8f9ff] py-20">
+    <div className="flex flex-col items-center bg-[#f8f9ff] py-20 sm:p-20">
       <div className="flex w-full flex-col items-center justify-center gap-8 p-2 md:flex-row">
         <div className="flex h-full w-full max-w-[500px] items-center justify-center rounded border border-[#e7eaee] bg-white py-4 sm:h-[500px] sm:py-0">
           <img
@@ -100,8 +149,43 @@ export const ProdutoPage = () => {
           </div>
         </div>
       </div>
+      <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] pl-4 text-[38px] font-semibold leading-[140%]">
+        Avaliações
+      </h1>
       <div className="flex w-full max-w-3xl flex-col gap-8">
-        <textarea></textarea>
+        {isAuthenticated() && (
+          <form className="grid items-center gap-4" onSubmit={avaliar}>
+            <h2 className="text-2xl font-semibold">Avalie o Produto</h2>
+            <textarea
+              value={Comentario}
+              rows={3}
+              onChange={(e) => setComentario(e.target.value)}
+              placeholder="Escreva aqui o que achou do nosso produto..."
+              className="resize-none p-4"
+            ></textarea>
+            <div className="flex justify-between">
+              <div className="flex gap-4">
+                {Array(5)
+                  ?.fill(null)
+                  ?.map((_, index) => (
+                    <img
+                      key={index}
+                      src={Star}
+                      onClick={() => setNota(index + 1)}
+                      className={`h-[24px] w-[24px] cursor-pointer opacity-${index + 1 <= Nota ? "100" : "30"} hover:opacity-100`}
+                    />
+                  ))}
+              </div>
+              <button
+                style={{ transition: "all 0.3s ease-in-out" }}
+                className="text-md w-fit rounded-lg bg-[#dd3842] px-12 py-2 font-semibold text-white shadow-md hover:bg-[#c32f39] hover:shadow-lg"
+              >
+                Avaliar
+              </button>
+            </div>
+            <hr />
+          </form>
+        )}
         <div className="grid h-full grid-cols-[auto,1fr] gap-y-8">
           {Avaliacoes.map((avaliacao) => (
             <Fragment key={avaliacao.id}>
