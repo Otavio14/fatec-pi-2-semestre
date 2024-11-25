@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { api } from "../shared/api";
-import { Input } from "../components/input.jsx";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Swal } from "../shared/swal";
+import { Input } from "../components/input.jsx";
+import { api } from "../shared/api";
 import { isAdmin, isAuthenticated } from "../shared/auth.jsx";
+import { Swal } from "../shared/swal";
 
 export const LoginPage = () => {
   const [Email, setEmail] = useState("");

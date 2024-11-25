@@ -49,4 +49,11 @@ public class ClienteCupomController implements Crud<ClienteCupom, Integer> {
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         return CLIENNTE_CUPOM_REPOSITORY.delete(id);
     }
+
+    @PostMapping("/cliente/{id}")
+    @RouteLevel(1)
+    public ResponseEntity<String> checkByClienteId(
+            @RequestBody ClienteCupom clienteCupom, @PathVariable Integer id) {
+        return CLIENNTE_CUPOM_REPOSITORY.checkByClienteId(clienteCupom, id);
+    }
 }

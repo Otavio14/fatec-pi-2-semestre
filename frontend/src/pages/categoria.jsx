@@ -1,7 +1,7 @@
+import { Pencil, Trash } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../components/input";
 import { api } from "../shared/api";
-import { Trash, Pencil } from "@phosphor-icons/react";
 import { Swal, Toast } from "../shared/swal";
 
 export const CategoriaPage = () => {
@@ -33,7 +33,7 @@ export const CategoriaPage = () => {
         closeModal();
         setReload((r) => !r);
         Toast.fire({
-          title: "Categoria cadastrado com sucesso!",
+          title: "Categoria cadastrada com sucesso!",
           icon: "success",
         });
       });

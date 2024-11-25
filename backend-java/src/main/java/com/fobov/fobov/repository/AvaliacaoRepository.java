@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -111,17 +110,17 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
     }
 
     public ResponseEntity<String> save(Avaliacao avaliacao) {
-        String sql =
-                "INSERT INTO avaliacoes (nota, comentario, dt_avaliacao, ) " +
-                        "VALUES (?, ?, ?)";
+        String sql = "INSERT INTO avaliacoes (nota, comentario, id_cliente, " +
+                "id_produto, dt_avaliacao) VALUES (?, ?, ?, ?, DATETIME" +
+                "('now','localtime'))";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
             preparedStatement.setInt(1, avaliacao.getNota());
             preparedStatement.setString(2, avaliacao.getComentario());
-            preparedStatement.setTimestamp(3,
-                    Timestamp.valueOf(avaliacao.getDtAvaliacao()));
+            preparedStatement.setInt(3, avaliacao.getIdCliente());
+            preparedStatement.setInt(4, avaliacao.getIdProduto());
 
             preparedStatement.executeUpdate();
             return ResponseEntity.status(HttpStatus.OK)
@@ -137,16 +136,17 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
     public ResponseEntity<String> update(Integer id, Avaliacao avaliacao) {
         String sql =
                 "UPDATE avaliacoes SET nota = ?, comentario = ?, dt_avaliacao" +
-                        " = ? WHERE id = ?";
+                        " = DATETIME('now', 'localtime'), id_cliente = ?, " +
+                        "id_produto = ? WHERE id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      sql)) {
             preparedStatement.setInt(1, avaliacao.getNota());
             preparedStatement.setString(2, avaliacao.getComentario());
-            preparedStatement.setTimestamp(3,
-                    Timestamp.valueOf(avaliacao.getDtAvaliacao()));
-            preparedStatement.setInt(4, id);
+            preparedStatement.setInt(3, avaliacao.getIdCliente());
+            preparedStatement.setInt(4, avaliacao.getIdProduto());
+            preparedStatement.setInt(5, id);
 
             preparedStatement.executeUpdate();
             return ResponseEntity.status(HttpStatus.OK)
@@ -189,10 +189,11 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
                 "produto_estoque, produtos.descricao AS " +
                 "produto_descricao, produtos.imagem AS " +
                 "produto_imagem, produtos.ativo AS produto_ativo, " +
-                "clientes.nome AS cliente_nome FROM avaliacoes LEFT " +
-                "JOIN clientes ON avaliacoes.id_cliente = clientes.id" +
-                " LEFT JOIN produtos ON avaliacoes.id_produto = " +
-                "produtos.id WHERE avaliacoes.id_produto = ?;";
+                "SUBSTRING(clientes.nome, 1, INSTR(clientes.nome, ' " +
+                "') - 1) AS cliente_nome FROM avaliacoes LEFT JOIN " +
+                "clientes ON avaliacoes.id_cliente = clientes.id LEFT" +
+                " JOIN produtos ON avaliacoes.id_produto = produtos" +
+                ".id WHERE avaliacoes.id_produto = ?;";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
