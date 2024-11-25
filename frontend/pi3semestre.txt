@@ -7,9 +7,8 @@ cliente:
         página p/ cada pedido -- Finalizado
     
     -features:
-        autenticação de login para conclusão de compra -- Finalizado
         terminar contato
-        avaliar produto
+        avaliar produto -- Rovere
         Filtro produtos por categoria
         na hora da compra, adicionar cupom
 

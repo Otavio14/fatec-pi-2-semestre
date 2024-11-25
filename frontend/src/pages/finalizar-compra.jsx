@@ -25,9 +25,11 @@ export const FinalizarCompraPage = () => {
   const [Bairro, setBairro] = useState("");
   const [NomeCidade, setNomeCidade] = useState("");
 
+  const [nomeCupom, setNomeCupom] = useState("");
+
+  const idCliente = getAuthId() 
   const finalizarCompra = (e) => {
     e.preventDefault();
-    const idCliente = getAuthId() 
     const pedido = {
       idCliente: idCliente,
       status: "Pendente",
@@ -106,6 +108,16 @@ export const FinalizarCompraPage = () => {
     });
   }, [Cep, Estados]);
 
+  function handleCupom(){
+    api.post(`/clientes-cupons/cliente/${idCliente}`, {cupom: {nome: nomeCupom}}).then((res) => {
+      console.log(res)
+      alert("Then")
+    }).catch((err) => {
+      console.log(err)
+      alert("Catch")
+    })
+  }
+
   return (
     <div className="flex flex-col items-center px-4 py-10 sm:px-20">
       <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
@@ -150,9 +162,12 @@ export const FinalizarCompraPage = () => {
               type="text"
               placeholder="Digite seu cupom"
               className="h-[40px] w-full sm:w-[220px] sm:w-[300px] px-4 rounded-l-xl border border-[#8f9eb2] focus:outline-none focus:ring-2 focus:ring-[#dd3842]"
+              value={nomeCupom}
+              onChange={(e) => setNomeCupom(e.target.value)}
             />
             <button
               className="w-full sm:w-[120px] h-[40px] mt-2 sm:mt-0 rounded-r-xl bg-[#dd3842] text-white font-semibold hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e]"
+              onClick={handleCupom}
             >
               Aplicar
             </button>
