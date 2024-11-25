@@ -66,10 +66,10 @@ export const routes = createBrowserRouter(
     {
       path: "/finalizar-compra",
       element: (
-        <>
+        <ClienteRoute>
           <HeaderComponent />
           <FinalizarCompraPage />
-        </>
+        </ClienteRoute>
       ),
     },
     {
@@ -84,10 +84,10 @@ export const routes = createBrowserRouter(
     {
       path: "/meu-pedido",
       element: (
-        <>
+        <ClienteRoute>
           <HeaderComponent />
           <MeuPedido />
-        </>
+        </ClienteRoute>
       ),
     },
     {

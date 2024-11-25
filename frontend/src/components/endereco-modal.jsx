@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { api } from "../shared/api";
 import { Input } from "./input";
@@ -28,7 +28,7 @@ export const EnderecoModal = ({
   const [Cidade, setCidade] = useState(idCidade || 0);
   const [Endereco, setEndereco] = useState(rua || "");
   const [Bairro, setBairro] = useState(bairro || "");
-  const [NomeCidade, setNomeCidade] = useState("");
+  const [NomeCidade, setNomeCidade] = useState(0);
 
   useEffect(() => {
     if (show) {
@@ -56,7 +56,9 @@ export const EnderecoModal = ({
       const { logradouro, bairro, localidade, uf } = response.data;
       setEndereco(logradouro);
       setBairro(bairro);
-      const estadoCorrespondente = Estados.find((estado) => estado.sigla === uf);
+      const estadoCorrespondente = Estados.find(
+        (estado) => estado.sigla === uf,
+      );
       if (estadoCorrespondente) {
         setEstado(estadoCorrespondente.id);
         setNomeCidade(localidade);
@@ -89,21 +91,19 @@ export const EnderecoModal = ({
     <div
       className={`${
         show
-          ? "flex fixed inset-0 justify-center items-center bg-black bg-opacity-30 backdrop-blur-md transition-opacity duration-300"
+          ? "fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-md transition-opacity duration-300"
           : "hidden"
       }`}
     >
-      <div
-        className="flex flex-col w-full max-w-[90%] sm:max-w-[500px] bg-white shadow-xl p-6 sm:p-8 rounded-3xl relative max-h-[90vh] overflow-y-auto"
-      >
+      <div className="relative flex max-h-[90vh] w-full max-w-[90%] flex-col overflow-y-auto rounded-3xl bg-white p-6 shadow-xl sm:max-w-[500px] sm:p-8">
         <button
-          className="absolute top-4 right-4 text-white bg-red-500 hover:bg-red-600 px-4 py-1 rounded-full shadow-lg transition-all duration-200"
+          className="absolute right-4 top-4 rounded-full bg-red-500 px-4 py-1 text-white shadow-lg transition-all duration-200 hover:bg-red-600"
           onClick={() => setShow(!show)}
         >
           X
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">
+        <h2 className="mb-6 text-center text-2xl font-bold text-gray-700">
           Endereço
         </h2>
 
@@ -181,10 +181,10 @@ export const EnderecoModal = ({
         />
 
         <button
-          className={`mt-6 px-6 py-2 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
+          className={`mt-6 rounded-xl px-6 py-2 font-semibold shadow-lg transition-all duration-200 ${
             hasChanged
               ? "bg-blue-500 text-white hover:bg-blue-600"
-              : "bg-gray-300 text-gray-600 cursor-not-allowed"
+              : "cursor-not-allowed bg-gray-300 text-gray-600"
           }`}
           disabled={!hasChanged}
           onClick={() => {

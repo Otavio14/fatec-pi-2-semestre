@@ -1,14 +1,15 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "../components/input.jsx";
 import { Select } from "../components/select.jsx";
 import { api } from "../shared/api.js";
-import axios from "axios";
-import { Swal } from "../shared/swal.js";
-import { useNavigate } from "react-router-dom";
 import { getAuthId, isAuthenticated } from "../shared/auth.jsx";
+import { Swal } from "../shared/swal.js";
 
 export const FinalizarCompraPage = () => {
   const Navigate = useNavigate();
+  const idCliente = getAuthId();
   const [CarrinhoTotal, setCarrinhoTotal] = useState(0);
   const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const [Confirmacao, setConfirmacao] = useState(false);
@@ -26,8 +27,6 @@ export const FinalizarCompraPage = () => {
   const [NomeCidade, setNomeCidade] = useState("");
 
   const [nomeCupom, setNomeCupom] = useState("");
-
-  const idCliente = getAuthId() 
   const finalizarCompra = (e) => {
     e.preventDefault();
     const pedido = {
@@ -108,29 +107,51 @@ export const FinalizarCompraPage = () => {
     });
   }, [Cep, Estados]);
 
-  function handleCupom(){
-    api.post(`/clientes-cupons/cliente/${idCliente}`, {cupom: {nome: nomeCupom}}).then((res) => {
-      console.log(res)
-      alert("Then")
-    }).catch((err) => {
-      console.log(err)
-      alert("Catch")
-    })
+  function handleCupom() {
+    api
+      .post(`/clientes-cupons/cliente/${idCliente}`, {
+        cupom: { nome: nomeCupom },
+      })
+      .then((res) => {
+        console.log(res);
+        alert("Then");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Catch");
+      });
   }
+
+  useEffect(() => {
+    if (!idCliente) return;
+
+    api.get(`/clientes/${idCliente}`).then((response) => {
+      setNome(response.data.nome);
+      setEmail(response.data.email);
+      setTelefone(response.data.telefone);
+      setCep(response.data.cep);
+      setNumero(response.data.numero);
+      setEndereco(response.data.endereco);
+      setBairro(response.data.bairro);
+      setCidade(response.data.idCidade);
+    });
+  }, [idCliente]);
 
   return (
     <div className="flex flex-col items-center px-4 py-10 sm:px-20">
       <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] text-[38px] font-semibold leading-[140%]">
         Finalizar Compra
       </h1>
-      <div className={`flex w-full flex-col items-center ${Confirmacao ? "hidden" : "flex"}`}>
+      <div
+        className={`flex w-full flex-col items-center ${Confirmacao ? "hidden" : "flex"}`}
+      >
         <div className="w-full bg-white">
           {CarrinhoProdutos.map((produto, index) => (
             <div
               key={index}
               className="grid w-full grid-cols-[auto,1fr,66px,100px] items-center gap-4 border-b border-[#d9d9d9] p-4"
             >
-              <div className="flex h-[75px] md:h-[100px] w-[50px] md:w-[100px] items-center justify-center rounded border p-[10px]">
+              <div className="flex h-[75px] w-[50px] items-center justify-center rounded border p-[10px] md:h-[100px] md:w-[100px]">
                 <img
                   src={produto.imagem}
                   alt={produto.nome}
@@ -155,24 +176,24 @@ export const FinalizarCompraPage = () => {
             </div>
           ))}
         </div>
-        <div className="mt-[20px] w-full flex flex-col sm:flex-row justify-between items-center">
+        <div className="mt-[20px] flex w-full flex-col items-center justify-between sm:flex-row">
           {/* Input de cupom */}
-          <div className="flex items-center w-full sm:w-auto">
+          <div className="flex w-full items-center sm:w-auto">
             <input
               type="text"
               placeholder="Digite seu cupom"
-              className="h-[40px] w-full sm:w-[220px] sm:w-[300px] px-4 rounded-l-xl border border-[#8f9eb2] focus:outline-none focus:ring-2 focus:ring-[#dd3842]"
+              className="h-[40px] w-full rounded-l-xl border border-[#8f9eb2] px-4 focus:outline-none focus:ring-2 focus:ring-[#dd3842] sm:w-[220px] sm:w-[300px]"
               value={nomeCupom}
               onChange={(e) => setNomeCupom(e.target.value)}
             />
             <button
-              className="w-full sm:w-[120px] h-[40px] mt-2 sm:mt-0 rounded-r-xl bg-[#dd3842] text-white font-semibold hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e]"
+              className="mt-2 h-[40px] w-full rounded-r-xl bg-[#dd3842] font-semibold text-white hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e] sm:mt-0 sm:w-[120px]"
               onClick={handleCupom}
             >
               Aplicar
             </button>
           </div>
-          <h2 className="mt-4 sm:mt-0 text-[24px] font-semibold leading-[140%]">
+          <h2 className="mt-4 text-[24px] font-semibold leading-[140%] sm:mt-0">
             Total:{" "}
             {CarrinhoTotal.toLocaleString("pt-br", {
               style: "currency",
@@ -180,7 +201,7 @@ export const FinalizarCompraPage = () => {
             })}
           </h2>
         </div>
-  
+
         {isAuthenticated() ? (
           <button
             onClick={() => setConfirmacao(true)}
@@ -308,6 +329,4 @@ export const FinalizarCompraPage = () => {
       </form>
     </div>
   );
-  
-  
 };

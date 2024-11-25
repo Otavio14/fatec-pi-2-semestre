@@ -22,15 +22,18 @@ export const LoginPage = () => {
             title: "Atenção!",
             text: "Email ou senha incorretos",
           });
-          return
+          return;
         }
         localStorage.setItem("token", response.data);
-        isAuthenticated() ? isAdmin() ? Navigate("/admin") : Navigate("/") :
-          Swal.fire({
-            icon: "error",
-            title: "Atenção!",
-            text: "Email ou senha incorretos",
-          })
+        isAuthenticated()
+          ? isAdmin()
+            ? Navigate("/admin")
+            : Navigate("/")
+          : Swal.fire({
+              icon: "error",
+              title: "Atenção!",
+              text: "Email ou senha incorretos",
+            });
       })
       .catch((error) => {
         Swal.fire({
@@ -50,7 +53,7 @@ export const LoginPage = () => {
     <div className="flex h-full min-h-screen w-full min-w-full flex-col items-center justify-center bg-gradient-to-r from-[#0c2d57] via-[#0c2d57b3] to-[#1a3a65] p-4">
       <NavLink
         to="/"
-        className="absolute left-4 top-4 flex items-center justify-center rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:bg-[#dd3842] hover:text-white hover:-translate-x-1"
+        className="absolute left-4 top-4 flex items-center justify-center rounded-full bg-white px-4 py-2 shadow-lg transition-all duration-300 hover:-translate-x-1 hover:bg-[#dd3842] hover:text-white"
       >
         <span className="font-medium">Voltar</span>
         <svg
@@ -59,9 +62,7 @@ export const LoginPage = () => {
           viewBox="0 0 24 24"
           className="h-6 w-6"
         >
-          <path
-            d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"
-          />
+          <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
         </svg>
       </NavLink>
 
@@ -102,13 +103,12 @@ export const LoginPage = () => {
           Ainda não tem uma conta?{" "}
           <NavLink
             to="/cadastro"
-            className="text-[#dd3842] hover:underline hover:text-[#c32f39] transition-colors"
+            className="text-[#dd3842] transition-colors hover:text-[#c32f39] hover:underline"
           >
             Cadastre-se
           </NavLink>
         </div>
       </form>
     </div>
-
   );
 };

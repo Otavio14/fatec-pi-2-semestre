@@ -10,6 +10,7 @@ import { Swal } from "../shared/swal";
 
 export const HeaderComponent = () => {
   const Navigate = useNavigate();
+  const idCliente = getAuthId();
   const [CarrinhoQuantidade, setCarrinhoQuantidade] = useState(0);
   const [CarrinhoTotal, setCarrinhoTotal] = useState(0);
   const [CarrinhoProdutos, setCarrinhoProdutos] = useState([]);
@@ -46,20 +47,17 @@ export const HeaderComponent = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      if (!isAdmin()) {
-        const id = getAuthId();
-        api
-          .get(`/clientes/${id}`)
-          .then((res) => {
-            setUsuarioInfo((prev) => {
-              return { ...prev, ...res.data };
-            });
-          })
-          .catch(() => {});
-      }
+    if (isAuthenticated() && !isAdmin()) {
+      api
+        .get(`/clientes/${idCliente}`)
+        .then((res) => {
+          setUsuarioInfo((prev) => {
+            return { ...prev, ...res.data };
+          });
+        })
+        .catch(() => {});
     }
-  }, []);
+  }, [idCliente]);
 
   const updateCarrinho = (produto, quantidade) => {
     if (quantidade < 1) {
@@ -101,8 +99,12 @@ export const HeaderComponent = () => {
   };
 
   const finalizarCompra = () => {
-    Navigate("/finalizar-compra");
-    setCarrinhoOpen(false);
+    if (isAuthenticated()) {
+      Navigate("/finalizar-compra");
+      setCarrinhoOpen(false);
+    } else {
+      Navigate("/login");
+    }
   };
 
   useEffect(() => {
