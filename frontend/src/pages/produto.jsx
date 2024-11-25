@@ -58,11 +58,7 @@ export const ProdutoPage = () => {
       setProduto(response.data);
     });
     api.get(`/avaliacoes/produto/${Number(ProdutoId)}`).then((response) => {
-      setAvaliacoes(
-        response.data?.filter(
-          (f) => Number(f?.idCliente) !== Number(idCliente),
-        ),
-      );
+      setAvaliacoes(response.data);
       const found = response.data?.find(
         (f) => Number(f?.idCliente) === Number(idCliente),
       );
@@ -149,9 +145,15 @@ export const ProdutoPage = () => {
           </div>
         </div>
       </div>
-      <h1 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] pl-4 text-[38px] font-semibold leading-[140%]">
+      <h2 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] pl-4 text-[38px] font-semibold leading-[140%]">
         Avaliações
-      </h1>
+      </h2>
+      {Avaliacoes?.filter((f) => Number(f?.idCliente) === Number(idCliente))
+        ?.length === 0 && !idCliente ? (
+        <h3 className="m-10 w-full pb-[12px] pl-4 text-center text-[22px] font-semibold leading-[140%]">
+          Esste produto ainda não recebeu avaliações!
+        </h3>
+      ) : null}
       <div className="flex w-full max-w-3xl flex-col gap-8">
         {isAuthenticated() && (
           <form className="grid items-center gap-4" onSubmit={avaliar}>
@@ -187,7 +189,9 @@ export const ProdutoPage = () => {
           </form>
         )}
         <div className="grid h-full grid-cols-[auto,1fr] gap-y-8">
-          {Avaliacoes.map((avaliacao) => (
+          {Avaliacoes?.filter(
+            (f) => Number(f?.idCliente) !== Number(idCliente),
+          )?.map((avaliacao) => (
             <Fragment key={avaliacao.id}>
               {/* flex h-full w-full max-w-[500px] items-center justify-center rounded border border-[#e7eaee] bg-white py-4 sm:h-[500px] sm:py-0 */}
               <div className="flex flex-col items-center justify-center rounded-l border-b border-l border-t border-[#e7eaee] bg-white p-6">

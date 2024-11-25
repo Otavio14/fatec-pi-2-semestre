@@ -136,8 +136,8 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
-    public ResponseEntity<String> saveByClienteId(ClienteCupom clienteCupom,
-                                                  Integer id) {
+    public ResponseEntity<String> checkByClienteId(ClienteCupom clienteCupom,
+                                                   Integer id) {
         String sqlConsultar =
                 "SELECT (CASE WHEN (SELECT cupons.id FROM cupons WHERE cupons" +
                         ".nome = ?) IS NULL THEN 'Cupom inexistente!' WHEN " +
@@ -147,11 +147,6 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                         "clientes_cupons.id_cliente = ? AND cupons.nome = ?) " +
                         "IS NOT NULL THEN 'Cupom já utilizado!' ELSE '' " +
                         "END) AS mensagem;";
-
-        String sqlInsert =
-                "INSERT INTO clientes_cupons (id_cliente, data_utilizacao, " +
-                        "id_cupom) VALUES (?, DATETIME('now', 'localtime'), " +
-                        "(SELECT id FROM cupons WHERE nome = ? LIMIT 1));";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatementConsultar =
@@ -172,17 +167,23 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                                 .body(mensagem);
                 }
             }
+            String consultarPorcentagem =
+                    "SELECT porcentagem FROM cupons WHERE nome = ?";
 
-            try (PreparedStatement preparedStatementInsert =
+            try (PreparedStatement preparedStatementPorcentagem =
                          connection.prepareStatement(
-                    sqlInsert)) {
-                preparedStatementInsert.setInt(1, id);
-                preparedStatementInsert.setString(2,
+                    consultarPorcentagem)) {
+                preparedStatementPorcentagem.setString(1,
                         clienteCupom.getCupom().getNome());
 
-                preparedStatementInsert.executeUpdate();
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body("Cupom utilizado com sucesso!");
+                try (ResultSet resultSet =
+                             preparedStatementPorcentagem.executeQuery()) {
+                    if (resultSet.next()) {
+                        return ResponseEntity.status(HttpStatus.OK)
+                                .body(resultSet.getString("porcentagem"));
+                    }
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
