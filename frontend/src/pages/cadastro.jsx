@@ -34,11 +34,11 @@ export const CadastroPage = () => {
     e.preventDefault();
     api
       .post("/clientes", { ...data })
-      .then((res) => {
+      .then(() => {
         Swal.fire({
           icon: "success",
           title: "Sucesso!",
-          text: "Conta criada!",
+          text: "Conta criada com sucesso!",
         });
         api
           .post(`/usuarios/login`, { email: data.email, senha: data.senha })
@@ -50,10 +50,21 @@ export const CadastroPage = () => {
                 : Navigate("/")
               : null;
           })
-          .catch((err) => console.log("Segundo catch: ", err));
+          .catch((error) => {
+            Swal.fire({
+              icon: "warning",
+              title: "Atenção!",
+              text:
+                error?.response?.data || "Não foi possível realizar o login!",
+            });
+          });
       })
-      .catch((err) => {
-        console.log({ erro: err });
+      .catch((error) => {
+        Swal.fire({
+          icon: "warning",
+          title: "Atenção!",
+          text: error?.response?.data || "Não foi possível criar a conta!",
+        });
       });
   };
 
