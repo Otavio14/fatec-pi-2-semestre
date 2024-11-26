@@ -56,4 +56,11 @@ public class ClienteCupomController implements Crud<ClienteCupom, Integer> {
             @RequestBody ClienteCupom clienteCupom, @PathVariable Integer id) {
         return CLIENNTE_CUPOM_REPOSITORY.checkByClienteId(clienteCupom, id);
     }
+
+    @PostMapping("/usar/{id}")
+    @RouteLevel(1)
+    public ResponseEntity<String> saveByClienteId(
+            @RequestBody ClienteCupom clienteCupom, @PathVariable Integer id) {
+        return CLIENNTE_CUPOM_REPOSITORY.saveByClienteId(clienteCupom, id);
+    }
 }

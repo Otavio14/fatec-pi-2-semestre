@@ -192,4 +192,29 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Não foi possível usar o cupom!");
     }
+
+    public ResponseEntity<String> saveByClienteId(ClienteCupom clienteCupom,
+                                                  Integer id) {
+        String sql =
+                "INSERT INTO clientes_cupons (id_cliente, data_utilizacao, " +
+                        "id_cupom) VALUES (?, DATETIME('now', 'localtime'), " +
+                        "(SELECT id FROM cupons WHERE nome = ?));";
+
+        try (Connection connection = DATA_SOURCE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     sql)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, clienteCupom.getCupom().getNome());
+
+            preparedStatement.executeUpdate();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Cupom utilizado com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não foi possível usar o cupom!");
+    }
 }

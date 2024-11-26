@@ -15,8 +15,6 @@ export const FinalizarCompraPage = () => {
   const [Confirmacao, setConfirmacao] = useState(false);
   const [Estados, setEstados] = useState([]);
   const [Cidades, setCidades] = useState([]);
-  const [Nome, setNome] = useState("");
-  const [Email, setEmail] = useState("");
   const [Telefone, setTelefone] = useState("");
   const [Cep, setCep] = useState("");
   const [Numero, setNumero] = useState(0);
@@ -25,8 +23,8 @@ export const FinalizarCompraPage = () => {
   const [Endereco, setEndereco] = useState("");
   const [Bairro, setBairro] = useState("");
   const [NomeCidade, setNomeCidade] = useState("");
-
   const [nomeCupom, setNomeCupom] = useState("");
+
   const finalizarCompra = (e) => {
     e.preventDefault();
     const pedido = {
@@ -60,12 +58,26 @@ export const FinalizarCompraPage = () => {
         );
 
         window.dispatchEvent(storageEvent);
-        Swal.fire({
-          title: "Compra finalizada com sucesso!",
-          icon: "success",
-        }).then(() => {
-          Navigate("/");
-        });
+
+        api
+          .post(`/clientes-cupons/usar/${idCliente}`, {
+            cupom: { nome: nomeCupom },
+          })
+          .then(() => {
+            Swal.fire({
+              title: "Compra finalizada com sucesso!",
+              icon: "success",
+            }).then(() => {
+              Navigate("/");
+            });
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "warning",
+              title: "Atenção!",
+              text: error?.response?.data || "Não foi possível usar o cupom!",
+            });
+          });
       });
     });
   };
@@ -89,7 +101,9 @@ export const FinalizarCompraPage = () => {
 
     api.get(`/cidades/estado/${Estado}`).then((response) => {
       setCidades(response.data);
-      setCidade(response.data.find((cidade) => cidade.nome === NomeCidade).id);
+      setCidade(
+        response.data?.find((cidade) => cidade.nome === NomeCidade)?.id || 0,
+      );
     });
   }, [Estado, NomeCidade]);
 
@@ -102,7 +116,7 @@ export const FinalizarCompraPage = () => {
       const { logradouro, bairro, localidade, uf } = response.data;
       setEndereco(logradouro);
       setBairro(bairro);
-      setEstado(Estados.find((estado) => estado.sigla === uf).id);
+      setEstado(Estados?.find((estado) => estado.sigla === uf)?.id || 0);
       setNomeCidade(localidade);
     });
   }, [Cep, Estados]);
@@ -113,12 +127,20 @@ export const FinalizarCompraPage = () => {
         cupom: { nome: nomeCupom },
       })
       .then((res) => {
-        console.log(res);
-        alert("Then");
+        const porcentagem = Number(res.data) / 100;
+        setCarrinhoTotal(CarrinhoTotal - CarrinhoTotal * porcentagem);
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Cupom aplicado com sucesso!",
+        });
       })
-      .catch((err) => {
-        console.log(err);
-        alert("Catch");
+      .catch((error) => {
+        Swal.fire({
+          icon: "warning",
+          title: "Atenção!",
+          text: error?.response?.data || "Não foi possível usar o cupom!",
+        });
       });
   }
 
@@ -126,8 +148,6 @@ export const FinalizarCompraPage = () => {
     if (!idCliente) return;
 
     api.get(`/clientes/${idCliente}`).then((response) => {
-      setNome(response.data.nome);
-      setEmail(response.data.email);
       setTelefone(response.data.telefone);
       setCep(response.data.cep);
       setNumero(response.data.numero);
@@ -143,7 +163,7 @@ export const FinalizarCompraPage = () => {
         Finalizar Compra
       </h1>
       <div
-        className={`flex w-full flex-col items-center ${Confirmacao ? "hidden" : "flex"}`}
+        className={`flex w-full flex-col items-center gap-4 ${Confirmacao ? "hidden" : "flex"}`}
       >
         <div className="w-full bg-white">
           {CarrinhoProdutos.map((produto, index) => (
@@ -182,12 +202,12 @@ export const FinalizarCompraPage = () => {
             <input
               type="text"
               placeholder="Digite seu cupom"
-              className="h-[40px] w-full rounded-l-xl border border-[#8f9eb2] px-4 focus:outline-none focus:ring-2 focus:ring-[#dd3842] sm:w-[220px] sm:w-[300px]"
+              className="h-[40px] w-full rounded-l-xl border border-[#8f9eb2] px-4 focus:outline-none focus:ring-2 focus:ring-[#dd3842] sm:w-[300px]"
               value={nomeCupom}
               onChange={(e) => setNomeCupom(e.target.value)}
             />
             <button
-              className="mt-2 h-[40px] w-full rounded-r-xl bg-[#dd3842] font-semibold text-white hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e] sm:mt-0 sm:w-[120px]"
+              className="h-[40px] w-full rounded-r-xl bg-[#dd3842] font-semibold text-white hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e] sm:mt-0 sm:w-[120px]"
               onClick={handleCupom}
             >
               Aplicar

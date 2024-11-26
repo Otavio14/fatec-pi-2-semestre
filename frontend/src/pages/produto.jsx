@@ -148,7 +148,7 @@ export const ProdutoPage = () => {
       <h2 className="mb-[33px] w-full border-b border-[#d9d9d9] pb-[12px] pl-4 text-[38px] font-semibold leading-[140%]">
         Avaliações
       </h2>
-      {Avaliacoes?.filter((f) => Number(f?.idCliente) === Number(idCliente))
+      {Avaliacoes?.filter((f) => Number(f?.idCliente) !== Number(idCliente))
         ?.length === 0 && !idCliente ? (
         <h3 className="m-10 w-full pb-[12px] pl-4 text-center text-[22px] font-semibold leading-[140%]">
           Esste produto ainda não recebeu avaliações!

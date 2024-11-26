@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { api } from "../../shared/api"
-import { getAuthId } from "../../shared/auth";
 import { useNavigate } from "react-router-dom";
 
 export const ProfilePedidos = ({ show, setShow, pedidos }) => {
