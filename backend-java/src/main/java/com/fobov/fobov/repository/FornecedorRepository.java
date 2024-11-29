@@ -23,6 +23,11 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Fornecedor> findAll() {
         List<Fornecedor> fornecedorList = new ArrayList<>();
         String sql =
@@ -74,6 +79,12 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
         return fornecedorList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Fornecedor findById(Integer id) {
         Fornecedor fornecedor = null;
         String sql = "SELECT id, nome, cep, endereco, " +
@@ -103,6 +114,12 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
         return fornecedor;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param fornecedor - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Fornecedor fornecedor) {
         String sql = "INSERT INTO fornecedores (nome, cep, endereco, " +
                 "complemento, telefone, status, id_cidade) VALUES (?, ?, ?, " +
@@ -130,6 +147,13 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id         - ID do registro
+     * @param fornecedor - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Fornecedor fornecedor) {
         String sql = "UPDATE fornecedores SET nome = ?, cep = ?, endereco = " +
                 "?, complemento = ?, telefone = ?, status = ?, id_cidade = ? " +
@@ -158,6 +182,12 @@ public class FornecedorRepository implements Crud<Fornecedor, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM fornecedores WHERE id = ?";
 

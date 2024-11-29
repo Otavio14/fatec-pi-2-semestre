@@ -35,6 +35,11 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Usuario> findAll() {
         List<Usuario> usuarios = new ArrayList<>();
         String sql = "SELECT id, nome, email FROM usuarios";
@@ -57,6 +62,12 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
         return usuarios;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Usuario findById(Integer id) {
         Usuario usuario = new Usuario();
         String sql = "SELECT id, nome, email FROM usuarios WHERE id = ?";
@@ -80,6 +91,12 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
         return usuario;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param usuario - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Usuario usuario) {
         String sqlConsultar =
                 "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
@@ -129,6 +146,13 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id      - ID do registro
+     * @param usuario - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Usuario usuario) {
         String sqlConsultar =
                 "SELECT id FROM usuarios WHERE email = ? AND id != ?" +
@@ -182,6 +206,12 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM usuarios WHERE id = ?";
 
@@ -201,6 +231,12 @@ public class UsuarioRepository implements Crud<Usuario, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Realizar login no sistema
+     *
+     * @param usuario - Dados do usuário
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> login(Usuario usuario) {
         String sql =
                 "SELECT id AS id, nome, email, senha, 0 AS " + "admin FROM" +

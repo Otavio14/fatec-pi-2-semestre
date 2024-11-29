@@ -27,6 +27,11 @@ public class ProdutoFornecedorRepository
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<ProdutoFornecedor> findAll() {
         List<ProdutoFornecedor> produtoFornecedorList = new ArrayList<>();
         String sql = "SELECT produtos_fornecedores.id, produtos_fornecedores" +
@@ -106,6 +111,12 @@ public class ProdutoFornecedorRepository
         return produtoFornecedorList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public ProdutoFornecedor findById(Integer id) {
         ProdutoFornecedor produtoFornecedor = null;
         String sql = "SELECT id, preco, quantidade, data, id_produto, " +
@@ -134,6 +145,12 @@ public class ProdutoFornecedorRepository
         return produtoFornecedor;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param produtoFornecedor - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(ProdutoFornecedor produtoFornecedor) {
         String sql =
                 "INSERT INTO produtos_fornecedores (preco, quantidade, data, " +
@@ -160,6 +177,13 @@ public class ProdutoFornecedorRepository
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id                - ID do registro
+     * @param produtoFornecedor - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id,
                                          ProdutoFornecedor produtoFornecedor) {
         String sql =
@@ -189,6 +213,12 @@ public class ProdutoFornecedorRepository
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM produtos_fornecedores WHERE id = ?";
 
@@ -208,6 +238,12 @@ public class ProdutoFornecedorRepository
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros com um ID de fornecedor
+     *
+     * @param id - ID do fornecedor
+     * @return lista de registros
+     */
     public List<ProdutoFornecedor> findAllByFornecedorId(Integer id) {
         List<ProdutoFornecedor> produtoFornecedorList = new ArrayList<>();
         String sql = "SELECT produtos_fornecedores.id, produtos_fornecedores" +

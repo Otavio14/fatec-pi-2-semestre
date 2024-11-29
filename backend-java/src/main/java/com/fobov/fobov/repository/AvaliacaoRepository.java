@@ -25,6 +25,11 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Avaliacao> findAll() {
         List<Avaliacao> avaliacaoList = new ArrayList<>();
         String sql = "SELECT avaliacoes.id, avaliacoes.nota, avaliacoes" +
@@ -82,6 +87,12 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
         return avaliacaoList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Avaliacao findById(Integer id) {
         Avaliacao avaliacao = null;
         String sql = "SELECT id, nota, comentario, dt_avaliacao, " +
@@ -109,6 +120,12 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
         return avaliacao;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param avaliacao - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Avaliacao avaliacao) {
         String sql = "INSERT INTO avaliacoes (nota, comentario, id_cliente, " +
                 "id_produto, dt_avaliacao) VALUES (?, ?, ?, ?, DATETIME" +
@@ -133,6 +150,13 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id        - ID do registro
+     * @param avaliacao - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Avaliacao avaliacao) {
         String sql =
                 "UPDATE avaliacoes SET nota = ?, comentario = ?, dt_avaliacao" +
@@ -159,6 +183,12 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM avaliacoes WHERE id = ?";
 
@@ -178,6 +208,12 @@ public class AvaliacaoRepository implements Crud<Avaliacao, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros com um ID de produto
+     *
+     * @param id - ID do produto
+     * @return lista de registros
+     */
     public List<Avaliacao> findAllByProdutoId(Integer id) {
         List<Avaliacao> avaliacaoList = new ArrayList<>();
         String sql = "SELECT avaliacoes.id, avaliacoes.nota, avaliacoes" +

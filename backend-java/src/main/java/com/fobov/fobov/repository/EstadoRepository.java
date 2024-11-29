@@ -21,6 +21,11 @@ public class EstadoRepository implements Crud<Estado, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Estado> findAll() {
         List<Estado> estados = new ArrayList<>();
         String sql = "SELECT id, nome, sigla FROM estados";
@@ -44,6 +49,12 @@ public class EstadoRepository implements Crud<Estado, Integer> {
         return estados;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Estado findById(Integer id) {
         Estado estado = new Estado();
         String sql = "SELECT id, nome, sigla FROM estados WHERE id =" + " ?";
@@ -67,6 +78,12 @@ public class EstadoRepository implements Crud<Estado, Integer> {
         return estado;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param estado - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Estado estado) {
         String sql = "INSERT INTO estados (nome, sigla) VALUES (?, ?)";
 
@@ -87,6 +104,13 @@ public class EstadoRepository implements Crud<Estado, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id     - ID do registro
+     * @param estado - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Estado estado) {
         String sql = "UPDATE estados SET nome = ?, sigla = ? WHERE id = ?";
 
@@ -108,6 +132,12 @@ public class EstadoRepository implements Crud<Estado, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM estados WHERE id = ?";
 

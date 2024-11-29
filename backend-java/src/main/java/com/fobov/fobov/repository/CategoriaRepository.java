@@ -21,6 +21,11 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Categoria> findAll() {
         List<Categoria> categorias = new ArrayList<>();
         String sql = "SELECT id, nome FROM categorias";
@@ -43,6 +48,12 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
         return categorias;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Categoria findById(Integer id) {
         Categoria categoria = new Categoria();
         String sql = "SELECT id, nome FROM categorias WHERE id " + "= ?";
@@ -66,6 +77,12 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
         return categoria;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param categoria - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Categoria categoria) {
         String sql = "INSERT INTO categorias (nome) VALUES (?)";
 
@@ -86,6 +103,13 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id        - ID do registro
+     * @param categoria - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Categoria categoria) {
         String sql = "UPDATE categorias SET nome = ? WHERE id = ?";
 
@@ -107,6 +131,12 @@ public class CategoriaRepository implements Crud<Categoria, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM categorias WHERE id = ?";
 

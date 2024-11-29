@@ -24,6 +24,11 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Produto> findAll() {
         List<Produto> produtoList = new ArrayList<>();
         String sql = "SELECT id, nome, dt_validade, preco, estoque, " +
@@ -54,6 +59,12 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
         return produtoList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Produto findById(Integer id) {
         Produto produto = new Produto();
         String sql =
@@ -89,6 +100,12 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
         return produto;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param produto - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Produto produto) {
         String sql =
                 "INSERT INTO produtos (nome, dt_validade, preco, estoque, " +
@@ -118,6 +135,13 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id      - ID do registro
+     * @param produto - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Produto produto) {
         String sql =
                 "UPDATE produtos SET nome = ?, dt_validade = ?, preco = ?, " +
@@ -147,6 +171,12 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM produtos WHERE id = ?";
 
@@ -166,6 +196,11 @@ public class ProdutoRepository implements Crud<Produto, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros ativos
+     *
+     * @return lista com os registros
+     */
     public List<Produto> findAllAtivo() {
         List<Produto> produtoList = new ArrayList<>();
         String sql =

@@ -21,6 +21,11 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<ClienteCupom> findAll() {
         List<ClienteCupom> clienteCupomList = new ArrayList<>();
         String sql = "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
@@ -48,6 +53,12 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
         return clienteCupomList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public ClienteCupom findById(Integer id) {
         ClienteCupom clienteCupom = null;
         String sql = "SELECT id, data_utilizacao, id_cliente, id_cupom FROM " +
@@ -74,6 +85,12 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
         return clienteCupom;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param clienteCupom - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(ClienteCupom clienteCupom) {
         String sql = "INSERT INTO clientes_cupons (data_utilizacao) VALUES (?)";
 
@@ -94,6 +111,13 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id           - ID do registro
+     * @param clienteCupom - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id,
                                          ClienteCupom clienteCupom) {
         String sql =
@@ -117,6 +141,12 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM clientes_cupons WHERE id = ?";
 
@@ -136,6 +166,12 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros com um ID de cliente
+     *
+     * @param id - ID do cliente
+     * @return lista de registros
+     */
     public ResponseEntity<String> checkByClienteId(ClienteCupom clienteCupom,
                                                    Integer id) {
         String sqlConsultar =
@@ -193,6 +229,13 @@ public class ClienteCupomRepository implements Crud<ClienteCupom, Integer> {
                 .body("Não foi possível usar o cupom!");
     }
 
+    /**
+     * Usar um cupom em um pedido
+     *
+     * @param clienteCupom - Dados do cupom e do cliente
+     * @param id           - ID do cliente
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> saveByClienteId(ClienteCupom clienteCupom,
                                                   Integer id) {
         String sql =

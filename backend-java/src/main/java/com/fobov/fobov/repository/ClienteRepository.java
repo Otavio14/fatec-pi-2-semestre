@@ -26,6 +26,11 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Cliente> findAll() {
         List<Cliente> clienteList = new ArrayList<>();
         String sql =
@@ -78,6 +83,12 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
         return clienteList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Cliente findById(Integer id) {
         Cliente cliente = null;
         String sql = "SELECT id, nome, cep, endereco, email, " +
@@ -108,6 +119,12 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
         return cliente;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param cliente - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Cliente cliente) {
         String sqlConsultar =
                 "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
@@ -167,6 +184,13 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id      - ID do registro
+     * @param cliente - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Cliente cliente) {
         String sqlConsultar =
                 "SELECT id FROM usuarios WHERE email = ?" + " UNION " +
@@ -231,6 +255,12 @@ public class ClienteRepository implements Crud<Cliente, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM clientes WHERE id = ?";
 

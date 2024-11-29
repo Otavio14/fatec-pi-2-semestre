@@ -25,6 +25,11 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Pedido> findAll() {
         List<Pedido> pedidoList = new ArrayList<>();
         String sql =
@@ -93,6 +98,12 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
         return pedidoList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Pedido findById(Integer id) {
         Pedido pedido = new Pedido();
         String sql = "SELECT id, dt_pedido, endereco, status, total, " +
@@ -119,6 +130,12 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
         return pedido;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param pedido - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Pedido pedido) {
         String sql =
                 "INSERT INTO pedidos (dt_pedido, endereco, status, total, " +
@@ -156,6 +173,13 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id     - ID do registro
+     * @param pedido - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Pedido pedido) {
         String sql =
                 "UPDATE pedidos SET dt_pedido = ?, endereco = ?, status = ?, " +
@@ -183,6 +207,12 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM pedidos WHERE id = ?";
 
@@ -202,6 +232,12 @@ public class PedidoRepository implements Crud<Pedido, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros com um ID de cliente
+     *
+     * @param id - ID do cliente
+     * @return lista de registros
+     */
     public List<Pedido> findAllByClienteId(Integer id) {
         List<Pedido> pedidoList = new ArrayList<>();
         String sql = "SELECT id, dt_pedido, endereco, status, total, " +

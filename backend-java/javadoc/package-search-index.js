@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.fobov.fobov"},{"l":"com.fobov.fobov.config"},{"l":"com.fobov.fobov.controller"},{"l":"com.fobov.fobov.interfaces"},{"l":"com.fobov.fobov.model"},{"l":"com.fobov.fobov.repository"}];updateSearchResults();

@@ -18,24 +18,48 @@ public class FornecedorController implements Crud<Fornecedor, Integer> {
         this.FORNECEDORES_REPOSITORY = FORNECEDORES_REPOSITORY;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     @GetMapping
     @RouteLevel(2)
     public List<Fornecedor> findAll() {
         return FORNECEDORES_REPOSITORY.findAll();
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     @GetMapping("/{id}")
     @RouteLevel(2)
     public Fornecedor findById(@PathVariable Integer id) {
         return FORNECEDORES_REPOSITORY.findById(id);
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param fornecedor - Dados do registro
+     * @return resposta da operacao
+     */
     @PostMapping
     @RouteLevel(2)
     public ResponseEntity<String> save(@RequestBody Fornecedor fornecedor) {
         return FORNECEDORES_REPOSITORY.save(fornecedor);
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id         - ID do registro
+     * @param fornecedor - Dados do registro
+     * @return resposta da operacao
+     */
     @PutMapping("/{id}")
     @RouteLevel(2)
     public ResponseEntity<String> update(@PathVariable Integer id,
@@ -43,6 +67,12 @@ public class FornecedorController implements Crud<Fornecedor, Integer> {
         return FORNECEDORES_REPOSITORY.update(id, fornecedor);
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     @DeleteMapping("/{id}")
     @RouteLevel(2)
     public ResponseEntity<String> delete(@PathVariable Integer id) {

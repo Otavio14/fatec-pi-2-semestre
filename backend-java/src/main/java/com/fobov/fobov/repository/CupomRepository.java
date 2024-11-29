@@ -21,6 +21,11 @@ public class CupomRepository implements Crud<Cupom, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Cupom> findAll() {
         List<Cupom> cupomList = new ArrayList<>();
         String sql = "SELECT id, nome, porcentagem FROM cupons";
@@ -44,10 +49,16 @@ public class CupomRepository implements Crud<Cupom, Integer> {
         return cupomList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Cupom findById(Integer id) {
         Cupom cupom = null;
-        String sql = "SELECT id, nome, porcentagem FROM cupons WHERE " +
-                "id = ?";
+        String sql =
+                "SELECT id, nome, porcentagem FROM cupons WHERE " + "id = ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -67,6 +78,12 @@ public class CupomRepository implements Crud<Cupom, Integer> {
         return cupom;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param cupom - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Cupom cupom) {
         String sql = "INSERT INTO cupons (nome, porcentagem) VALUES (?, ?)";
 
@@ -87,10 +104,16 @@ public class CupomRepository implements Crud<Cupom, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id    - ID do registro
+     * @param cupom - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Cupom cupom) {
         String sql =
-                "UPDATE cupons SET nome = ?, porcentagem = ? WHERE id " +
-                        "= ?";
+                "UPDATE cupons SET nome = ?, porcentagem = ? WHERE id " + "= ?";
 
         try (Connection connection = DATA_SOURCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -110,6 +133,12 @@ public class CupomRepository implements Crud<Cupom, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM cupons WHERE id = ?";
 

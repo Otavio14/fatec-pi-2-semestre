@@ -26,6 +26,11 @@ public class ProdutoCategoriaRepository
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<ProdutoCategoria> findAll() {
         List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
         String sql = "SELECT produtos_categorias.id, produtos_categorias" +
@@ -80,6 +85,12 @@ public class ProdutoCategoriaRepository
         return produtoCategorias;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public ProdutoCategoria findById(Integer id) {
         ProdutoCategoria produtoCategoria = new ProdutoCategoria();
         String sql =
@@ -107,6 +118,12 @@ public class ProdutoCategoriaRepository
         return produtoCategoria;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param produtoCategoria - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(ProdutoCategoria produtoCategoria) {
         String sql =
                 "INSERT INTO produtos_categorias (id_produto, id_categoria) " +
@@ -129,6 +146,13 @@ public class ProdutoCategoriaRepository
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id               - ID do registro
+     * @param produtoCategoria - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id,
                                          ProdutoCategoria produtoCategoria) {
         String sql =
@@ -153,6 +177,12 @@ public class ProdutoCategoriaRepository
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM produtos_categorias WHERE id = ?";
 
@@ -172,6 +202,12 @@ public class ProdutoCategoriaRepository
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros com um ID de produto
+     *
+     * @param id - ID do produto
+     * @return lista de registros
+     */
     public List<ProdutoCategoria> findAllByProdutoId(Integer id) {
         List<ProdutoCategoria> produtoCategorias = new ArrayList<>();
         String sql = "SELECT produtos_categorias.id, produtos_categorias" +

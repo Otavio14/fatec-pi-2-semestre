@@ -21,6 +21,11 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
         this.DATA_SOURCE = dataSource;
     }
 
+    /**
+     * Listar todos os registros
+     *
+     * @return lista com os registros
+     */
     public List<Cidade> findAll() {
         List<Cidade> cidadeList = new ArrayList<>();
         String sql = "SELECT id, nome, id_estado FROM cidades";
@@ -44,6 +49,12 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
         return cidadeList;
     }
 
+    /**
+     * Lista os dados de um registro específico
+     *
+     * @param id - ID do registro
+     * @return dados do registro
+     */
     public Cidade findById(Integer id) {
         Cidade cidade = null;
         String sql =
@@ -70,6 +81,12 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
         return cidade;
     }
 
+    /**
+     * Cadastrar um novo registro
+     *
+     * @param cidade - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> save(Cidade cidade) {
         String sql = "INSERT INTO cidades (nome) VALUES (?)";
 
@@ -89,6 +106,13 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
                 .body("Não foi possível realizar o cadastro!");
     }
 
+    /**
+     * Alterar um registro
+     *
+     * @param id     - ID do registro
+     * @param cidade - Dados do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> update(Integer id, Cidade cidade) {
         String sql = "UPDATE cidades SET nome = ? WHERE id = ?";
 
@@ -109,6 +133,12 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
                 .body("Não foi possível realizar a alteração!");
     }
 
+    /**
+     * Remover um registro
+     *
+     * @param id - ID do registro
+     * @return resposta da operacao
+     */
     public ResponseEntity<String> delete(Integer id) {
         String sql = "DELETE FROM cidades WHERE id = ?";
 
@@ -128,6 +158,12 @@ public class CidadeRepository implements Crud<Cidade, Integer> {
                 .body("Não foi possível realizar a exclusão!");
     }
 
+    /**
+     * Listar todos os registros com um ID de estado
+     *
+     * @param idEstado - ID do estado
+     * @return lista de registros
+     */
     public List<Cidade> findAllByEstado(int idEstado) {
         List<Cidade> cidadeList = new ArrayList<>();
         String sql = "SELECT id, nome, id_estado FROM cidades WHERE id_estado" +
