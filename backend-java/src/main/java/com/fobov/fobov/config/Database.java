@@ -9,11 +9,19 @@ import org.sqlite.SQLiteDataSource;
 import javax.sql.DataSource;
 import java.util.Optional;
 
+/**
+ * Classe destinada às configurações do banco de dados
+ */
 @Configuration
 public class Database {
     @Autowired
     Environment env;
 
+    /**
+     * Define a URL do banco de dados
+     *
+     * @return data source dessa URL
+     */
     @Bean
     public DataSource dataSource() {
         SQLiteDataSource dataSource = new SQLiteDataSource();

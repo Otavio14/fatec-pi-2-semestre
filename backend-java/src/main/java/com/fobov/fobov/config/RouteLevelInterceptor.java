@@ -12,12 +12,26 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.crypto.SecretKey;
 
+/**
+ * Um interceptador de rotas que identifica o nível da rota desejada e se o
+ * usuário que está realizando a requisição possui permissão para acessá-la
+ */
 @Component
 public class RouteLevelInterceptor implements HandlerInterceptor {
     @Value("${jwt_secret}")
     private String JWT_SECRET;
 
-
+    /**
+     * Método que vai de fato intercecptar as requisições e decidir se libera
+     * o acesso
+     *
+     * @param request  current HTTP request
+     * @param response current HTTP response
+     * @param handler  chosen handler to execute, for type and/or instance
+     *                 evaluation
+     * @return se é permitido ou não
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler)
@@ -41,6 +55,12 @@ public class RouteLevelInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * Pega o nível de permissão que a requisição possui
+     *
+     * @param request - requisição
+     * @return nível de permissão
+     */
     private int getRequestLevel(HttpServletRequest request) {
         try {
 

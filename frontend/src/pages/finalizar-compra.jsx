@@ -24,6 +24,7 @@ export const FinalizarCompraPage = () => {
   const [Bairro, setBairro] = useState("");
   const [NomeCidade, setNomeCidade] = useState("");
   const [nomeCupom, setNomeCupom] = useState("");
+  const [CupomJaAplicado, setCupomJaAplicado] = useState(false);
 
   const finalizarCompra = (e) => {
     e.preventDefault();
@@ -121,14 +122,36 @@ export const FinalizarCompraPage = () => {
     });
   }, [Cep, Estados]);
 
-  function handleCupom() {
+  async function handleCupom(event) {
+    event.preventDefault();
+
+    const { isConfirmed } = CupomJaAplicado
+      ? await Swal.fire({
+          icon: "question",
+          title: "Cupom já aplicado!",
+          text: "Deseja substituir?",
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: "Sim",
+          cancelButtonText: "Não",
+        })
+      : { isConfirmed: true };
+
+    if (!isConfirmed) return;
+
+    setCupomJaAplicado(true);
+
     api
       .post(`/clientes-cupons/cliente/${idCliente}`, {
         cupom: { nome: nomeCupom },
       })
       .then((res) => {
         const porcentagem = Number(res.data) / 100;
-        setCarrinhoTotal(CarrinhoTotal - CarrinhoTotal * porcentagem);
+        const total = CarrinhoProdutos.reduce(
+          (a, c) => a + c.preco * c.quantidade,
+          0,
+        );
+        setCarrinhoTotal(total - total * porcentagem);
         Swal.fire({
           icon: "success",
           title: "Sucesso!",
@@ -198,21 +221,21 @@ export const FinalizarCompraPage = () => {
         </div>
         <div className="mt-[20px] flex w-full flex-col items-center justify-between sm:flex-row">
           {/* Input de cupom */}
-          <div className="flex w-full items-center sm:w-auto">
+          <form
+            className="flex w-full items-center sm:w-auto"
+            onSubmit={handleCupom}
+          >
             <input
               type="text"
               placeholder="Digite seu cupom"
               className="h-[40px] w-full rounded-l-xl border border-[#8f9eb2] px-4 focus:outline-none focus:ring-2 focus:ring-[#dd3842] sm:w-[300px]"
               value={nomeCupom}
-              onChange={(e) => setNomeCupom(e.target.value)}
+              onChange={(e) => setNomeCupom(e.target.value?.toUpperCase())}
             />
-            <button
-              className="h-[40px] w-full rounded-r-xl bg-[#dd3842] font-semibold text-white hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e] sm:mt-0 sm:w-[120px]"
-              onClick={handleCupom}
-            >
+            <button className="h-[40px] w-full rounded-r-xl bg-[#dd3842] font-semibold text-white hover:bg-[#d7303e] focus:ring-2 focus:ring-[#d7303e] sm:mt-0 sm:w-[120px]">
               Aplicar
             </button>
-          </div>
+          </form>
           <h2 className="mt-4 text-[24px] font-semibold leading-[140%] sm:mt-0">
             Total:{" "}
             {CarrinhoTotal.toLocaleString("pt-br", {

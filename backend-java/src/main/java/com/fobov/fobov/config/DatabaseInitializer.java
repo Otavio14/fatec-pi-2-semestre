@@ -14,6 +14,11 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Optional;
 
+/**
+ * Classe destinada a inicializar o banco de dados, utilizando dos arquivos
+ * create-tables.sql e insert-values.sql, que contém respectivamente os SQL's
+ * de criação das tabelas e valores padrões dessas tabelas
+ */
 @Configuration
 public class DatabaseInitializer implements CommandLineRunner {
     @Autowired
@@ -21,6 +26,13 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Autowired
     private DataSource dataSource;
 
+    /**
+     * Método que inicia o processo de execução dos arquivos de tabelas e
+     * inserts
+     *
+     * @param args incoming main method arguments
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
         String url = Optional.ofNullable(env.getProperty("url")).orElse("");
@@ -37,6 +49,12 @@ public class DatabaseInitializer implements CommandLineRunner {
         }
     }
 
+    /**
+     * Executa um arquivo em SQL
+     *
+     * @param connection - conexão do banco de dados
+     * @param filePath   - caminho do arquivo a ser executado
+     */
     private void executeSqlFile(Connection connection, String filePath) {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(getClass().getResourceAsStream(filePath),

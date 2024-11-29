@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Star from "../assets/star.png";
 import { api } from "../shared/api";
 import { getAuthId, isAuthenticated } from "../shared/auth";
-import { Toast } from "../shared/swal";
+import { Swal, Toast } from "../shared/swal";
 
 export const ProdutoPage = () => {
   const { id } = useParams();
@@ -24,7 +24,13 @@ export const ProdutoPage = () => {
       produtos: carrinho.produtos.find((produto) => produto.id === ProdutoId)
         ? carrinho.produtos.map((produto) =>
             produto.id === ProdutoId
-              ? { ...produto, quantidade: produto.quantidade + Quantidade }
+              ? {
+                  ...produto,
+                  quantidade:
+                    produto.quantidade + Quantidade > Produto.estoque
+                      ? Produto.estoque
+                      : produto.quantidade + Quantidade,
+                }
               : produto,
           )
         : [
@@ -33,8 +39,10 @@ export const ProdutoPage = () => {
               id: ProdutoId,
               nome: Produto.nome,
               preco: Produto.preco,
-              quantidade: Quantidade,
+              quantidade:
+                Quantidade > Produto.estoque ? Produto.estoque : Quantidade,
               imagem: Produto.imagem,
+              estoque: Produto.estoque,
             },
           ],
       total: carrinho.total + Quantidade * Produto.preco,
@@ -131,7 +139,22 @@ export const ProdutoPage = () => {
             <input
               type="number"
               value={Quantidade}
-              onChange={(e) => setQuantidade(Number(e.target.value))}
+              onChange={(e) => {
+                const q = Number(e.target.value);
+
+                if (q < 1) setQuantidade(1);
+                else if (q >= 100) setQuantidade(99);
+                else if (q > Produto.estoque) {
+                  setQuantidade(Produto.estoque);
+                  Swal.fire({
+                    icon: "warning",
+                    title: "Atenção!",
+                    text: "Você alcançou o limite de estoque deste produto!",
+                  });
+                } else setQuantidade(Number(e.target.value));
+              }}
+              min={1}
+              max={99}
               className="h-[50px] w-full max-w-[120px] rounded border border-[#5c728e] bg-transparent pl-[50px] text-[18px] font-medium leading-[28px]"
             />
 

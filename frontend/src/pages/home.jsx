@@ -25,6 +25,7 @@ export const HomePage = () => {
             Image={produto.imagem}
             Id={produto.id}
             Nota={produto?.nota}
+            Estoque={produto?.estoque}
           />
         ))}
       </div>

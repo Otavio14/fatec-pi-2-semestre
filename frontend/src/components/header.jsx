@@ -60,42 +60,40 @@ export const HeaderComponent = () => {
   }, [idCliente]);
 
   const updateCarrinho = (produto, quantidade) => {
-    if (quantidade < 1) {
-      const produtos = CarrinhoProdutos.filter((f) => f.id !== produto.id);
-      const total = CarrinhoTotal - produto.preco;
-      const qtde = CarrinhoQuantidade - 1;
-      setCarrinhoProdutos(produtos);
-      setCarrinhoTotal(total);
-      setCarrinhoQuantidade(qtde);
+    if (quantidade > produto.estoque)
+      Swal.fire({
+        icon: "warning",
+        title: "Atenção!",
+        text: "Você alcançou o limite de estoque deste produto!",
+      });
 
-      localStorage.setItem(
-        "carrinho",
-        JSON.stringify({
-          produtos: produtos,
-          total: total,
-          quantidade: qtde,
-        }),
-      );
-    } else {
-      const produtos = CarrinhoProdutos.map((f) =>
-        f.id === produto.id ? { ...f, quantidade: parseInt(quantidade) } : f,
-      );
-      const total =
-        CarrinhoTotal + produto.preco * (quantidade - produto.quantidade);
-      const qtde = produtos.reduce((acc, curr) => acc + curr.quantidade, 0);
-      setCarrinhoProdutos(produtos);
-      setCarrinhoTotal(total);
-      setCarrinhoQuantidade(qtde);
-
-      localStorage.setItem(
-        "carrinho",
-        JSON.stringify({
-          produtos: produtos,
-          total: total,
-          quantidade: qtde,
-        }),
-      );
-    }
+    const produtos =
+      quantidade <= 0
+        ? CarrinhoProdutos.filter((f) => f.id !== produto.id)
+        : CarrinhoProdutos.map((f) =>
+            f.id === produto.id
+              ? {
+                  ...f,
+                  quantidade:
+                    quantidade > produto?.estoque
+                      ? produto?.estoque
+                      : Number(quantidade),
+                }
+              : f,
+          );
+    const total = produtos.reduce((a, c) => a + c.preco * c.quantidade, 0);
+    const qtde = produtos.reduce((acc, curr) => acc + curr.quantidade, 0);
+    setCarrinhoProdutos(produtos);
+    setCarrinhoTotal(total);
+    setCarrinhoQuantidade(qtde);
+    localStorage.setItem(
+      "carrinho",
+      JSON.stringify({
+        produtos: produtos,
+        total: total,
+        quantidade: qtde,
+      }),
+    );
   };
 
   const finalizarCompra = () => {
@@ -233,10 +231,16 @@ export const HeaderComponent = () => {
                 </div>
                 <input
                   onChange={(e) => {
-                    updateCarrinho(produto, e.target.value);
+                    const q = Number(e.target.value);
+
+                    if (q < 0) updateCarrinho(produto, 0);
+                    else if (q >= 100) updateCarrinho(produto, 99);
+                    else updateCarrinho(produto, Number(e.target.value));
                   }}
                   value={produto.quantidade}
                   type="number"
+                  min={0}
+                  max={99}
                   className="h-[28px] w-[66px] rounded border border-[#8f9eb2] px-[10px]"
                 />
               </div>

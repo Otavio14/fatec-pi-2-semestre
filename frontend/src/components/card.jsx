@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import Star from "../assets/star.png";
 
-export const Card = ({ Text, Price, Image, Nota, Id }) => {
+export const Card = ({ Text, Price, Image, Nota, Id, Estoque }) => {
   const adicionarAoCarrinho = () => {
     const carrinho = JSON.parse(localStorage.getItem("carrinho") || "{}");
     const newValue = JSON.stringify({
@@ -20,6 +20,7 @@ export const Card = ({ Text, Price, Image, Nota, Id }) => {
               preco: Price,
               quantidade: 1,
               imagem: Image,
+              estoque: Estoque,
             },
           ],
       total: carrinho.total + Price,

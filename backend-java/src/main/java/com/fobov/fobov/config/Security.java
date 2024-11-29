@@ -9,17 +9,30 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Classe que implementa as funcionalidades relacionadas à segurança
+ */
 @Configuration
 public class Security implements WebMvcConfigurer {
     @Autowired
     private RouteLevelInterceptor routeLevelInterceptor;
 
+    /**
+     * Registra o interceptador para ser utilizado
+     *
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(routeLevelInterceptor);
     }
 
 
+    /**
+     * Define as configurações de CORS
+     *
+     * @return
+     */
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source =
