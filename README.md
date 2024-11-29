@@ -2,9 +2,9 @@
 
 Projeto destinado à criação de uma aplicação para o Projeto Integrado no curso de Análise e Desenvolvimento de Sistemas na FATEC.
 
-O site está publicado no Github Pages, sendo possível acessá-lo pela URL https://otavio14.github.io/fatec-pi-2-semestre/ e a API está disponível pela URL https://fatec-pi-2-semestre.onrender.com/api .
+O site está publicado no Github Pages, sendo possível acessá-lo pela URL https://otavio14.github.io/fatec-pi-2-semestre/ e a API está disponível pela URL https://fobov-java.onrender.com .
 
-## Instalação
+## Instalação e inicialização
 
 Siga os passos abaixo para instalar e executar o projeto
 
@@ -20,21 +20,17 @@ Executar os comandos:
 
 **Backend**
 
-Executar os comandos:
+1. Na pasta `backend-java` é preciso executar o Maven para instalar as dependências
+2. Para executar basta usar `spring-boot:run`
 
-```bash
-  cd backend
-  npm i
-  npm run dev
-```
+## Deploy Backend em Java
 
-Criar um `.env` com os seguintes dados:
-
-```bash
-DATABASE_URL= # Caminho para o arquivo do banco de dados do Prisma
-PORT= # Porta a ser utilizada
-JWT_SECRET = # 256 Bit secret
-```
+1. Excutar o package do Maven
+2. Copiar o arquivo JAR para a pasta `host-deploy` junto do `database.db`
+3. Com o Docker instalado localmente rodar `docker build -t otavio14/fobov .`
+4. No Docker Desktop dar `push` para o Docker Hub
+5. No Render em `Manually Deploy` clicar em `Deploy latest reference`
+6. Vai ficar disponível na url `https://fobov-java.onrender.com` sem necessidade de definir a porta
 
 # Resultado visual
 
@@ -73,15 +69,6 @@ JWT_SECRET = # 256 Bit secret
 # Recebimento do pedido
 
 ![request](./frontend/public/request.png)
-
-## Deploy Backend em Java
-
-1. Excutar o package do Maven
-2. Copiar o arquivo JAR para a pasta `host-deploy` junto do `database.db`
-3. Com o Docker instalado localmente rodar `docker build -t otavio14/fobov .`
-4. No Docker Desktop dar `push` para o Docker Hub
-5. No Render em `Manually Deploy` clicar em `Deploy latest reference`
-6. Vai ficar disponível na url `https://fobov-java.onrender.com` sem necessidade de definir a porta
 
 ## Autores
 
